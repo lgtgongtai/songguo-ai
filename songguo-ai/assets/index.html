@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>松果AI - 松一口气，换一种活法</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --pine: #2D5F3E;
+  --pine-light: #3D7A52;
+  --pine-pale: #E8F5E9;
+  --warm: #F5E6D3;
+  --warm-dark: #D4A574;
+  --cream: #FFF8F0;
+  --text: #2C3E2D;
+  --text-light: #5A6B5C;
+  --shadow: rgba(45, 95, 62, 0.1);
+  --radius: 16px;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  background: var(--cream);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ===== 顶部导航 ===== */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: rgba(255, 248, 240, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(45, 95, 62, 0.08);
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--pine);
+}
+
+.nav-logo .logo-icon {
+  width: 36px;
+  height: 36px;
+  background: var(--pine);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 20px;
+}
+
+.nav-links a {
+  color: var(--text-light);
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover { color: var(--pine); }
+
+/* ===== 主视觉区 ===== */
+.hero {
+  padding: 120px 24px 60px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(ellipse at center, rgba(45, 95, 62, 0.03) 0%, transparent 70%);
+  animation: breathe 8s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.1); opacity: 1; }
+}
+
+.hero-mascot {
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 24px;
+  background: linear-gradient(135deg, var(--pine) 0%, var(--pine-light) 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 56px;
+  box-shadow: 0 8px 32px var(--shadow);
+  animation: float 4s ease-in-out infinite;
+  position: relative;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.hero-mascot::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 16px;
+  background: rgba(45, 95, 62, 0.08);
+  border-radius: 50%;
+  animation: shadow-pulse 4s ease-in-out infinite;
+}
+
+@keyframes shadow-pulse {
+  0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.5; }
+  50% { transform: translateX(-50%) scale(0.8); opacity: 0.3; }
+}
+
+.hero h1 {
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--pine);
+  margin-bottom: 12px;
+  position: relative;
+}
+
+.hero .subtitle {
+  font-size: 18px;
+  color: var(--text-light);
+  margin-bottom: 8px;
+  position: relative;
+}
+
+.hero .tagline {
+  font-size: 14px;
+  color: var(--warm-dark);
+  font-style: italic;
+  position: relative;
+}
+
+/* ===== 呼吸泡泡动画 ===== */
+.bubble-container {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin: 32px 0;
+  position: relative;
+}
+
+.bubble {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--pine);
+  opacity: 0.3;
+  animation: bubble-breathe 4s ease-in-out infinite;
+}
+
+.bubble:nth-child(2) { animation-delay: 0.5s; }
+.bubble:nth-child(3) { animation-delay: 1s; }
+
+@keyframes bubble-breathe {
+  0%, 100% { transform: scale(1); opacity: 0.3; }
+  25% { transform: scale(1.8); opacity: 0.8; }
+  50% { transform: scale(1); opacity: 0.3; }
+  75% { transform: scale(0.6); opacity: 0.1; }
+}
+
+.bubble-label {
+  font-size: 12px;
+  color: var(--text-light);
+  text-align: center;
+  margin-top: -8px;
+  position: relative;
+}
+
+/* ===== 场景选择区 ===== */
+.scenes {
+  padding: 40px 24px 60px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.section-title {
+  text-align: center;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--pine);
+  margin-bottom: 8px;
+}
+
+.section-desc {
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-light);
+  margin-bottom: 36px;
+}
+
+.scene-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.scene-card {
+  background: white;
+  border-radius: var(--radius);
+  padding: 24px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  box-shadow: 0 2px 12px var(--shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+.scene-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px var(--shadow);
+  border-color: var(--pine);
+}
+
+.scene-card.active {
+  border-color: var(--pine);
+  background: var(--pine-pale);
+}
+
+.scene-card .card-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin-bottom: 16px;
+}
+
+.scene-card .card-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.scene-card .card-role {
+  font-size: 12px;
+  color: var(--warm-dark);
+  margin-bottom: 10px;
+}
+
+.scene-card .card-desc {
+  font-size: 13px;
+  color: var(--text-light);
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+
+.scene-card .card-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.scene-card .tag {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 20px;
+  background: var(--pine-pale);
+  color: var(--pine);
+}
+
+.scene-card .tag.free { background: #E3F2FD; color: #1565C0; }
+.scene-card .tag.vip { background: #FFF3E0; color: #E65100; }
+
+/* 卡片颜色 */
+.card-vent .card-icon { background: #FFF3E0; }
+.card-heal .card-icon { background: #E8F5E9; }
+.card-fight .card-icon { background: #FCE4EC; }
+.card-void .card-icon { background: #E3F2FD; }
+.card-reflect .card-icon { background: #F3E5F5; }
+.card-breathe .card-icon { background: #E0F7FA; }
+
+/* ===== 对话演示区 ===== */
+.chat-demo {
+  display: none;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 0 24px 60px;
+}
+
+.chat-demo.active { display: block; }
+
+.chat-header {
+  background: white;
+  border-radius: var(--radius) var(--radius) 0 0;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid rgba(45, 95, 62, 0.08);
+}
+
+.chat-header .role-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+.chat-header .role-info h3 {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.chat-header .role-info p {
+  font-size: 12px;
+  color: var(--text-light);
+}
+
+.chat-header .close-btn {
+  margin-left: auto;
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: var(--text-light);
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.chat-header .close-btn:hover { background: var(--pine-pale); }
+
+.chat-body {
+  background: white;
+  padding: 20px;
+  min-height: 320px;
+  max-height: 480px;
+  overflow-y: auto;
+  border-radius: 0 0 var(--radius) var(--radius);
+  box-shadow: 0 4px 16px var(--shadow);
+}
+
+.chat-msg {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+  animation: msg-in 0.3s ease;
+}
+
+@keyframes msg-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.chat-msg.role { flex-direction: row; }
+.chat-msg.user { flex-direction: row-reverse; }
+
+.chat-msg .msg-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.chat-msg.role .msg-avatar { background: var(--pine-pale); }
+.chat-msg.user .msg-avatar { background: var(--warm); }
+
+.chat-msg .msg-bubble {
+  max-width: 75%;
+  padding: 10px 14px;
+  border-radius: 14px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.chat-msg.role .msg-bubble {
+  background: var(--pine-pale);
+  color: var(--text);
+  border-bottom-left-radius: 4px;
+}
+
+.chat-msg.user .msg-bubble {
+  background: var(--pine);
+  color: white;
+  border-bottom-right-radius: 4px;
+}
+
+.chat-input-area {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+  padding: 0 24px;
+  max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.chat-input-area input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 2px solid rgba(45, 95, 62, 0.15);
+  border-radius: 24px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+  background: white;
+}
+
+.chat-input-area input:focus { border-color: var(--pine); }
+
+.chat-input-area button {
+  padding: 12px 20px;
+  background: var(--pine);
+  color: white;
+  border: none;
+  border-radius: 24px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.chat-input-area button:hover { background: var(--pine-light); transform: scale(1.02); }
+
+/* ===== 五维雷达图 ===== */
+.dimensions {
+  padding: 40px 24px 60px;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.dim-chart {
+  background: white;
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: 0 2px 12px var(--shadow);
+}
+
+.dim-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.dim-bar .dim-label {
+  width: 72px;
+  font-size: 13px;
+  color: var(--text-light);
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.dim-bar .dim-track {
+  flex: 1;
+  height: 8px;
+  background: var(--pine-pale);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.dim-bar .dim-fill {
+  height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--pine) 0%, var(--pine-light) 100%);
+  transition: width 1s ease;
+}
+
+.dim-bar .dim-value {
+  width: 32px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--pine);
+}
+
+/* ===== 使用指南 ===== */
+.guide {
+  padding: 40px 24px 80px;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.guide-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.guide-step {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  background: white;
+  padding: 20px;
+  border-radius: var(--radius);
+  box-shadow: 0 2px 8px var(--shadow);
+}
+
+.guide-step .step-num {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--pine);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.guide-step .step-content h4 {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.guide-step .step-content p {
+  font-size: 13px;
+  color: var(--text-light);
+  line-height: 1.5;
+}
+
+/* ===== 底部 ===== */
+.footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-light);
+  font-size: 12px;
+  border-top: 1px solid rgba(45, 95, 62, 0.08);
+}
+
+/* ===== 响应式 ===== */
+@media (max-width: 640px) {
+  .hero h1 { font-size: 28px; }
+  .hero .subtitle { font-size: 16px; }
+  .scene-grid { grid-template-columns: 1fr; }
+  .nav-links { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- 导航 -->
+<nav class="nav">
+  <div class="nav-logo">
+    <div class="logo-icon">&#x1F330;</div>
+    <span>松果AI</span>
+  </div>
+  <div class="nav-links">
+    <a href="#scenes">解压场景</a>
+    <a href="#dimensions">解压维度</a>
+    <a href="#guide">使用指南</a>
+  </div>
+</nav>
+
+<!-- 主视觉 -->
+<section class="hero">
+  <div class="hero-mascot">&#x1F43F;</div>
+  <h1>松果AI</h1>
+  <p class="subtitle">你的口袋解压伙伴</p>
+  <p class="tagline">"松一口气，换一种活法"</p>
+  <div class="bubble-container">
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+  </div>
+  <p class="bubble-label">吸 -- 停 -- 呼 --</p>
+</section>
+
+<!-- 场景选择 -->
+<section class="scenes" id="scenes">
+  <h2 class="section-title">选择你的解压方式</h2>
+  <p class="section-desc">六个场景，总有一个接住你此刻的情绪</p>
+  <div class="scene-grid">
+
+    <div class="scene-card card-vent" onclick="selectScene('vent')">
+      <div class="card-icon">&#x1F525;</div>
+      <div class="card-title">吐槽大会</div>
+      <div class="card-role">最佳损友 | 6-10轮</div>
+      <div class="card-desc">今天谁惹你了？随便骂，我帮你记仇。站在你这边，一起把堵着的气放出来。</div>
+      <div class="card-tags">
+        <span class="tag free">免费</span>
+        <span class="tag">压力释放</span>
+        <span class="tag">站队共情</span>
+      </div>
+    </div>
+
+    <div class="scene-card card-heal" onclick="selectScene('heal')">
+      <div class="card-icon">&#x1F33F;</div>
+      <div class="card-title">治愈聊天</div>
+      <div class="card-role">治愈倾听者 | 6-12轮</div>
+      <div class="card-desc">今天过得还好吗？想说点什么都可以，我都在。不急着给答案，先把你接住。</div>
+      <div class="card-tags">
+        <span class="tag vip">会员</span>
+        <span class="tag">温暖陪伴</span>
+        <span class="tag">情绪日记</span>
+      </div>
+    </div>
+
+    <div class="scene-card card-fight" onclick="selectScene('fight')">
+      <div class="card-icon">&#x26A1;</div>
+      <div class="card-title">吵架模拟器</div>
+      <div class="card-role">吵架对手 | 6-12轮</div>
+      <div class="card-desc">想练练怎么开口？我当那个让你不爽的人，你随便怼。吵完了，我主动和好。</div>
+      <div class="card-tags">
+        <span class="tag vip">会员</span>
+        <span class="tag">安全发火</span>
+        <span class="tag">主动和好</span>
+      </div>
+    </div>
+
+    <div class="scene-card card-void" onclick="selectScene('void')">
+      <div class="card-icon">&#x1F573;</div>
+      <div class="card-title">安全宣泄</div>
+      <div class="card-role">树洞 | 6-10轮</div>
+      <div class="card-desc">想说什么都行，这里只有你和我。不会评判，不会外传，都安全。</div>
+      <div class="card-tags">
+        <span class="tag vip">会员</span>
+        <span class="tag">无评判</span>
+        <span class="tag">安全容器</span>
+      </div>
+    </div>
+
+    <div class="scene-card card-reflect" onclick="selectScene('reflect')">
+      <div class="card-icon">&#x1F50D;</div>
+      <div class="card-title">复盘引导</div>
+      <div class="card-role">情绪向导 | 6-10轮</div>
+      <div class="card-desc">今天哪件事还堵在心里？不给答案，用提问帮你看清情绪的来源。</div>
+      <div class="card-tags">
+        <span class="tag vip">VIP</span>
+        <span class="tag">自我觉察</span>
+        <span class="tag">苏格拉底</span>
+      </div>
+    </div>
+
+    <div class="scene-card card-breathe" onclick="selectScene('breathe')">
+      <div class="card-icon">&#x1F32C;</div>
+      <div class="card-title">放松舱</div>
+      <div class="card-role">呼吸引导员 | 4-8轮</div>
+      <div class="card-desc">找个舒服的姿势，跟着松果的泡泡：吸--停--呼--。把紧绷的身子一点点松开。</div>
+      <div class="card-tags">
+        <span class="tag free">全员可用</span>
+        <span class="tag">身体放松</span>
+        <span class="tag">呼吸引导</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- 对话演示 -->
+<section class="chat-demo" id="chatDemo">
+  <div class="chat-header">
+    <div class="role-avatar" id="chatAvatar">&#x1F525;</div>
+    <div class="role-info">
+      <h3 id="chatRoleName">最佳损友</h3>
+      <p id="chatRoleDesc">吐槽大会</p>
+    </div>
+    <button class="close-btn" onclick="closeChat()">&#x2715;</button>
+  </div>
+  <div class="chat-body" id="chatBody"></div>
+</section>
+<div class="chat-input-area" id="chatInputArea" style="display:none;">
+  <input type="text" id="chatInput" placeholder="说点什么..." onkeypress="if(event.key==='Enter')sendMessage()">
+  <button onclick="sendMessage()">发送</button>
+</div>
+
+<!-- 五维解压维度 -->
+<section class="dimensions" id="dimensions">
+  <h2 class="section-title">五维解压维度</h2>
+  <p class="section-desc">不评判、不排名，只帮你看见自己的情绪变化</p>
+  <div class="dim-chart">
+    <div class="dim-bar">
+      <span class="dim-label">情绪识别</span>
+      <div class="dim-track"><div class="dim-fill" style="width:0%" data-target="80"></div></div>
+      <span class="dim-value">4.0</span>
+    </div>
+    <div class="dim-bar">
+      <span class="dim-label">共情接纳</span>
+      <div class="dim-track"><div class="dim-fill" style="width:0%" data-target="90"></div></div>
+      <span class="dim-value">4.5</span>
+    </div>
+    <div class="dim-bar">
+      <span class="dim-label">压力释放</span>
+      <div class="dim-track"><div class="dim-fill" style="width:0%" data-target="70"></div></div>
+      <span class="dim-value">3.5</span>
+    </div>
+    <div class="dim-bar">
+      <span class="dim-label">放松深度</span>
+      <div class="dim-track"><div class="dim-fill" style="width:0%" data-target="60"></div></div>
+      <span class="dim-value">3.0</span>
+    </div>
+    <div class="dim-bar">
+      <span class="dim-label">自我觉察</span>
+      <div class="dim-track"><div class="dim-fill" style="width:0%" data-target="50"></div></div>
+      <span class="dim-value">2.5</span>
+    </div>
+  </div>
+</section>
+
+<!-- 使用指南 -->
+<section class="guide" id="guide">
+  <h2 class="section-title">怎么玩</h2>
+  <p class="section-desc">四步闭环：玩 - 记 - 评 - 复</p>
+  <div class="guide-steps">
+    <div class="guide-step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h4>选一个场景，开始对话</h4>
+        <p>上面的六个场景，选一个最符合你此刻心情的。松果会帮你切换到对应的角色。</p>
+      </div>
+    </div>
+    <div class="guide-step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h4>跟角色聊，想说什么说什么</h4>
+        <p>不评判、不说教、不劝和。角色会按自己的方式接住你。想骂就骂，想哭就哭，想安静就安静。</p>
+      </div>
+    </div>
+    <div class="guide-step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h4>聊完自动生成效报告</h4>
+        <p>对话结束后，松果会帮你记录五维情绪状态，给出一个新看见和一个今晚能做的小事。</p>
+      </div>
+    </div>
+    <div class="guide-step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <h4>按建议再玩，越玩越松</h4>
+        <p>根据报告建议，选一个薄弱维度再玩一次。系统会追踪你的情绪变化趋势，帮你看见自己在变好。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 底部 -->
+<footer class="footer">
+  <p>松果AI - 不是成功就是成长</p>
+  <p style="margin-top:4px;">别绷着，松口气</p>
+</footer>
+
+<script>
+// 场景数据
+const scenes = {
+  vent: {
+    icon: '\u{1F525}',
+    name: '最佳损友',
+    desc: '吐槽大会',
+    color: '#FFF3E0',
+    messages: [
+      { role: 'role', text: '来，今天谁惹你了？我当树洞，随便骂，我帮你记仇。' },
+      { role: 'user', text: '第三版了，每次都说"再调一下"。' },
+      { role: 'role', text: '啊啊啊"再调一下"这五个字我能气一整年！来，把最想怼他的话甩出来。' },
+      { role: 'user', text: '（骂完）……舒服点了。' },
+      { role: 'role', text: '骂完是不是轻松多了？呼——松松帮你把烦恼打包扔了。深吸一口气~' }
+    ]
+  },
+  heal: {
+    icon: '\u{1F33F}',
+    name: '治愈倾听者',
+    desc: '治愈聊天',
+    color: '#E8F5E9',
+    messages: [
+      { role: 'role', text: '今天过得还好吗？想说点什么都可以，我都在。' },
+      { role: 'user', text: '有点累，也不知道在累什么。' },
+      { role: 'role', text: '嗯，有时候累是说不清的。你大概是那种，明明撑着，又怕自己撑不住，对吗？' },
+      { role: 'user', text: '……对，就是这种感觉。' },
+      { role: 'role', text: '来，跟着松果的呼吸泡泡：吸——停——呼——今天也辛苦啦。' }
+    ]
+  },
+  fight: {
+    icon: '\u{26A1}',
+    name: '吵架对手',
+    desc: '吵架模拟器',
+    color: '#FCE4EC',
+    messages: [
+      { role: 'role', text: '想练练怎么开口？我当那个让你不爽的人，你随便怼。' },
+      { role: 'user', text: '你上次那事真的太过分了！' },
+      { role: 'role', text: '过分？我觉得挺正常啊，你至于吗？' },
+      { role: 'user', text: '至于！你根本不把人当回事！' },
+      { role: 'role', text: '……行吧，算你赢这次。你刚才那句，其实挺在理的。吵完了？呼——松松帮你把气吐出去了。' }
+    ]
+  },
+  void: {
+    icon: '\u{1F573}',
+    name: '树洞',
+    desc: '安全宣泄',
+    color: '#E3F2FD',
+    messages: [
+      { role: 'role', text: '想说什么都行，这里只有你和我。我是个树洞，不会说出去。' },
+      { role: 'user', text: '我其实特别怕自己什么都做不好……' },
+      { role: 'role', text: '我在听，你慢慢说。' },
+      { role: 'user', text: '明明很努力了，还是被人说不行。' },
+      { role: 'role', text: '嗯，我听到了。都安全，这里不会有人judge你。倒出来是不是轻了点？深吸一口气，松松陪你。' }
+    ]
+  },
+  reflect: {
+    icon: '\u{1F50D}',
+    name: '情绪向导',
+    desc: '复盘引导',
+    color: '#F3E5F5',
+    messages: [
+      { role: 'role', text: '今天哪件事，还堵在心里？咱慢慢理一理。' },
+      { role: 'user', text: '同事抢功那事，我还是气。' },
+      { role: 'role', text: '你刚说那句，再展开说说？如果抛开"应该大度"，你真正在意的是？' },
+      { role: 'user', text: '……我是在意我自己的努力没被看见。' },
+      { role: 'role', text: '所以你是在意"被看见"，对吗？这句新看见，先帮你在情绪日记里记着。' }
+    ]
+  },
+  breathe: {
+    icon: '\u{1F32C}',
+    name: '呼吸引导员',
+    desc: '放松舱',
+    color: '#E0F7FA',
+    messages: [
+      { role: 'role', text: '找个舒服的姿势。跟着松果的泡泡：吸——停——呼——' },
+      { role: 'role', text: '肩膀，松下来~ 下巴，松开。胸口，慢慢落。' },
+      { role: 'user', text: '（放松中）' },
+      { role: 'role', text: '走神了也没关系，回到泡泡就好。' },
+      { role: 'role', text: '深吸最后一口，呼——睁开眼。有没有轻一点？嗯，松松陪你。下次紧了，随时回来。' }
+    ]
+  }
+};
+
+let currentScene = null;
+
+function selectScene(key) {
+  currentScene = key;
+  const scene = scenes[key];
+  
+  // 更新卡片状态
+  document.querySelectorAll('.scene-card').forEach(c => c.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  
+  // 更新聊天头部
+  document.getElementById('chatAvatar').textContent = scene.icon;
+  document.getElementById('chatAvatar').style.background = scene.color;
+  document.getElementById('chatRoleName').textContent = scene.name;
+  document.getElementById('chatRoleDesc').textContent = scene.desc;
+  
+  // 显示聊天区
+  const chatDemo = document.getElementById('chatDemo');
+  chatDemo.classList.add('active');
+  
+  // 清空并加载消息
+  const chatBody = document.getElementById('chatBody');
+  chatBody.innerHTML = '';
+  
+  scene.messages.forEach((msg, i) => {
+    setTimeout(() => {
+      addMessage(msg.role, msg.text, scene.icon);
+    }, i * 600);
+  });
+  
+  // 显示输入框
+  document.getElementById('chatInputArea').style.display = 'flex';
+  
+  // 滚动到聊天区
+  setTimeout(() => {
+    chatDemo.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 300);
+}
+
+function addMessage(role, text, icon) {
+  const chatBody = document.getElementById('chatBody');
+  const msgDiv = document.createElement('div');
+  msgDiv.className = `chat-msg ${role}`;
+  
+  const avatar = role === 'role' ? icon : '\u{1F9D1}';
+  msgDiv.innerHTML = `
+    <div class="msg-avatar">${avatar}</div>
+    <div class="msg-bubble">${text}</div>
+  `;
+  
+  chatBody.appendChild(msgDiv);
+  chatBody.scrollTop = chatBody.scrollHeight;
+}
+
+function sendMessage() {
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if (!text) return;
+  
+  const scene = scenes[currentScene];
+  addMessage('user', text, scene.icon);
+  input.value = '';
+  
+  // 模拟角色回复
+  setTimeout(() => {
+    const replies = {
+      vent: ['他也太离谱了吧！！换谁都气。', '你敏感个啥，换谁都气。', '骂完是不是舒服点了？来，深吸一口气~'],
+      heal: ['我在呢，慢慢说。', '不用急着好起来，先陪你待一会儿。', '你刚说那句，我听进去了。'],
+      fight: ['你这话什么意思？说出来啊。', '行，那你倒是说个理由？', '……行吧，算你赢这次。'],
+      void: ['我在听，你慢慢说。', '都安全，这里不会有人judge你。', '嗯，我听到了，继续。'],
+      reflect: ['你刚说那句，再展开说说？', '如果抛开"应该"，你真正在意的是？', '所以你是在意……对吗？'],
+      breathe: ['吸——停两秒——呼——', '肩膀，松下来~', '走神了也没关系，回到泡泡就好。']
+    };
+    const replyList = replies[currentScene] || replies.vent;
+    const reply = replyList[Math.floor(Math.random() * replyList.length)];
+    addMessage('role', reply, scene.icon);
+  }, 800);
+}
+
+function closeChat() {
+  document.getElementById('chatDemo').classList.remove('active');
+  document.getElementById('chatInputArea').style.display = 'none';
+  document.querySelectorAll('.scene-card').forEach(c => c.classList.remove('active'));
+  currentScene = null;
+}
+
+// 维度条动画
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      document.querySelectorAll('.dim-fill').forEach(bar => {
+        const target = bar.getAttribute('data-target');
+        bar.style.width = target + '%';
+      });
+      observer.disconnect();
+    }
+  });
+}, { threshold: 0.3 });
+
+observer.observe(document.querySelector('.dim-chart'));
+
+// 平滑滚动
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function(e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth' });
+  });
+});
+</script>
+
+</body>
+</html>
