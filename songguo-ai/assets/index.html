@@ -2,1066 +2,619 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>松果AI - 松一口气，换一种活法</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
+<title>松果AI - 情绪解压伙伴</title>
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
-:root {
-  --pine: #2D5F3E;
-  --pine-light: #3D7A52;
-  --pine-pale: #E8F5E9;
-  --warm: #F5E6D3;
-  --warm-dark: #D4A574;
-  --cream: #FFF8F0;
-  --text: #2C3E2D;
-  --text-light: #5A6B5C;
-  --shadow: rgba(45, 95, 62, 0.1);
-  --radius: 16px;
-  --safe-top: env(safe-area-inset-top, 0px);
-  --safe-bottom: env(safe-area-inset-bottom, 0px);
-}
-
-html { scroll-behavior: smooth; }
-
-body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
-  background: var(--cream);
-  color: var(--text);
-  min-height: 100vh;
-  overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
-}
-
-/* ===== 顶部导航 ===== */
-.nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 100;
-  background: rgba(255, 248, 240, 0.92);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  padding: calc(10px + var(--safe-top)) 16px 10px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid rgba(45, 95, 62, 0.06);
-}
-
-.nav-logo {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 17px;
-  font-weight: 700;
-  color: var(--pine);
-}
-
-.nav-logo .logo-icon {
-  width: 32px;
-  height: 32px;
-  background: var(--pine);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-}
-
-.nav-links {
-  display: flex;
-  gap: 16px;
-}
-
-.nav-links a {
-  color: var(--text-light);
-  text-decoration: none;
-  font-size: 13px;
-  transition: color 0.2s;
-  padding: 6px 0;
-}
-
-.nav-links a:hover, .nav-links a:active { color: var(--pine); }
-
-/* ===== 主视觉区 ===== */
-.hero {
-  padding: calc(80px + var(--safe-top)) 20px 40px;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-}
-
-.hero::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(ellipse at center, rgba(45, 95, 62, 0.03) 0%, transparent 70%);
-  animation: breathe 8s ease-in-out infinite;
-}
-
-@keyframes breathe {
-  0%, 100% { transform: scale(1); opacity: 0.5; }
-  50% { transform: scale(1.1); opacity: 1; }
-}
-
-.hero-mascot {
-  width: 100px;
-  height: 100px;
-  margin: 0 auto 20px;
-  background: linear-gradient(135deg, var(--pine) 0%, var(--pine-light) 100%);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 48px;
-  box-shadow: 0 8px 32px var(--shadow);
-  animation: float 4s ease-in-out infinite;
-  position: relative;
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
-}
-
-.hero-mascot::after {
-  content: '';
-  position: absolute;
-  bottom: -6px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 64px;
-  height: 12px;
-  background: rgba(45, 95, 62, 0.06);
-  border-radius: 50%;
-  animation: shadow-pulse 4s ease-in-out infinite;
-}
-
-@keyframes shadow-pulse {
-  0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.5; }
-  50% { transform: translateX(-50%) scale(0.8); opacity: 0.3; }
-}
-
-.hero h1 {
-  font-size: 30px;
-  font-weight: 800;
-  color: var(--pine);
-  margin-bottom: 8px;
-  position: relative;
-}
-
-.hero .subtitle {
-  font-size: 16px;
-  color: var(--text-light);
-  margin-bottom: 6px;
-  position: relative;
-}
-
-.hero .tagline {
-  font-size: 13px;
-  color: var(--warm-dark);
-  font-style: italic;
-  position: relative;
-}
-
-/* ===== 呼吸泡泡动画 ===== */
-.bubble-container {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin: 24px 0;
-  position: relative;
-}
-
-.bubble {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--pine);
-  opacity: 0.3;
-  animation: bubble-breathe 4s ease-in-out infinite;
-}
-
-.bubble:nth-child(2) { animation-delay: 0.5s; }
-.bubble:nth-child(3) { animation-delay: 1s; }
-
-@keyframes bubble-breathe {
-  0%, 100% { transform: scale(1); opacity: 0.3; }
-  25% { transform: scale(1.8); opacity: 0.8; }
-  50% { transform: scale(1); opacity: 0.3; }
-  75% { transform: scale(0.6); opacity: 0.1; }
-}
-
-.bubble-label {
-  font-size: 12px;
-  color: var(--text-light);
-  text-align: center;
-  margin-top: -6px;
-  position: relative;
-  letter-spacing: 2px;
-}
-
-/* ===== 场景选择区 ===== */
-.scenes {
-  padding: 32px 16px 48px;
-  max-width: 960px;
-  margin: 0 auto;
-}
-
-.section-title {
-  text-align: center;
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--pine);
-  margin-bottom: 6px;
-}
-
-.section-desc {
-  text-align: center;
-  font-size: 13px;
-  color: var(--text-light);
-  margin-bottom: 28px;
-}
-
-.scene-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-}
-
-.scene-card {
-  background: white;
-  border-radius: 14px;
-  padding: 16px;
-  cursor: pointer;
-  transition: all 0.25s ease;
-  border: 2px solid transparent;
-  box-shadow: 0 2px 8px var(--shadow);
-  position: relative;
-  overflow: hidden;
-  -webkit-user-select: none;
-  user-select: none;
-}
-
-.scene-card:active {
-  transform: scale(0.97);
-  border-color: var(--pine);
-}
-
-.scene-card.active {
-  border-color: var(--pine);
-  background: var(--pine-pale);
-}
-
-.scene-card .card-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  margin-bottom: 10px;
-}
-
-.scene-card .card-title {
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--text);
-  margin-bottom: 3px;
-}
-
-.scene-card .card-role {
-  font-size: 11px;
-  color: var(--warm-dark);
-  margin-bottom: 8px;
-}
-
-.scene-card .card-desc {
-  font-size: 12px;
-  color: var(--text-light);
-  line-height: 1.5;
-  margin-bottom: 10px;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.scene-card .card-tags {
-  display: flex;
-  gap: 4px;
-  flex-wrap: wrap;
-}
-
-.scene-card .tag {
-  font-size: 10px;
-  padding: 2px 6px;
-  border-radius: 20px;
-  background: var(--pine-pale);
-  color: var(--pine);
-}
-
-.scene-card .tag.free { background: #E3F2FD; color: #1565C0; }
-.scene-card .tag.vip { background: #FFF3E0; color: #E65100; }
-
-/* 卡片颜色 */
-.card-vent .card-icon { background: #FFF3E0; }
-.card-heal .card-icon { background: #E8F5E9; }
-.card-fight .card-icon { background: #FCE4EC; }
-.card-void .card-icon { background: #E3F2FD; }
-.card-reflect .card-icon { background: #F3E5F5; }
-.card-breathe .card-icon { background: #E0F7FA; }
-
-/* ===== 对话演示区 ===== */
-.chat-demo {
-  display: none;
-  max-width: 640px;
-  margin: 0 auto;
-  padding: 0 16px 16px;
-}
-
-.chat-demo.active { display: block; }
-
-.chat-header {
-  background: white;
-  border-radius: 14px 14px 0 0;
-  padding: 12px 16px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  border-bottom: 1px solid rgba(45, 95, 62, 0.06);
-}
-
-.chat-header .role-avatar {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-}
-
-.chat-header .role-info h3 {
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.chat-header .role-info p {
-  font-size: 11px;
-  color: var(--text-light);
-}
-
-.chat-header .close-btn {
-  margin-left: auto;
-  background: none;
-  border: none;
-  font-size: 18px;
-  color: var(--text-light);
-  cursor: pointer;
-  padding: 6px 10px;
-  border-radius: 8px;
-  transition: background 0.2s;
-  min-width: 36px;
-  min-height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.chat-header .close-btn:active { background: var(--pine-pale); }
-
-.chat-body {
-  background: white;
-  padding: 16px;
-  min-height: 280px;
-  max-height: 50vh;
-  overflow-y: auto;
-  border-radius: 0 0 14px 14px;
-  box-shadow: 0 4px 16px var(--shadow);
-  -webkit-overflow-scrolling: touch;
-}
-
-.chat-msg {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 14px;
-  animation: msg-in 0.3s ease;
-}
-
-@keyframes msg-in {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.chat-msg.role { flex-direction: row; }
-.chat-msg.user { flex-direction: row-reverse; }
-
-.chat-msg .msg-avatar {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  flex-shrink: 0;
-}
-
-.chat-msg.role .msg-avatar { background: var(--pine-pale); }
-.chat-msg.user .msg-avatar { background: var(--warm); }
-
-.chat-msg .msg-bubble {
-  max-width: 80%;
-  padding: 10px 12px;
-  border-radius: 14px;
-  font-size: 14px;
-  line-height: 1.5;
-  word-break: break-word;
-}
-
-.chat-msg.role .msg-bubble {
-  background: var(--pine-pale);
-  color: var(--text);
-  border-bottom-left-radius: 4px;
-}
-
-.chat-msg.user .msg-bubble {
-  background: var(--pine);
-  color: white;
-  border-bottom-right-radius: 4px;
-}
-
-.chat-input-area {
-  display: flex;
-  gap: 8px;
-  margin-top: 12px;
-  padding: 0 16px;
-  max-width: 640px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.chat-input-area input {
-  flex: 1;
-  padding: 10px 14px;
-  border: 1.5px solid rgba(45, 95, 62, 0.15);
-  border-radius: 22px;
-  font-size: 15px;
-  outline: none;
-  transition: border-color 0.2s;
-  background: white;
-  -webkit-appearance: none;
-  appearance: none;
-}
-
-.chat-input-area input:focus { border-color: var(--pine); }
-
-.chat-input-area button {
-  padding: 10px 18px;
-  background: var(--pine);
-  color: white;
-  border: none;
-  border-radius: 22px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-  min-width: 56px;
-  min-height: 42px;
-  -webkit-appearance: none;
-  appearance: none;
-}
-
-.chat-input-area button:active { background: var(--pine-light); transform: scale(0.96); }
-
-/* ===== 五维雷达图 ===== */
-.dimensions {
-  padding: 32px 16px 48px;
-  max-width: 640px;
-  margin: 0 auto;
-}
-
-.dim-chart {
-  background: white;
-  border-radius: 14px;
-  padding: 20px 16px;
-  box-shadow: 0 2px 8px var(--shadow);
-}
-
-.dim-bar {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 12px;
-}
-
-.dim-bar:last-child { margin-bottom: 0; }
-
-.dim-bar .dim-label {
-  width: 60px;
-  font-size: 12px;
-  color: var(--text-light);
-  text-align: right;
-  flex-shrink: 0;
-}
-
-.dim-bar .dim-track {
-  flex: 1;
-  height: 8px;
-  background: var(--pine-pale);
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.dim-bar .dim-fill {
-  height: 100%;
-  border-radius: 4px;
-  background: linear-gradient(90deg, var(--pine) 0%, var(--pine-light) 100%);
-  transition: width 1s ease;
-}
-
-.dim-bar .dim-value {
-  width: 28px;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--pine);
-}
-
-/* ===== 使用指南 ===== */
-.guide {
-  padding: 32px 16px 64px;
-  max-width: 640px;
-  margin: 0 auto;
-}
-
-.guide-steps {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.guide-step {
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-  background: white;
-  padding: 16px;
-  border-radius: 14px;
-  box-shadow: 0 2px 8px var(--shadow);
-}
-
-.guide-step .step-num {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: var(--pine);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  font-weight: 700;
-  flex-shrink: 0;
-}
-
-.guide-step .step-content h4 {
-  font-size: 14px;
-  font-weight: 600;
-  margin-bottom: 3px;
-}
-
-.guide-step .step-content p {
-  font-size: 12px;
-  color: var(--text-light);
-  line-height: 1.5;
-}
-
-/* ===== 底部 ===== */
-.footer {
-  text-align: center;
-  padding: 20px 16px calc(20px + var(--safe-bottom));
-  color: var(--text-light);
-  font-size: 12px;
-  border-top: 1px solid rgba(45, 95, 62, 0.06);
-}
-
-.footer p + p { margin-top: 4px; }
-
-/* ========================================
-   桌面端 (>768px)
-   ======================================== */
-@media (min-width: 769px) {
-  .nav { padding: calc(12px + var(--safe-top)) 24px 12px; }
-  .nav-logo { font-size: 18px; }
-  .nav-logo .logo-icon { width: 36px; height: 36px; font-size: 20px; }
-  .nav-links { gap: 20px; }
-  .nav-links a { font-size: 14px; }
-
-  .hero { padding: calc(120px + var(--safe-top)) 24px 60px; }
-  .hero-mascot { width: 120px; height: 120px; font-size: 56px; margin-bottom: 24px; }
-  .hero h1 { font-size: 36px; }
-  .hero .subtitle { font-size: 18px; }
-  .hero .tagline { font-size: 14px; }
-
-  .bubble-container { gap: 12px; margin: 32px 0; }
-  .bubble { width: 12px; height: 12px; }
-
-  .scenes { padding: 40px 24px 60px; }
-  .section-title { font-size: 24px; }
-  .section-desc { font-size: 14px; margin-bottom: 36px; }
-  .scene-grid { grid-template-columns: repeat(3, 1fr); gap: 20px; }
-  .scene-card { padding: 24px; border-radius: var(--radius); }
-  .scene-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px var(--shadow); border-color: var(--pine); }
-  .scene-card .card-icon { width: 48px; height: 48px; font-size: 24px; margin-bottom: 16px; border-radius: 12px; }
-  .scene-card .card-title { font-size: 18px; }
-  .scene-card .card-role { font-size: 12px; margin-bottom: 10px; }
-  .scene-card .card-desc { font-size: 13px; margin-bottom: 12px; -webkit-line-clamp: unset; }
-  .scene-card .tag { font-size: 11px; padding: 3px 8px; }
-
-  .chat-demo { padding: 0 24px 60px; }
-  .chat-header { padding: 16px 20px; border-radius: var(--radius) var(--radius) 0 0; }
-  .chat-header .role-avatar { width: 40px; height: 40px; font-size: 20px; }
-  .chat-header .role-info h3 { font-size: 15px; }
-  .chat-body { padding: 20px; min-height: 320px; max-height: 480px; border-radius: 0 0 var(--radius) var(--radius); }
-  .chat-msg .msg-avatar { width: 32px; height: 32px; font-size: 16px; }
-  .chat-msg .msg-bubble { font-size: 14px; max-width: 75%; }
-  .chat-input-area { padding: 0 24px; margin-top: 16px; }
-  .chat-input-area input { padding: 12px 16px; font-size: 14px; border-radius: 24px; }
-  .chat-input-area button { padding: 12px 20px; border-radius: 24px; }
-
-  .dimensions { padding: 40px 24px 60px; }
-  .dim-chart { padding: 24px; border-radius: var(--radius); }
-  .dim-bar { gap: 12px; margin-bottom: 14px; }
-  .dim-bar .dim-label { width: 72px; font-size: 13px; }
-  .dim-bar .dim-value { width: 32px; font-size: 13px; }
-
-  .guide { padding: 40px 24px 80px; }
-  .guide-step { padding: 20px; gap: 16px; border-radius: var(--radius); }
-  .guide-step .step-num { width: 32px; height: 32px; font-size: 14px; }
-  .guide-step .step-content h4 { font-size: 15px; }
-  .guide-step .step-content p { font-size: 13px; }
-
-  .footer { padding: 24px calc(24px + var(--safe-bottom)); }
-}
-
-/* ========================================
-   小屏手机 (<375px)
-   ======================================== */
-@media (max-width: 374px) {
-  .scene-grid { grid-template-columns: 1fr; }
-  .hero h1 { font-size: 26px; }
-  .hero-mascot { width: 80px; height: 80px; font-size: 40px; }
-  .section-title { font-size: 20px; }
-}
-
-/* ========================================
-   横屏适配
-   ======================================== */
-@media (max-height: 500px) and (orientation: landscape) {
-  .hero { padding-top: calc(60px + var(--safe-top)); padding-bottom: 20px; }
-  .hero-mascot { width: 64px; height: 64px; font-size: 32px; margin-bottom: 12px; }
-  .hero h1 { font-size: 24px; }
-  .bubble-container { margin: 12px 0; }
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{height:100%;-webkit-text-size-adjust:100%}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif;
+  background:#F5F0E8;color:#2D3436;line-height:1.5;min-height:100%;
+  overflow:hidden;position:fixed;width:100%;height:100%;
+}
+:root{
+  --green:#2D5F3E;--green-light:#4A8C62;--green-pale:#E8F0E8;
+  --cream:#F5F0E8;--cream-dark:#E8DFD0;
+  --brown:#8B6F47;--brown-light:#A68B5B;
+  --orange:#E8944A;--orange-light:#F0A85C;
+  --red-soft:#D4726A;--blue-soft:#6A9FB5;--purple-soft:#9B7EB5;
+  --shadow:0 2px 12px rgba(45,95,62,0.08);
+  --shadow-lg:0 8px 24px rgba(45,95,62,0.12);
+  --radius:16px;--radius-sm:10px;
+  --safe-top:env(safe-area-inset-top,0px);
+  --safe-bottom:env(safe-area-inset-bottom,0px);
+}
+button{font-family:inherit;border:none;background:none;cursor:pointer;color:inherit}
+input,textarea{font-family:inherit;border:none;outline:none;background:none}
+
+/* ===== App Shell ===== */
+#app{display:flex;flex-direction:column;height:100%;width:100%;position:relative}
+
+/* ===== Tab Content ===== */
+.tab-content{display:none;flex:1;flex-direction:column;overflow:hidden;position:relative}
+.tab-content.active{display:flex}
+
+/* ===== Chat Tab ===== */
+#chat-tab{background:var(--cream)}
+.chat-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:calc(12px + var(--safe-top)) 16px 12px;
+  background:rgba(245,240,232,0.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(45,95,62,0.08);z-index:10;
+  flex-shrink:0;
+}
+.chat-header-left{display:flex;align-items:center;gap:10px}
+.chat-header-avatar{
+  width:36px;height:36px;border-radius:50%;background:var(--green);
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;color:#fff;
+}
+.chat-header-info h3{font-size:15px;font-weight:600;color:var(--green)}
+.chat-header-info span{font-size:11px;color:#999}
+.chat-header-btn{
+  width:32px;height:32px;border-radius:50%;background:var(--cream-dark);
+  display:flex;align-items:center;justify-content:center;font-size:16px;
+}
+
+/* Chat Messages */
+.chat-messages{
+  flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  padding:16px;padding-bottom:8px;
+  display:flex;flex-direction:column;gap:12px;
+}
+.chat-messages::-webkit-scrollbar{width:3px}
+.chat-messages::-webkit-scrollbar-thumb{background:var(--green);border-radius:2px}
+
+.msg-row{display:flex;gap:8px;max-width:85%;animation:msgIn .3s ease}
+.msg-row.bot{align-self:flex-start}
+.msg-row.user{align-self:flex-end;flex-direction:row-reverse}
+.msg-avatar{
+  width:32px;height:32px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:14px;
+  margin-top:2px;
+}
+.msg-row.bot .msg-avatar{background:var(--green);color:#fff}
+.msg-row.user .msg-avatar{background:var(--orange);color:#fff}
+.msg-bubble{
+  padding:10px 14px;border-radius:16px;font-size:14px;line-height:1.6;
+  word-break:break-word;position:relative;
+}
+.msg-row.bot .msg-bubble{background:#fff;border-top-left-radius:4px;box-shadow:0 1px 4px rgba(0,0,0,0.04)}
+.msg-row.user .msg-bubble{background:var(--green);color:#fff;border-top-right-radius:4px}
+.msg-time{font-size:10px;color:#bbb;margin-top:4px;text-align:right}
+.msg-row.bot .msg-time{text-align:left}
+
+@keyframes msgIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* Typing Indicator */
+.typing-indicator{display:flex;gap:4px;padding:12px 16px}
+.typing-dot{
+  width:6px;height:6px;border-radius:50%;background:var(--green-light);
+  animation:typingBounce 1.2s infinite;
+}
+.typing-dot:nth-child(2){animation-delay:.2s}
+.typing-dot:nth-child(3){animation-delay:.4s}
+@keyframes typingBounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
+
+/* Scene Quick Access */
+.scene-quick{
+  flex-shrink:0;padding:8px 12px;background:rgba(245,240,232,0.95);
+  border-top:1px solid rgba(45,95,62,0.06);
+  overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch;
+  display:flex;gap:8px;
+}
+.scene-quick::-webkit-scrollbar{display:none}
+.scene-quick-item{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:8px 14px;border-radius:20px;background:#fff;
+  font-size:13px;color:var(--green);white-space:nowrap;
+  border:1px solid var(--green-pale);transition:all .2s;
+  flex-shrink:0;
+}
+.scene-quick-item:active{transform:scale(.95);background:var(--green-pale)}
+.scene-quick-item .sq-emoji{font-size:16px}
+
+/* Chat Input */
+.chat-input-area{
+  flex-shrink:0;display:flex;align-items:flex-end;gap:8px;
+  padding:10px 12px calc(10px + var(--safe-bottom));
+  background:rgba(245,240,232,0.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-top:1px solid rgba(45,95,62,0.08);
+}
+.chat-input{
+  flex:1;min-height:36px;max-height:100px;padding:8px 14px;
+  border-radius:20px;background:#fff;font-size:15px;
+  border:1px solid var(--cream-dark);resize:none;
+  line-height:1.4;
+}
+.chat-input:focus{border-color:var(--green)}
+.chat-input::placeholder{color:#bbb}
+.chat-send-btn{
+  width:36px;height:36px;border-radius:50%;background:var(--green);
+  color:#fff;display:flex;align-items:center;justify-content:center;
+  font-size:16px;flex-shrink:0;transition:all .2s;
+}
+.chat-send-btn:active{transform:scale(.9)}
+.chat-send-btn.disabled{background:var(--cream-dark);color:#bbb}
+
+/* ===== Scenes Tab ===== */
+#scenes-tab{background:var(--cream)}
+.scenes-header{
+  padding:calc(20px + var(--safe-top)) 20px 16px;text-align:center;
+  background:linear-gradient(180deg,var(--green-pale) 0%,var(--cream) 100%);
+  flex-shrink:0;
+}
+.scenes-header h2{font-size:20px;font-weight:700;color:var(--green);margin-bottom:4px}
+.scenes-header p{font-size:13px;color:#888}
+.scenes-grid{
+  flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  padding:0 16px 20px;display:grid;grid-template-columns:1fr 1fr;gap:12px;
+  align-content:start;
+}
+.scene-card{
+  background:#fff;border-radius:var(--radius);padding:16px;
+  cursor:pointer;transition:all .2s;position:relative;overflow:hidden;
+  border:1px solid rgba(45,95,62,0.06);
+}
+.scene-card:active{transform:scale(.97)}
+.scene-card-icon{font-size:28px;margin-bottom:8px}
+.scene-card-name{font-size:15px;font-weight:600;color:var(--green);margin-bottom:4px}
+.scene-card-desc{font-size:12px;color:#888;line-height:1.4;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.scene-card-tag{
+  position:absolute;top:10px;right:10px;
+  font-size:10px;padding:2px 8px;border-radius:10px;
+  background:var(--green-pale);color:var(--green);
+}
+.scene-card-tag.paid{background:#FFF0E0;color:var(--orange)}
+
+/* Scene Detail Modal */
+.scene-modal{
+  display:none;position:fixed;top:0;left:0;right:0;bottom:0;
+  background:rgba(0,0,0,0.5);z-index:100;
+  align-items:flex-end;justify-content:center;
+}
+.scene-modal.show{display:flex}
+.scene-modal-content{
+  background:#fff;border-radius:20px 20px 0 0;width:100%;max-height:80vh;
+  padding:24px 20px calc(20px + var(--safe-bottom));overflow-y:auto;
+  animation:slideUp .3s ease;
+}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.scene-modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.scene-modal-header h3{font-size:18px;font-weight:600;color:var(--green)}
+.scene-modal-close{width:28px;height:28px;border-radius:50%;background:var(--cream);display:flex;align-items:center;justify-content:center;font-size:14px}
+.scene-modal-body p{font-size:14px;color:#666;line-height:1.7;margin-bottom:12px}
+.scene-modal-body .scene-meta{display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.scene-modal-body .scene-meta span{font-size:12px;padding:4px 10px;border-radius:12px;background:var(--cream)}
+.scene-modal-start{
+  width:100%;padding:14px;border-radius:var(--radius);background:var(--green);
+  color:#fff;font-size:15px;font-weight:600;margin-top:16px;
+  transition:all .2s;
+}
+.scene-modal-start:active{transform:scale(.97)}
+
+/* ===== My Tab ===== */
+#my-tab{background:var(--cream)}
+.my-header{
+  padding:calc(24px + var(--safe-top)) 20px 20px;text-align:center;
+  background:linear-gradient(180deg,var(--green-pale) 0%,var(--cream) 100%);
+  flex-shrink:0;
+}
+.my-avatar{
+  width:64px;height:64px;border-radius:50%;background:var(--green);
+  display:flex;align-items:center;justify-content:center;
+  font-size:32px;color:#fff;margin:0 auto 10px;
+  box-shadow:0 4px 12px rgba(45,95,62,0.2);
+}
+.my-header h2{font-size:18px;font-weight:600;color:var(--green);margin-bottom:2px}
+.my-header p{font-size:12px;color:#999}
+.my-content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 16px 20px}
+
+.my-section{background:#fff;border-radius:var(--radius);padding:16px;margin-bottom:12px;box-shadow:var(--shadow)}
+.my-section-title{font-size:14px;font-weight:600;color:var(--green);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+
+/* Dimensions */
+.dim-item{margin-bottom:10px}
+.dim-item:last-child{margin-bottom:0}
+.dim-item-header{display:flex;justify-content:space-between;margin-bottom:4px}
+.dim-item-header span:first-child{font-size:13px;color:#555}
+.dim-item-header span:last-child{font-size:13px;font-weight:600;color:var(--green)}
+.dim-bar{height:6px;background:var(--cream);border-radius:3px;overflow:hidden}
+.dim-bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--green-light),var(--green));width:0;transition:width 1s ease}
+
+/* Guide Steps */
+.guide-steps{display:flex;flex-direction:column;gap:12px}
+.guide-step{display:flex;gap:10px;align-items:flex-start}
+.guide-step-num{
+  width:24px;height:24px;border-radius:50%;background:var(--green-pale);
+  color:var(--green);font-size:12px;font-weight:600;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.guide-step-text{font-size:13px;color:#666;line-height:1.5}
+.guide-step-text strong{color:var(--green);font-weight:600}
+
+/* About */
+.about-links{display:flex;flex-direction:column;gap:8px}
+.about-link{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px;border-radius:var(--radius-sm);background:var(--cream);
+  font-size:14px;color:#555;
+}
+.about-link:active{background:var(--cream-dark)}
+.about-link-arrow{color:#ccc}
+
+/* ===== Bottom Tab Bar ===== */
+.tab-bar{
+  flex-shrink:0;display:flex;
+  padding:6px 0 calc(6px + var(--safe-bottom));
+  background:rgba(255,255,255,0.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-top:1px solid rgba(45,95,62,0.08);z-index:50;
+}
+.tab-bar-item{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;
+  padding:4px 0;cursor:pointer;transition:all .2s;position:relative;
+}
+.tab-bar-item .tab-icon{font-size:22px;transition:all .2s}
+.tab-bar-item .tab-label{font-size:10px;color:#999;transition:all .2s}
+.tab-bar-item.active .tab-icon{transform:scale(1.1)}
+.tab-bar-item.active .tab-label{color:var(--green);font-weight:600}
+.tab-bar-item.active::before{
+  content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:20px;height:2px;border-radius:1px;background:var(--green);
+}
+
+/* ===== Desktop (>=768px) ===== */
+@media(min-width:768px){
+  #app{max-width:480px;margin:0 auto;border-left:1px solid var(--cream-dark);border-right:1px solid var(--cream-dark)}
+  body{background:#E8DFD0}
+}
+@media(min-width:1024px){
+  #app{max-width:420px;box-shadow:var(--shadow-lg)}
+}
+
+/* ===== Landscape ===== */
+@media(max-height:500px) and (orientation:landscape){
+  .chat-header{padding:8px 16px}
+  .chat-messages{padding:8px 16px}
+  .scene-quick{padding:4px 12px}
+  .chat-input-area{padding:6px 12px}
 }
 </style>
 </head>
 <body>
+<div id="app">
 
-<!-- 导航 -->
-<nav class="nav">
-  <div class="nav-logo">
-    <div class="logo-icon">&#x1F330;</div>
-    <span>松果AI</span>
+  <!-- ===== Chat Tab ===== -->
+  <div id="chat-tab" class="tab-content active">
+    <div class="chat-header">
+      <div class="chat-header-left">
+        <div class="chat-header-avatar">🐿</div>
+        <div class="chat-header-info">
+          <h3 id="chat-role-name">松果</h3>
+          <span id="chat-role-status">在线 · 你的解压伙伴</span>
+        </div>
+      </div>
+      <button class="chat-header-btn" onclick="resetChat()" title="新对话">↻</button>
+    </div>
+
+    <div class="chat-messages" id="chat-messages">
+      <div class="msg-row bot">
+        <div class="msg-avatar">🐿</div>
+        <div class="msg-bubble">
+          嘿，你来啦~ 我是松果，你的解压小伙伴。<br><br>
+          今天过得怎么样？有什么想聊的，或者想玩个解压小游戏？<br>
+          随便说，我都在~
+        </div>
+      </div>
+    </div>
+
+    <div class="scene-quick" id="scene-quick">
+      <button class="scene-quick-item" onclick="selectScene('吐槽大会')"><span class="sq-emoji">🔥</span>吐槽大会</button>
+      <button class="scene-quick-item" onclick="selectScene('治愈聊天')"><span class="sq-emoji">🌿</span>治愈聊天</button>
+      <button class="scene-quick-item" onclick="selectScene('吵架模拟器')"><span class="sq-emoji">💢</span>吵架模拟器</button>
+      <button class="scene-quick-item" onclick="selectScene('安全宣泄')"><span class="sq-emoji">🕳</span>树洞</button>
+      <button class="scene-quick-item" onclick="selectScene('复盘引导')"><span class="sq-emoji">🧭</span>复盘引导</button>
+      <button class="scene-quick-item" onclick="selectScene('放松舱')"><span class="sq-emoji">🫧</span>放松舱</button>
+    </div>
+
+    <div class="chat-input-area">
+      <textarea class="chat-input" id="chat-input" placeholder="说点什么..." rows="1" onkeydown="handleKeyDown(event)"></textarea>
+      <button class="chat-send-btn" id="chat-send-btn" onclick="sendMessage()">➤</button>
+    </div>
   </div>
-  <div class="nav-links">
-    <a href="#scenes">场景</a>
-    <a href="#dimensions">维度</a>
-    <a href="#guide">指南</a>
+
+  <!-- ===== Scenes Tab ===== -->
+  <div id="scenes-tab" class="tab-content">
+    <div class="scenes-header">
+      <h2>解压场景</h2>
+      <p>选一个，开始玩</p>
+    </div>
+    <div class="scenes-grid" id="scenes-grid"></div>
   </div>
-</nav>
 
-<!-- 主视觉 -->
-<section class="hero">
-  <div class="hero-mascot">&#x1F43F;</div>
-  <h1>松果AI</h1>
-  <p class="subtitle">你的口袋解压伙伴</p>
-  <p class="tagline">"松一口气，换一种活法"</p>
-  <div class="bubble-container">
-    <div class="bubble"></div>
-    <div class="bubble"></div>
-    <div class="bubble"></div>
+  <!-- ===== My Tab ===== -->
+  <div id="my-tab" class="tab-content">
+    <div class="my-header">
+      <div class="my-avatar">🐿</div>
+      <h2>松果AI</h2>
+      <p>松一口气，换一种活法</p>
+    </div>
+    <div class="my-content">
+      <div class="my-section">
+        <div class="my-section-title">📊 解压维度</div>
+        <div id="dimensions"></div>
+      </div>
+      <div class="my-section">
+        <div class="my-section-title">📖 怎么玩</div>
+        <div class="guide-steps">
+          <div class="guide-step">
+            <div class="guide-step-num">1</div>
+            <div class="guide-step-text"><strong>玩</strong> — 选一个场景，和松果聊起来</div>
+          </div>
+          <div class="guide-step">
+            <div class="guide-step-num">2</div>
+            <div class="guide-step-text"><strong>记</strong> — 聊完自动生成解压成效记录</div>
+          </div>
+          <div class="guide-step">
+            <div class="guide-step-num">3</div>
+            <div class="guide-step-text"><strong>评</strong> — 看见自己的情绪变化</div>
+          </div>
+          <div class="guide-step">
+            <div class="guide-step-num">4</div>
+            <div class="guide-step-text"><strong>复</strong> — 复玩，形成日常解压习惯</div>
+          </div>
+        </div>
+      </div>
+      <div class="my-section">
+        <div class="my-section-title">关于</div>
+        <div class="about-links">
+          <div class="about-link">版本<span style="color:#999">v1.0.0</span></div>
+          <div class="about-link">松果AI · 情绪解压伙伴</div>
+        </div>
+      </div>
+    </div>
   </div>
-  <p class="bubble-label">吸 -- 停 -- 呼 --</p>
-</section>
 
-<!-- 场景选择 -->
-<section class="scenes" id="scenes">
-  <h2 class="section-title">选择你的解压方式</h2>
-  <p class="section-desc">六个场景，总有一个接住你此刻的情绪</p>
-  <div class="scene-grid">
-
-    <div class="scene-card card-vent" onclick="selectScene('vent')">
-      <div class="card-icon">&#x1F525;</div>
-      <div class="card-title">吐槽大会</div>
-      <div class="card-role">最佳损友 | 6-10轮</div>
-      <div class="card-desc">今天谁惹你了？随便骂，我帮你记仇。站在你这边，一起把堵着的气放出来。</div>
-      <div class="card-tags">
-        <span class="tag free">免费</span>
-        <span class="tag">压力释放</span>
-        <span class="tag">站队共情</span>
-      </div>
+  <!-- ===== Bottom Tab Bar ===== -->
+  <div class="tab-bar">
+    <div class="tab-bar-item active" onclick="switchTab('chat')">
+      <span class="tab-icon">💬</span>
+      <span class="tab-label">聊天</span>
     </div>
-
-    <div class="scene-card card-heal" onclick="selectScene('heal')">
-      <div class="card-icon">&#x1F33F;</div>
-      <div class="card-title">治愈聊天</div>
-      <div class="card-role">治愈倾听者 | 6-12轮</div>
-      <div class="card-desc">今天过得还好吗？想说点什么都可以，我都在。不急着给答案，先把你接住。</div>
-      <div class="card-tags">
-        <span class="tag vip">会员</span>
-        <span class="tag">温暖陪伴</span>
-        <span class="tag">情绪日记</span>
-      </div>
+    <div class="tab-bar-item" onclick="switchTab('scenes')">
+      <span class="tab-icon">🎭</span>
+      <span class="tab-label">场景</span>
     </div>
-
-    <div class="scene-card card-fight" onclick="selectScene('fight')">
-      <div class="card-icon">&#x26A1;</div>
-      <div class="card-title">吵架模拟器</div>
-      <div class="card-role">吵架对手 | 6-12轮</div>
-      <div class="card-desc">想练练怎么开口？我当那个让你不爽的人，你随便怼。吵完了，我主动和好。</div>
-      <div class="card-tags">
-        <span class="tag vip">会员</span>
-        <span class="tag">安全发火</span>
-        <span class="tag">主动和好</span>
-      </div>
+    <div class="tab-bar-item" onclick="switchTab('my')">
+      <span class="tab-icon">🐿</span>
+      <span class="tab-label">我的</span>
     </div>
-
-    <div class="scene-card card-void" onclick="selectScene('void')">
-      <div class="card-icon">&#x1F573;</div>
-      <div class="card-title">安全宣泄</div>
-      <div class="card-role">树洞 | 6-10轮</div>
-      <div class="card-desc">想说什么都行，这里只有你和我。不会评判，不会外传，都安全。</div>
-      <div class="card-tags">
-        <span class="tag vip">会员</span>
-        <span class="tag">无评判</span>
-        <span class="tag">安全容器</span>
-      </div>
-    </div>
-
-    <div class="scene-card card-reflect" onclick="selectScene('reflect')">
-      <div class="card-icon">&#x1F50D;</div>
-      <div class="card-title">复盘引导</div>
-      <div class="card-role">情绪向导 | 6-10轮</div>
-      <div class="card-desc">今天哪件事还堵在心里？不给答案，用提问帮你看清情绪的来源。</div>
-      <div class="card-tags">
-        <span class="tag vip">VIP</span>
-        <span class="tag">自我觉察</span>
-        <span class="tag">苏格拉底</span>
-      </div>
-    </div>
-
-    <div class="scene-card card-breathe" onclick="selectScene('breathe')">
-      <div class="card-icon">&#x1F32C;</div>
-      <div class="card-title">放松舱</div>
-      <div class="card-role">呼吸引导员 | 4-8轮</div>
-      <div class="card-desc">找个舒服的姿势，跟着松果的泡泡：吸--停--呼--。把紧绷的身子一点点松开。</div>
-      <div class="card-tags">
-        <span class="tag free">全员可用</span>
-        <span class="tag">身体放松</span>
-        <span class="tag">呼吸引导</span>
-      </div>
-    </div>
-
   </div>
-</section>
 
-<!-- 对话演示 -->
-<section class="chat-demo" id="chatDemo">
-  <div class="chat-header">
-    <div class="role-avatar" id="chatAvatar">&#x1F525;</div>
-    <div class="role-info">
-      <h3 id="chatRoleName">最佳损友</h3>
-      <p id="chatRoleDesc">吐槽大会</p>
-    </div>
-    <button class="close-btn" onclick="closeChat()">&#x2715;</button>
-  </div>
-  <div class="chat-body" id="chatBody"></div>
-</section>
-<div class="chat-input-area" id="chatInputArea" style="display:none;">
-  <input type="text" id="chatInput" placeholder="说点什么..." onkeypress="if(event.key==='Enter')sendMessage()">
-  <button onclick="sendMessage()">发送</button>
 </div>
 
-<!-- 五维解压维度 -->
-<section class="dimensions" id="dimensions">
-  <h2 class="section-title">五维解压维度</h2>
-  <p class="section-desc">不评判、不排名，只帮你看见自己的情绪变化</p>
-  <div class="dim-chart">
-    <div class="dim-bar">
-      <span class="dim-label">情绪识别</span>
-      <div class="dim-track"><div class="dim-fill" style="width:0%" data-target="80"></div></div>
-      <span class="dim-value">4.0</span>
+<!-- Scene Detail Modal -->
+<div class="scene-modal" id="scene-modal">
+  <div class="scene-modal-content">
+    <div class="scene-modal-header">
+      <h3 id="modal-title"></h3>
+      <button class="scene-modal-close" onclick="closeModal()">✕</button>
     </div>
-    <div class="dim-bar">
-      <span class="dim-label">共情接纳</span>
-      <div class="dim-track"><div class="dim-fill" style="width:0%" data-target="90"></div></div>
-      <span class="dim-value">4.5</span>
-    </div>
-    <div class="dim-bar">
-      <span class="dim-label">压力释放</span>
-      <div class="dim-track"><div class="dim-fill" style="width:0%" data-target="70"></div></div>
-      <span class="dim-value">3.5</span>
-    </div>
-    <div class="dim-bar">
-      <span class="dim-label">放松深度</span>
-      <div class="dim-track"><div class="dim-fill" style="width:0%" data-target="60"></div></div>
-      <span class="dim-value">3.0</span>
-    </div>
-    <div class="dim-bar">
-      <span class="dim-label">自我觉察</span>
-      <div class="dim-track"><div class="dim-fill" style="width:0%" data-target="50"></div></div>
-      <span class="dim-value">2.5</span>
-    </div>
+    <div class="scene-modal-body" id="modal-body"></div>
   </div>
-</section>
-
-<!-- 使用指南 -->
-<section class="guide" id="guide">
-  <h2 class="section-title">怎么玩</h2>
-  <p class="section-desc">四步闭环：玩 - 记 - 评 - 复</p>
-  <div class="guide-steps">
-    <div class="guide-step">
-      <div class="step-num">1</div>
-      <div class="step-content">
-        <h4>选一个场景，开始对话</h4>
-        <p>上面的六个场景，选一个最符合你此刻心情的。松果会帮你切换到对应的角色。</p>
-      </div>
-    </div>
-    <div class="guide-step">
-      <div class="step-num">2</div>
-      <div class="step-content">
-        <h4>跟角色聊，想说什么说什么</h4>
-        <p>不评判、不说教、不劝和。角色会按自己的方式接住你。想骂就骂，想哭就哭，想安静就安静。</p>
-      </div>
-    </div>
-    <div class="guide-step">
-      <div class="step-num">3</div>
-      <div class="step-content">
-        <h4>聊完自动生成效报告</h4>
-        <p>对话结束后，松果会帮你记录五维情绪状态，给出一个新看见和一个今晚能做的小事。</p>
-      </div>
-    </div>
-    <div class="guide-step">
-      <div class="step-num">4</div>
-      <div class="step-content">
-        <h4>按建议再玩，越玩越松</h4>
-        <p>根据报告建议，选一个薄弱维度再玩一次。系统会追踪你的情绪变化趋势，帮你看见自己在变好。</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 底部 -->
-<footer class="footer">
-  <p>松果AI - 不是成功就是成长</p>
-  <p>别绷着，松口气</p>
-</footer>
+</div>
 
 <script>
-// 场景数据
-const scenes = {
-  vent: {
-    icon: '\u{1F525}',
-    name: '最佳损友',
-    desc: '吐槽大会',
-    color: '#FFF3E0',
-    messages: [
-      { role: 'role', text: '来，今天谁惹你了？我当树洞，随便骂，我帮你记仇。' },
-      { role: 'user', text: '第三版了，每次都说"再调一下"。' },
-      { role: 'role', text: '啊啊啊"再调一下"这五个字我能气一整年！来，把最想怼他的话甩出来。' },
-      { role: 'user', text: '（骂完）……舒服点了。' },
-      { role: 'role', text: '骂完是不是轻松多了？呼——松松帮你把烦恼打包扔了。深吸一口气~' }
-    ]
-  },
-  heal: {
-    icon: '\u{1F33F}',
-    name: '治愈倾听者',
-    desc: '治愈聊天',
-    color: '#E8F5E9',
-    messages: [
-      { role: 'role', text: '今天过得还好吗？想说点什么都可以，我都在。' },
-      { role: 'user', text: '有点累，也不知道在累什么。' },
-      { role: 'role', text: '嗯，有时候累是说不清的。你大概是那种，明明撑着，又怕自己撑不住，对吗？' },
-      { role: 'user', text: '……对，就是这种感觉。' },
-      { role: 'role', text: '来，跟着松果的呼吸泡泡：吸——停——呼——今天也辛苦啦。' }
-    ]
-  },
-  fight: {
-    icon: '\u{26A1}',
-    name: '吵架对手',
-    desc: '吵架模拟器',
-    color: '#FCE4EC',
-    messages: [
-      { role: 'role', text: '想练练怎么开口？我当那个让你不爽的人，你随便怼。' },
-      { role: 'user', text: '你上次那事真的太过分了！' },
-      { role: 'role', text: '过分？我觉得挺正常啊，你至于吗？' },
-      { role: 'user', text: '至于！你根本不把人当回事！' },
-      { role: 'role', text: '……行吧，算你赢这次。你刚才那句，其实挺在理的。吵完了？呼——松松帮你把气吐出去了。' }
-    ]
-  },
-  void: {
-    icon: '\u{1F573}',
-    name: '树洞',
-    desc: '安全宣泄',
-    color: '#E3F2FD',
-    messages: [
-      { role: 'role', text: '想说什么都行，这里只有你和我。我是个树洞，不会说出去。' },
-      { role: 'user', text: '我其实特别怕自己什么都做不好……' },
-      { role: 'role', text: '我在听，你慢慢说。' },
-      { role: 'user', text: '明明很努力了，还是被人说不行。' },
-      { role: 'role', text: '嗯，我听到了。都安全，这里不会有人judge你。倒出来是不是轻了点？深吸一口气，松松陪你。' }
-    ]
-  },
-  reflect: {
-    icon: '\u{1F50D}',
-    name: '情绪向导',
-    desc: '复盘引导',
-    color: '#F3E5F5',
-    messages: [
-      { role: 'role', text: '今天哪件事，还堵在心里？咱慢慢理一理。' },
-      { role: 'user', text: '同事抢功那事，我还是气。' },
-      { role: 'role', text: '你刚说那句，再展开说说？如果抛开"应该大度"，你真正在意的是？' },
-      { role: 'user', text: '……我是在意我自己的努力没被看见。' },
-      { role: 'role', text: '所以你是在意"被看见"，对吗？这句新看见，先帮你在情绪日记里记着。' }
-    ]
-  },
-  breathe: {
-    icon: '\u{1F32C}',
-    name: '呼吸引导员',
-    desc: '放松舱',
-    color: '#E0F7FA',
-    messages: [
-      { role: 'role', text: '找个舒服的姿势。跟着松果的泡泡：吸——停——呼——' },
-      { role: 'role', text: '肩膀，松下来~ 下巴，松开。胸口，慢慢落。' },
-      { role: 'user', text: '（放松中）' },
-      { role: 'role', text: '走神了也没关系，回到泡泡就好。' },
-      { role: 'role', text: '深吸最后一口，呼——睁开眼。有没有轻一点？嗯，松松陪你。下次紧了，随时回来。' }
-    ]
-  }
+// ===== Scene Data =====
+const scenes = [
+  {id:'吐槽大会',emoji:'🔥',name:'最佳损友',desc:'找个AI一起痛快吐槽',detail:'把堵着的那口气放出来。最佳损友永远站你这边，不劝和、不评判，陪你一起骂完再松口气。',tag:'免费',difficulty:'★★',rounds:'6-10轮',opening:'今天谁惹你了？我当树洞，随便骂，我帮你记仇。'},
+  {id:'治愈聊天',emoji:'🌿',name:'治愈倾听者',desc:'温柔陪伴，被接住的感觉',detail:'一个温柔、安静、永远在的倾听者。不急着给答案，先把你接住。你说的话，我都听进去了。',tag:'会员',difficulty:'★★',rounds:'6-12轮',opening:'今天过得还好吗？想说点什么都可以，我都在。'},
+  {id:'吵架模拟器',emoji:'💢',name:'吵架对手',desc:'把憋着的话甩出来',detail:'你指定那个让你不爽的人，我来演。语气带刺但不过线，专门当你的安全发火桶。吵完了，我主动和好。',tag:'会员',difficulty:'★★★',rounds:'6-12轮',opening:'行，你说说，你想跟我吵什么？'},
+  {id:'安全宣泄',emoji:'🕳',name:'树洞',desc:'什么都可以说，说完就删',detail:'这里什么都可以倒出来。不评判、不追问、不留痕。你说完，我就帮你打包扔了。',tag:'会员',difficulty:'★★',rounds:'6-10轮',opening:'来吧，这里什么都可以说。说完我帮你扔了。'},
+  {id:'复盘引导',emoji:'🧭',name:'情绪向导',desc:'陪你看清情绪的来源',detail:'不急着解决，先陪你看清。那些堵着的事，到底是因为什么？我们一起慢慢拆。',tag:'VIP',difficulty:'★★★',rounds:'6-10轮',opening:'来，我们慢慢聊。刚才那件事，你最先冒出来的感受是什么？'},
+  {id:'放松舱',emoji:'🫧',name:'呼吸引导员',desc:'跟着松果一起深呼吸',detail:'什么都不用想，跟着我的节奏。吸气——停——呼气——把紧绷的身体，慢慢松下来。',tag:'免费',difficulty:'★★',rounds:'4-8轮',opening:'来，找个舒服的姿势。我们先把呼吸慢下来——'}
+];
+
+const dimensions = [
+  {name:'情绪识别',value:75},
+  {name:'共情接纳',value:85},
+  {name:'压力释放',value:60},
+  {name:'放松深度',value:70},
+  {name:'自我觉察',value:55}
+];
+
+const roleReplies = {
+  '松果':['嘿，我在这呢~','慢慢说，不着急','你今天的状态怎么样？','有什么想聊的，或者想玩个场景？'],
+  '最佳损友':['他也太离谱了吧！！','换谁都气，你受委屈了','来，把最想怼的话甩出来','骂完是不是舒服点了？'],
+  '治愈倾听者':['我在呢，慢慢说','你刚说那句，我听进去了','不用急着好起来，先陪你待一会儿','来，跟着呼吸泡泡：吸——停——呼——'],
+  '吵架对手':['你这话什么意思？','行，那你说说','我不跟你计较','……算了，不吵了。'],
+  '树洞':['说吧，这里什么都可以倒出来','我帮你记着，说完就扔','不评判，不追问','你倒出来了吗？松一点了吗？'],
+  '情绪向导':['来，我们慢慢拆','那个感受，像什么？','如果抛开应该，你真正在意的是什么？','你看见了吗？'],
+  '呼吸引导员':['吸气——1、2、3、4','停——1、2','呼气——1、2、3、4、5、6','肩膀松下来，下巴也松一松']
 };
 
-let currentScene = null;
+let currentRole = '松果';
+let messageCount = 0;
 
-function selectScene(key) {
-  currentScene = key;
-  const scene = scenes[key];
-
-  document.querySelectorAll('.scene-card').forEach(c => c.classList.remove('active'));
-  event.currentTarget.classList.add('active');
-
-  document.getElementById('chatAvatar').textContent = scene.icon;
-  document.getElementById('chatAvatar').style.background = scene.color;
-  document.getElementById('chatRoleName').textContent = scene.name;
-  document.getElementById('chatRoleDesc').textContent = scene.desc;
-
-  const chatDemo = document.getElementById('chatDemo');
-  chatDemo.classList.add('active');
-
-  const chatBody = document.getElementById('chatBody');
-  chatBody.innerHTML = '';
-
-  scene.messages.forEach((msg, i) => {
-    setTimeout(() => {
-      addMessage(msg.role, msg.text, scene.icon);
-    }, i * 500);
-  });
-
-  document.getElementById('chatInputArea').style.display = 'flex';
-
-  setTimeout(() => {
-    chatDemo.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, 200);
+// ===== Tab Switching =====
+function switchTab(tab) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-bar-item').forEach(el => el.classList.remove('active'));
+  document.getElementById(tab + '-tab').classList.add('active');
+  document.querySelectorAll('.tab-bar-item')[['chat','scenes','my'].indexOf(tab)].classList.add('active');
+  if(tab === 'my') setTimeout(animateDimensions, 300);
 }
 
-function addMessage(role, text, icon) {
-  const chatBody = document.getElementById('chatBody');
-  const msgDiv = document.createElement('div');
-  msgDiv.className = 'chat-msg ' + role;
+// ===== Chat Functions =====
+function addMessage(text, isUser) {
+  const container = document.getElementById('chat-messages');
+  const row = document.createElement('div');
+  row.className = 'msg-row ' + (isUser ? 'user' : 'bot');
+  const avatar = document.createElement('div');
+  avatar.className = 'msg-avatar';
+  avatar.textContent = isUser ? '🧑' : (currentRole === '松果' ? '🐿' : scenes.find(s => s.name === currentRole)?.emoji || '🐿');
+  const bubble = document.createElement('div');
+  bubble.className = 'msg-bubble';
+  bubble.textContent = text;
+  row.appendChild(avatar);
+  row.appendChild(bubble);
+  container.appendChild(row);
+  container.scrollTop = container.scrollHeight;
+}
 
-  const avatar = role === 'role' ? icon : '\u{1F9D1}';
-  msgDiv.innerHTML =
-    '<div class="msg-avatar">' + avatar + '</div>' +
-    '<div class="msg-bubble">' + text + '</div>';
+function showTyping() {
+  const container = document.getElementById('chat-messages');
+  const row = document.createElement('div');
+  row.className = 'msg-row bot';
+  row.id = 'typing-row';
+  const avatar = document.createElement('div');
+  avatar.className = 'msg-avatar';
+  avatar.textContent = currentRole === '松果' ? '🐿' : (scenes.find(s => s.name === currentRole)?.emoji || '🐿');
+  const indicator = document.createElement('div');
+  indicator.className = 'typing-indicator';
+  indicator.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
+  row.appendChild(avatar);
+  row.appendChild(indicator);
+  container.appendChild(row);
+  container.scrollTop = container.scrollHeight;
+}
 
-  chatBody.appendChild(msgDiv);
-  chatBody.scrollTop = chatBody.scrollHeight;
+function removeTyping() {
+  const el = document.getElementById('typing-row');
+  if(el) el.remove();
 }
 
 function sendMessage() {
-  const input = document.getElementById('chatInput');
+  const input = document.getElementById('chat-input');
   const text = input.value.trim();
-  if (!text) return;
-
-  const scene = scenes[currentScene];
-  addMessage('user', text, scene.icon);
+  if(!text) return;
+  addMessage(text, true);
   input.value = '';
-
+  input.style.height = 'auto';
+  messageCount++;
+  showTyping();
   setTimeout(() => {
-    const replies = {
-      vent: ['他也太离谱了吧！！换谁都气。', '你敏感个啥，换谁都气。', '骂完是不是舒服点了？来，深吸一口气~'],
-      heal: ['我在呢，慢慢说。', '不用急着好起来，先陪你待一会儿。', '你刚说那句，我听进去了。'],
-      fight: ['你这话什么意思？说出来啊。', '行，那你倒是说个理由？', '……行吧，算你赢这次。'],
-      void: ['我在听，你慢慢说。', '都安全，这里不会有人judge你。', '嗯，我听到了，继续。'],
-      reflect: ['你刚说那句，再展开说说？', '如果抛开"应该"，你真正在意的是？', '所以你是在意……对吗？'],
-      breathe: ['吸——停两秒——呼——', '肩膀，松下来~', '走神了也没关系，回到泡泡就好。']
-    };
-    const replyList = replies[currentScene] || replies.vent;
-    const reply = replyList[Math.floor(Math.random() * replyList.length)];
-    addMessage('role', reply, scene.icon);
-  }, 600);
+    removeTyping();
+    const replies = roleReplies[currentRole] || roleReplies['松果'];
+    const reply = replies[Math.floor(Math.random() * replies.length)];
+    addMessage(reply, false);
+  }, 800 + Math.random() * 800);
 }
 
-function closeChat() {
-  document.getElementById('chatDemo').classList.remove('active');
-  document.getElementById('chatInputArea').style.display = 'none';
-  document.querySelectorAll('.scene-card').forEach(c => c.classList.remove('active'));
-  currentScene = null;
-  document.getElementById('scenes').scrollIntoView({ behavior: 'smooth' });
-}
-
-// 维度条动画
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      document.querySelectorAll('.dim-fill').forEach(bar => {
-        const target = bar.getAttribute('data-target');
-        bar.style.width = target + '%';
-      });
-      observer.disconnect();
-    }
-  });
-}, { threshold: 0.3 });
-
-observer.observe(document.querySelector('.dim-chart'));
-
-// 平滑滚动
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-  anchor.addEventListener('click', function(e) {
+function handleKeyDown(e) {
+  if(e.key === 'Enter' && !e.shiftKey) {
     e.preventDefault();
-    const target = document.querySelector(this.getAttribute('href'));
-    if (target) target.scrollIntoView({ behavior: 'smooth' });
+    sendMessage();
+  }
+}
+
+function selectScene(sceneId) {
+  const scene = scenes.find(s => s.id === sceneId);
+  if(!scene) return;
+  currentRole = scene.name;
+  document.getElementById('chat-role-name').textContent = scene.name;
+  document.getElementById('chat-role-status').textContent = scene.desc;
+  switchTab('chat');
+  setTimeout(() => {
+    showTyping();
+    setTimeout(() => {
+      removeTyping();
+      addMessage(scene.opening, false);
+    }, 600);
+  }, 300);
+}
+
+function resetChat() {
+  currentRole = '松果';
+  messageCount = 0;
+  document.getElementById('chat-role-name').textContent = '松果';
+  document.getElementById('chat-role-status').textContent = '在线 · 你的解压伙伴';
+  const container = document.getElementById('chat-messages');
+  container.innerHTML = '';
+  addMessage('嘿，你又来啦~ 今天想聊点什么？', false);
+}
+
+// ===== Scenes Grid =====
+function renderScenes() {
+  const grid = document.getElementById('scenes-grid');
+  grid.innerHTML = '';
+  scenes.forEach(s => {
+    const card = document.createElement('div');
+    card.className = 'scene-card';
+    card.onclick = () => openSceneModal(s);
+    card.innerHTML = `
+      <span class="scene-card-tag ${s.tag === '免费' ? '' : 'paid'}">${s.tag}</span>
+      <div class="scene-card-icon">${s.emoji}</div>
+      <div class="scene-card-name">${s.id}</div>
+      <div class="scene-card-desc">${s.desc}</div>
+    `;
+    grid.appendChild(card);
   });
+}
+
+function openSceneModal(scene) {
+  document.getElementById('modal-title').textContent = scene.id;
+  document.getElementById('modal-body').innerHTML = `
+    <div class="scene-meta">
+      <span>🎭 ${scene.name}</span>
+      <span>难度 ${scene.difficulty}</span>
+      <span>💬 ${scene.rounds}</span>
+      <span>${scene.tag === '免费' ? '🆓 免费' : '💎 ' + scene.tag}</span>
+    </div>
+    <p>${scene.detail}</p>
+    <p style="font-size:13px;color:var(--brown);background:var(--cream);padding:10px 14px;border-radius:10px;margin-top:8px">
+      💬 开场白：「${scene.opening}」
+    </p>
+    <button class="scene-modal-start" onclick="startScene('${scene.id}')">开始对话</button>
+  `;
+  document.getElementById('scene-modal').classList.add('show');
+}
+
+function closeModal() {
+  document.getElementById('scene-modal').classList.remove('show');
+}
+
+function startScene(sceneId) {
+  closeModal();
+  selectScene(sceneId);
+}
+
+// ===== Dimensions =====
+function renderDimensions() {
+  const container = document.getElementById('dimensions');
+  container.innerHTML = '';
+  dimensions.forEach(d => {
+    const item = document.createElement('div');
+    item.className = 'dim-item';
+    item.innerHTML = `
+      <div class="dim-item-header"><span>${d.name}</span><span>${d.value}%</span></div>
+      <div class="dim-bar"><div class="dim-bar-fill" data-width="${d.value}"></div></div>
+    `;
+    container.appendChild(item);
+  });
+}
+
+function animateDimensions() {
+  document.querySelectorAll('.dim-bar-fill').forEach(el => {
+    el.style.width = el.dataset.width + '%';
+  });
+}
+
+// ===== Init =====
+renderScenes();
+renderDimensions();
+
+// Close modal on backdrop click
+document.getElementById('scene-modal').addEventListener('click', function(e) {
+  if(e.target === this) closeModal();
+});
+
+// Auto-resize textarea
+document.getElementById('chat-input').addEventListener('input', function() {
+  this.style.height = 'auto';
+  this.style.height = Math.min(this.scrollHeight, 100) + 'px';
 });
 </script>
-
 </body>
 </html>
