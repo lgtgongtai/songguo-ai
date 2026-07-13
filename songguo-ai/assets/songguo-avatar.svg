@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- 金黄色圆形背景 -->
+  <circle cx="100" cy="100" r="95" fill="#D4A843"/>
+  
+  <!-- 松鼠身体 -->
+  <ellipse cx="100" cy="130" rx="35" ry="40" fill="#8B6914"/>
+  
+  <!-- 松鼠头部 -->
+  <circle cx="100" cy="85" r="30" fill="#8B6914"/>
+  
+  <!-- 左耳朵 -->
+  <ellipse cx="78" cy="65" rx="12" ry="18" fill="#8B6914" transform="rotate(-20 78 65)"/>
+  <ellipse cx="78" cy="65" rx="7" ry="12" fill="#D4A843" transform="rotate(-20 78 65)"/>
+  
+  <!-- 右耳朵 -->
+  <ellipse cx="122" cy="65" rx="12" ry="18" fill="#8B6914" transform="rotate(20 122 65)"/>
+  <ellipse cx="122" cy="65" rx="7" ry="12" fill="#D4A843" transform="rotate(20 122 65)"/>
+  
+  <!-- 眼睛 -->
+  <circle cx="90" cy="82" r="5" fill="#2C1810"/>
+  <circle cx="110" cy="82" r="5" fill="#2C1810"/>
+  <circle cx="91" cy="80" r="2" fill="white"/>
+  <circle cx="111" cy="80" r="2" fill="white"/>
+  
+  <!-- 鼻子 -->
+  <ellipse cx="100" cy="92" rx="4" ry="3" fill="#2C1810"/>
+  
+  <!-- 嘴巴 -->
+  <path d="M 95 96 Q 100 100 105 96" stroke="#2C1810" stroke-width="2" fill="none"/>
+  
+  <!-- 腮红 -->
+  <circle cx="82" cy="92" r="6" fill="#E8A87C" opacity="0.6"/>
+  <circle cx="118" cy="92" r="6" fill="#E8A87C" opacity="0.6"/>
+  
+  <!-- 大尾巴 -->
+  <path d="M 130 120 Q 160 100 155 140 Q 150 170 120 160 Q 140 150 135 130 Z" fill="#8B6914"/>
+  <path d="M 132 125 Q 155 110 150 140 Q 145 160 122 155 Q 138 148 134 132 Z" fill="#D4A843" opacity="0.5"/>
+  
+  <!-- 前爪 -->
+  <ellipse cx="85" cy="145" rx="8" ry="12" fill="#8B6914"/>
+  <ellipse cx="115" cy="145" rx="8" ry="12" fill="#8B6914"/>
+  
+  <!-- 松果（抱在怀里） -->
+  <ellipse cx="100" cy="135" rx="12" ry="15" fill="#6B4423"/>
+  <path d="M 92 128 L 95 132 M 96 126 L 98 130 M 100 125 L 100 129 M 104 126 L 102 130 M 108 128 L 105 132" stroke="#8B6914" stroke-width="1.5"/>
+  <path d="M 92 135 L 95 138 M 96 133 L 98 136 M 100 132 L 100 135 M 104 133 L 102 136 M 108 135 L 105 138" stroke="#8B6914" stroke-width="1.5"/>
+  <path d="M 92 142 L 95 145 M 96 140 L 98 143 M 100 139 L 100 142 M 104 140 L 102 143 M 108 142 L 105 145" stroke="#8B6914" stroke-width="1.5"/>
+</svg>
