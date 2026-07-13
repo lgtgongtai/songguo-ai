@@ -554,12 +554,12 @@ async function sendMessage() {
   showTyping();
   
   try {
-    const response = await fetch(API_URL + '/chat', {
+    const response = await fetch(API_URL + '/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         message: text,
-        session_id: sessionId,
+        session_id: sessionId || 'session_' + Date.now(),
         role: currentRole
       })
     });
@@ -612,10 +612,10 @@ async function resetChat() {
   
   // Call backend to reset session
   try {
-    await fetch(API_URL + '/reset', {
+    await fetch(API_URL + '/api/switch-role', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ session_id: sessionId })
+      body: JSON.stringify({ session_id: sessionId || 'session_' + Date.now(), target_role: '松果' })
     });
   } catch (e) {}
   
