@@ -442,6 +442,10 @@ const dimensions = [
   {name:'自我觉察',value:55}
 ];
 
+// ===== API Configuration =====
+const API_URL = 'https://songguoai-kvulvmggfe.cn-hangzhou.fcapp.run';
+let sessionId = null;
+
 const roleReplies = {
   '松果':[
     '尼采说凝视深渊时深渊也在凝视你——但咱不凝视，咱直接松口气~',
@@ -539,7 +543,7 @@ function removeTyping() {
   if(el) el.remove();
 }
 
-function sendMessage() {
+async function sendMessage() {
   const input = document.getElementById('chat-input');
   const text = input.value.trim();
   if(!text) return;
@@ -548,12 +552,29 @@ function sendMessage() {
   input.style.height = 'auto';
   messageCount++;
   showTyping();
-  setTimeout(() => {
+  
+  try {
+    const response = await fetch(API_URL + '/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: text,
+        session_id: sessionId,
+        role: currentRole
+      })
+    });
+    
+    const data = await response.json();
     removeTyping();
+    sessionId = data.session_id;
+    addMessage(data.reply, false);
+  } catch (error) {
+    removeTyping();
+    // Fallback to local replies if API fails
     const replies = roleReplies[currentRole] || roleReplies['松果'];
     const reply = replies[Math.floor(Math.random() * replies.length)];
     addMessage(reply, false);
-  }, 800 + Math.random() * 800);
+  }
 }
 
 function handleKeyDown(e) {
@@ -563,10 +584,11 @@ function handleKeyDown(e) {
   }
 }
 
-function selectScene(sceneId) {
+async function selectScene(sceneId) {
   const scene = scenes.find(s => s.id === sceneId);
   if(!scene) return;
   currentRole = scene.name;
+  sessionId = null; // Reset session when switching roles
   document.getElementById('chat-role-name').textContent = scene.name;
   document.getElementById('chat-role-status').textContent = scene.desc;
   switchTab('chat');
@@ -579,13 +601,24 @@ function selectScene(sceneId) {
   }, 300);
 }
 
-function resetChat() {
+async function resetChat() {
   currentRole = '松果';
   messageCount = 0;
+  sessionId = null;
   document.getElementById('chat-role-name').textContent = '松果';
   document.getElementById('chat-role-status').textContent = '在线 · 你的解压伙伴';
   const container = document.getElementById('chat-messages');
   container.innerHTML = '';
+  
+  // Call backend to reset session
+  try {
+    await fetch(API_URL + '/reset', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ session_id: sessionId })
+    });
+  } catch (e) {}
+  
   addMessage('嘿，你又来啦~ 今天想聊点什么？', false);
 }
 
