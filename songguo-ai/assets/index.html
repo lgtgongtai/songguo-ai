@@ -139,36 +139,52 @@ input,textarea{font-family:inherit;border:none;outline:none;background:none}
 .chat-send-btn:active{transform:scale(.9)}
 .chat-send-btn.disabled{background:var(--cream-dark);color:#bbb}
 
-/* ===== Scenes Tab ===== */
-#scenes-tab{background:var(--cream)}
-.scenes-header{
+/* ===== Records Tab ===== */
+#records-tab{background:var(--cream)}
+.records-header{
   padding:calc(20px + var(--safe-top)) 20px 16px;text-align:center;
   background:linear-gradient(180deg,var(--gold-pale) 0%,var(--cream) 100%);
   flex-shrink:0;
 }
-.scenes-header h2{font-size:20px;font-weight:700;color:var(--brown);margin-bottom:4px}
-.scenes-header p{font-size:13px;color:#888}
-.scenes-grid{
+.records-header h2{font-size:20px;font-weight:700;color:var(--brown);margin-bottom:4px}
+.records-header p{font-size:13px;color:#888}
+.records-list{
   flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;
-  padding:0 16px 20px;display:grid;grid-template-columns:1fr 1fr;gap:12px;
-  align-content:start;
+  padding:0 16px 20px;
 }
-.scene-card{
-  background:#fff;border-radius:var(--radius);padding:16px;
-  cursor:pointer;transition:all .2s;position:relative;overflow:hidden;
+.record-card{
+  background:#fff;border-radius:var(--radius);padding:16px;margin-bottom:12px;
   border:1px solid rgba(212,168,67,0.10);
+  box-shadow:0 2px 8px rgba(0,0,0,0.04);
 }
-.scene-card:active{transform:scale(.97)}
-.scene-card-icon{font-size:28px;margin-bottom:8px}
-.scene-card-name{font-size:15px;font-weight:600;color:var(--brown);margin-bottom:4px}
-.scene-card-desc{font-size:12px;color:#888;line-height:1.4;
-  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.scene-card-tag{
-  position:absolute;top:10px;right:10px;
-  font-size:10px;padding:2px 8px;border-radius:10px;
-  background:var(--gold-pale);color:var(--brown);
+.record-card-header{
+  display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;
 }
-.scene-card-tag.paid{background:#FFF0E0;color:var(--orange)}
+.record-card-scene{display:flex;align-items:center;gap:8px}
+.record-card-scene-icon{
+  width:36px;height:36px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;font-size:18px;
+  background:linear-gradient(135deg,#FFF8E8,#FFE8B0);
+}
+.record-card-scene-name{font-size:15px;font-weight:600;color:var(--brown)}
+.record-card-date{font-size:12px;color:#999}
+.record-card-dimensions{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.record-dim{
+  font-size:11px;padding:3px 8px;border-radius:10px;
+  background:rgba(212,168,67,0.1);color:#B8860B;
+}
+.record-card-gains{
+  font-size:13px;color:#666;line-height:1.6;
+  padding-top:12px;border-top:1px solid #f0ebe0;
+}
+.record-card-gains strong{color:var(--brown);font-weight:600}
+.record-card-action{
+  margin-top:8px;font-size:12px;color:#B8860B;
+  background:rgba(212,168,67,0.08);padding:8px 12px;border-radius:8px;
+}
+.record-empty{text-align:center;padding:60px 20px;color:#999}
+.record-empty-icon{font-size:48px;margin-bottom:12px}
+.record-empty p{font-size:14px;margin:0}
 
 /* Scene Detail Modal */
 .scene-modal{
@@ -326,13 +342,13 @@ input,textarea{font-family:inherit;border:none;outline:none;background:none}
     </div>
   </div>
 
-  <!-- ===== Scenes Tab ===== -->
-  <div id="scenes-tab" class="tab-content">
-    <div class="scenes-header">
-      <h2>解压场景</h2>
-      <p>选一个，开始玩</p>
+  <!-- ===== Records Tab ===== -->
+  <div id="records-tab" class="tab-content">
+    <div class="records-header">
+      <h2>解压记录</h2>
+      <p>每一次对话，都是一次松口气</p>
     </div>
-    <div class="scenes-grid" id="scenes-grid"></div>
+    <div class="records-list" id="records-list"></div>
   </div>
 
   <!-- ===== My Tab ===== -->
@@ -384,9 +400,9 @@ input,textarea{font-family:inherit;border:none;outline:none;background:none}
       <span class="tab-icon">💬</span>
       <span class="tab-label">聊天</span>
     </div>
-    <div class="tab-bar-item" onclick="switchTab('scenes')">
-      <span class="tab-icon">🎭</span>
-      <span class="tab-label">场景</span>
+    <div class="tab-bar-item" onclick="switchTab('records')">
+      <span class="tab-icon">📋</span>
+      <span class="tab-label">记录</span>
     </div>
     <div class="tab-bar-item" onclick="switchTab('my')">
       <span class="tab-icon">🐿</span>
@@ -444,8 +460,9 @@ function switchTab(tab) {
   document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
   document.querySelectorAll('.tab-bar-item').forEach(el => el.classList.remove('active'));
   document.getElementById(tab + '-tab').classList.add('active');
-  document.querySelectorAll('.tab-bar-item')[['chat','scenes','my'].indexOf(tab)].classList.add('active');
+  document.querySelectorAll('.tab-bar-item')[['chat','records','my'].indexOf(tab)].classList.add('active');
   if(tab === 'my') setTimeout(animateDimensions, 300);
+  if(tab === 'records') renderRecords();
 }
 
 // ===== Chat Functions =====
@@ -601,6 +618,71 @@ function animateDimensions() {
   document.querySelectorAll('.dim-bar-fill').forEach(el => {
     el.style.width = el.dataset.width + '%';
   });
+}
+
+// ===== Records Functions =====
+const mockRecords = [
+  {
+    scene: '吐槽大会', emoji: '', date: '今天 14:30',
+    dims: ['情绪识别 4', '共情接纳 5', '压力释放 5', '放松深度 3', '自我觉察 2'],
+    gains: '把对甲方的火气全倒出来了，骂完真的舒服多了',
+    action: '今晚做个小事：喝杯温水，伸个懒腰'
+  },
+  {
+    scene: '治愈聊天', emoji: '🌿', date: '昨天 22:15',
+    dims: ['情绪识别 5', '共情接纳 5', '压力释放 3', '放松深度 4', '自我觉察 3'],
+    gains: '原来累是说不清的，但有人陪着就不那么怕了',
+    action: '今晚早点睡，明天又是新的一天'
+  },
+  {
+    scene: '吵架模拟器', emoji: '💢', date: '3天前',
+    dims: ['情绪识别 4', '共情接纳 4', '压力释放 5', '放松深度 3', '自我觉察 3'],
+    gains: '把憋了很久的话说出来了，发现说出来也没那么可怕',
+    action: '下次遇到类似情况，试试直接表达'
+  },
+  {
+    scene: '安全宣泄', emoji: '🕳', date: '1周前',
+    dims: ['情绪识别 3', '共情接纳 4', '压力释放 5', '放松深度 2', '自我觉察 2'],
+    gains: '什么都不用想，把情绪倒空就好',
+    action: '允许自己有情绪，不用急着好起来'
+  },
+  {
+    scene: '复盘引导', emoji: '🧭', date: '2周前',
+    dims: ['情绪识别 4', '共情接纳 4', '压力释放 2', '放松深度 2', '自我觉察 5'],
+    gains: '原来我一直在意的是被认可，不是事情本身',
+    action: '下次焦虑时，问问自己真正在意的是什么'
+  },
+  {
+    scene: '放松舱', emoji: '🫧', date: '2周前',
+    dims: ['情绪识别 3', '共情接纳 4', '压力释放 2', '放松深度 5', '自我觉察 1'],
+    gains: '跟着呼吸慢慢放松，身体真的轻了',
+    action: '睡前做一次呼吸练习'
+  }
+];
+
+function renderRecords() {
+  const container = document.getElementById('records-list');
+  if(!container) return;
+  container.innerHTML = mockRecords.map(r => `
+    <div class="record-card">
+      <div class="record-card-header">
+        <div class="record-card-scene">
+          <div class="record-card-scene-icon">${r.emoji}</div>
+          <div class="record-card-scene-name">${r.scene}</div>
+        </div>
+        <div class="record-card-date">${r.date}</div>
+      </div>
+      <div class="record-card-dimensions">
+        ${r.dims.map(d => `<span class="record-dim">${d}</span>`).join('')}
+      </div>
+      <div class="record-card-gains">
+        <strong>新看见：</strong>${r.gains}
+      </div>
+      <div class="record-card-action">
+        💡 ${r.action}
+      </div>
+    </div>
+  `).join('');
 }
 
 // ===== Init =====
