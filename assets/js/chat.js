@@ -100,15 +100,15 @@ function getSmartFallback(userText) {
     // 具体话题
     work: /工作|上班|老板|同事|加班|辞职|跳槽|职场|项目|任务/i.test(text),
     relationship: /恋爱|分手|失恋|对象|男朋友|女朋友|老公|老婆|婚姻|相亲|表白/i.test(text),
-    family: |父母|妈妈|爸爸|家庭|家人|孩子|儿子|女儿|婆媳|亲戚/i.test(text),
-    money: |钱|没钱|穷|工资|房贷|车贷|信用卡|债务|理财|投资/i.test(text),
-    health: |生病|身体|健康|医院|医生|药|失眠|头痛|不舒服/i.test(text),
-    future: |未来|以后|将来|前途|规划|目标|梦想|理想|人生/i.test(text),
-    self: |自己|自我|自卑|自信|性格|内向|外向|缺点|优点/i.test(text),
+    family: /父母|妈妈|爸爸|家庭|家人|孩子|儿子|女儿|婆媳|亲戚/i.test(text),
+    money: /钱|没钱|穷|工资|房贷|车贷|信用卡|债务|理财|投资/i.test(text),
+    health: /生病|身体|健康|医院|医生|药|失眠|头痛|不舒服/i.test(text),
+    future: /未来|以后|将来|前途|规划|目标|梦想|理想|人生/i.test(text),
+    self: /自己|自我|自卑|自信|性格|内向|外向|缺点|优点/i.test(text),
     
     // 互动意图
-    greeting: |你好|嗨|hi|hello|在吗|喂|哈喽/i.test(text),
-    question: |怎么办|为什么|怎么|如何|什么|哪里|谁|何时|多少|能|可以|会|吗|呢|吧/i.test(text),
+    greeting: /你好|嗨|hi|hello|在吗|喂|哈喽/i.test(text),
+    question: /怎么办|为什么|怎么|如何|什么|哪里|谁|何时|多少|能|可以|会|吗|呢|吧/i.test(text),
     short: text.length <= 5,
     long: text.length > 50
   };
@@ -416,3 +416,12 @@ async function resetChat() {
   } catch (e) {}
   addMessage('嘿，你又来啦~ 今天想聊点什么？', false);
 }
+
+// ===== Expose functions to global scope =====
+window.sendMessage = sendMessage;
+window.handleKeyDown = handleKeyDown;
+window.toggleVoiceInput = toggleVoiceInput;
+window.selectScene = selectScene;
+window.resetChat = resetChat;
+window.showTyping = showTyping;
+window.removeTyping = removeTyping;
