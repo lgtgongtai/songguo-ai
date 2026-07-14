@@ -25,7 +25,14 @@ function addMessage(text, isUser, scenes = null) {
       avatar.textContent = userAvatar || '';
     }
   } else {
-    avatar.textContent = currentRole === '松松' ? '' : (currentRole === '松果' ? '' : scenes.find(s => s.name === currentRole)?.emoji || '');
+    if(currentRole === '松松' || currentRole === '松果') {
+      avatar.textContent = '';
+    } else if(scenes) {
+      const scene = scenes.find(s => s.name === currentRole);
+      avatar.textContent = scene ? scene.emoji : '';
+    } else {
+      avatar.textContent = '';
+    }
   }
   const bubble = document.createElement('div');
   bubble.className = 'msg-bubble';
