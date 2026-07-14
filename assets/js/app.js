@@ -19,6 +19,27 @@ function switchTab(tab) {
   if(tab === 'records') renderRecords();
 }
 
+// ===== 松松客服引导话术 =====
+const songSongGuides = {
+  opening: '嗨，我是松松，你的解压向导~ ️\n\n我可以帮你：\n🔥 <b>吐槽大会</b>（免费）— 找个AI一起痛快吐槽\n🌿 <b>治愈聊天</b>（会员）— 温柔陪伴，被接住的感觉\n💢 <b>吵架模拟器</b>（会员）— 把憋着的话甩出来\n🕳 <b>树洞</b>（会员）— 什么都可以说，说完就删\n🧭 <b>复盘引导</b>（VIP）— 陪你看清情绪的来源\n🫧 <b>放松舱</b>（免费）— 跟着松果一起深呼吸\n\n你想试试哪个？或者直接跟我说说你的心情~',
+  
+  recommend: {
+    '生气': '听起来你现在有点火大~ 推荐你去<b>吐槽大会</b>（免费）发泄一下，或者去<b>吵架模拟器</b>（会员）把憋着的话甩出来！',
+    '累': '感觉你今天挺累的~ 推荐去<b>治愈聊天</b>（会员）让松果陪陪你，或者去<b>放松舱</b>（免费）做个深呼吸~',
+    '焦虑': '焦虑的时候，可以先去<b>放松舱</b>（免费）把呼吸慢下来，或者去<b>复盘引导</b>（VIP）看看焦虑的来源~',
+    '难过': '难过的时候，去<b>治愈聊天</b>（会员）吧，松果会温柔地接住你~ 或者去<b>树洞</b>（会员）把情绪倒出来~',
+    '压力': '压力大的话，推荐<b>吐槽大会</b>（免费）先发泄一下，或者去<b>树洞</b>（会员）把压力倒出来~',
+    'default': '我理解你的感受~ 要不要试试我们的场景？\n🔥 吐槽大会（免费）\n🫧 放松舱（免费）\n🌿 治愈聊天（会员）\n💢 吵架模拟器（会员）\n🕳 树洞（会员）\n🧭 复盘引导（VIP）\n\n你想试试哪个？'
+  },
+  
+  membership: {
+    '会员': '这个场景需要<b>会员</b>才能使用哦~ 开通会员后可以无限使用所有会员场景，还能解锁更多专属功能！\n\n现在开通会员，立享：\n✅ 6大场景无限畅聊\n✅ 专属角色皮肤\n✅ 优先客服支持\n\n点击这里开通会员 →',
+    'VIP': '这个场景需要<b>VIP</b>才能使用哦~ VIP是我们的最高等级，包含所有会员权益，还能解锁：\n\n✅ 复盘引导（深度情绪分析）\n✅ 专属心理报告\n✅ 1对1专家咨询\n\n点击这里开通VIP →'
+  },
+  
+  fallback: ['我理解你的感受~ 要不要选一个场景聊聊？', '听起来你今天有些心事，选个场景跟我说说吧~', '没关系，慢慢来。选一个场景，我们开始解压~', '我在听呢~ 选一个场景，让我更好地帮助你~']
+};
+
 // ===== Home Page Functions =====
 function enterScene(sceneId) {
   const scene = scenes.find(s => s.id === sceneId);
@@ -38,7 +59,7 @@ function enterScene(sceneId) {
 }
 
 function chatWithSongSong() {
-  currentRole = '松果';
+  currentRole = '松松';
   sessionId = null;
   messageCount = 0;
   document.getElementById('chat-role-name').textContent = '松松';
@@ -48,7 +69,7 @@ function chatWithSongSong() {
   switchTab('chat');
   setTimeout(() => {
     showTyping();
-    setTimeout(() => { removeTyping(); addMessage('嗨，我是松松，你的系统客服~ 有什么可以帮你的吗？', false); }, 600);
+    setTimeout(() => { removeTyping(); addMessage(songSongGuides.opening, false); }, 600);
   }, 300);
 }
 
@@ -72,12 +93,12 @@ function animateDimensions() {
 
 // ===== Records =====
 const mockRecords = [
-  {scene:'吐槽大会',emoji:'🔥',date:'今天 14:30',dims:['情绪识别 4','共情接纳 5','压力释放 5','放松深度 3','自我觉察 2'],gains:'把对甲方的火气全倒出来了，骂完真的舒服多了',action:'今晚做个小事：喝杯温水，伸个懒腰'},
-  {scene:'治愈聊天',emoji:'🌿',date:'昨天 22:15',dims:['情绪识别 5','共情接纳 5','压力释放 3','放松深度 4','自我觉察 3'],gains:'原来累是说不清的，但有人陪着就不那么怕了',action:'今晚早点睡，明天又是新的一天'},
+  {scene:'吐槽大会',emoji:'',date:'今天 14:30',dims:['情绪识别 4','共情接纳 5','压力释放 5','放松深度 3','自我觉察 2'],gains:'把对甲方的火气全倒出来了，骂完真的舒服多了',action:'今晚做个小事：喝杯温水，伸个懒腰'},
+  {scene:'治愈聊天',emoji:'',date:'昨天 22:15',dims:['情绪识别 5','共情接纳 5','压力释放 3','放松深度 4','自我觉察 3'],gains:'原来累是说不清的，但有人陪着就不那么怕了',action:'今晚早点睡，明天又是新的一天'},
   {scene:'吵架模拟器',emoji:'💢',date:'3天前',dims:['情绪识别 4','共情接纳 4','压力释放 5','放松深度 3','自我觉察 3'],gains:'把憋了很久的话说出来了，发现说出来也没那么可怕',action:'下次遇到类似情况，试试直接表达'},
   {scene:'安全宣泄',emoji:'🕳',date:'1周前',dims:['情绪识别 3','共情接纳 4','压力释放 5','放松深度 2','自我觉察 2'],gains:'什么都不用想，把情绪倒空就好',action:'允许自己有情绪，不用急着好起来'},
   {scene:'复盘引导',emoji:'🧭',date:'2周前',dims:['情绪识别 4','共情接纳 4','压力释放 2','放松深度 2','自我觉察 5'],gains:'原来我一直在意的是被认可，不是事情本身',action:'下次焦虑时，问问自己真正在意的是什么'},
-  {scene:'放松舱',emoji:'🫧',date:'2周前',dims:['情绪识别 3','共情接纳 4','压力释放 2','放松深度 5','自我觉察 1'],gains:'跟着呼吸慢慢放松，身体真的轻了',action:'睡前做一次呼吸练习'}
+  {scene:'放松舱',emoji:'',date:'2周前',dims:['情绪识别 3','共情接纳 4','压力释放 2','放松深度 5','自我觉察 1'],gains:'跟着呼吸慢慢放松，身体真的轻了',action:'睡前做一次呼吸练习'}
 ];
 
 function renderRecords() {
@@ -89,7 +110,7 @@ function renderRecords() {
 // ===== Scene Modal =====
 function openSceneModal(scene) {
   document.getElementById('modal-title').textContent = scene.id;
-  document.getElementById('modal-body').innerHTML = '<div class="scene-meta"><span>🎭 ' + scene.name + '</span><span>难度 ' + scene.difficulty + '</span><span>💬 ' + scene.rounds + '</span><span>' + (scene.tag === '免费' ? '🆓 免费' : '💎 ' + scene.tag) + '</span></div><p>' + scene.detail + '</p><p style="font-size:13px;color:var(--brown);background:var(--cream);padding:10px 14px;border-radius:10px;margin-top:8px">💬 开场白：「' + scene.opening + '」</p><button class="scene-modal-start" onclick="startScene(\'' + scene.id + '\')">开始对话</button>';
+  document.getElementById('modal-body').innerHTML = '<div class="scene-meta"><span> ' + scene.name + '</span><span>难度 ' + scene.difficulty + '</span><span>💬 ' + scene.rounds + '</span><span>' + (scene.tag === '免费' ? ' 免费' : '💎 ' + scene.tag) + '</span></div><p>' + scene.detail + '</p><p style="font-size:13px;color:var(--brown);background:var(--cream);padding:10px 14px;border-radius:10px;margin-top:8px"> 开场白：「' + scene.opening + '」</p><button class="scene-modal-start" onclick="startScene(\'' + scene.id + '\')">开始对话</button>';
   document.getElementById('scene-modal').classList.add('show');
 }
 function closeModal() { document.getElementById('scene-modal').classList.remove('show'); }

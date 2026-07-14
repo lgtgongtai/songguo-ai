@@ -14,10 +14,10 @@ function addMessage(text, isUser) {
   row.className = 'msg-row ' + (isUser ? 'user' : 'bot');
   const avatar = document.createElement('div');
   avatar.className = 'msg-avatar';
-  avatar.textContent = isUser ? '🧑' : (currentRole === '松果' ? '🐿' : scenes.find(s => s.name === currentRole)?.emoji || '🐿');
+  avatar.textContent = isUser ? '' : (currentRole === '松松' ? '🐿' : (currentRole === '松果' ? '🐿' : scenes.find(s => s.name === currentRole)?.emoji || ''));
   const bubble = document.createElement('div');
   bubble.className = 'msg-bubble';
-  bubble.textContent = text;
+  bubble.innerHTML = text.replace(/\n/g, '<br>');
   row.appendChild(avatar); row.appendChild(bubble);
   container.appendChild(row);
   container.scrollTop = container.scrollHeight;
@@ -50,6 +50,17 @@ async function sendMessage() {
   input.value = ''; input.style.height = 'auto';
   messageCount++;
   showTyping();
+  
+  // 松松客服引导逻辑
+  if(currentRole === '松松') {
+    setTimeout(() => {
+      removeTyping();
+      const reply = getSongSongReply(text);
+      addMessage(reply, false);
+    }, 800);
+    return;
+  }
+  
   try {
     const response = await fetch(API_URL + '/api/chat', {
       method: 'POST',
@@ -68,6 +79,55 @@ async function sendMessage() {
     const reply = replies[Math.floor(Math.random() * replies.length)];
     addMessage(reply, false);
   }
+}
+
+// ===== 松松客服回复逻辑 =====
+function getSongSongReply(userText) {
+  const text = userText.toLowerCase();
+  
+  // 检测会员/VIP意图
+  if(text.includes('会员') || text.includes('vip') || text.includes('付费') || text.includes('开通')) {
+    return songSongGuides.membership['会员'];
+  }
+  if(text.includes('复盘') || text.includes('深度')) {
+    return songSongGuides.membership['VIP'];
+  }
+  
+  // 检测场景选择意图
+  if(text.includes('吐槽') || text.includes('发泄') || text.includes('骂')) {
+    return '好的！<b>吐槽大会</b>是免费的，现在就可以去~ 点击左上角←返回首页，选择🔥吐槽大会，我们开始发泄！';
+  }
+  if(text.includes('治愈') || text.includes('陪伴') || text.includes('温柔')) {
+    return '<b>治愈聊天</b>需要会员哦~ 开通会员后可以无限使用，还有专属角色皮肤和优先客服支持！点击这里开通会员 →';
+  }
+  if(text.includes('吵架') || text.includes('模拟') || text.includes('')) {
+    return '<b>吵架模拟器</b>需要会员哦~ 把憋着的话甩出来，超解压！开通会员即可使用 →';
+  }
+  if(text.includes('树洞') || text.includes('秘密') || text.includes('删除')) {
+    return '<b>树洞</b>需要会员哦~ 什么都可以说，说完就删，绝对安全！开通会员即可使用 →';
+  }
+  if(text.includes('复盘') || text.includes('分析') || text.includes('看清')) {
+    return '<b>复盘引导</b>是VIP专属场景哦~ 包含深度情绪分析和专属心理报告！点击这里开通VIP →';
+  }
+  if(text.includes('放松') || text.includes('呼吸') || text.includes('深呼吸')) {
+    return '好的！<b>放松舱</b>是免费的，跟着松果一起深呼吸~ 点击左上角←返回首页，选择放松舱，我们开始放松！';
+  }
+  
+  // 检测情绪关键词，推荐场景
+  for(const keyword in songSongGuides.recommend) {
+    if(keyword !== 'default' && text.includes(keyword)) {
+      return songSongGuides.recommend[keyword];
+    }
+  }
+  
+  // 检测场景选择
+  if(text.includes('场景') || text.includes('哪个') || text.includes('试试') || text.includes('选择')) {
+    return songSongGuides.opening;
+  }
+  
+  // 默认回复
+  const fallback = songSongGuides.fallback[Math.floor(Math.random() * songSongGuides.fallback.length)];
+  return fallback + '\n\n🔥 吐槽大会（免费）\n🫧 放松舱（免费）\n🌿 治愈聊天（会员）\n💢 吵架模拟器（会员）\n🕳 树洞（会员）\n🧭 复盘引导（VIP）';
 }
 
 function handleKeyDown(e) {
