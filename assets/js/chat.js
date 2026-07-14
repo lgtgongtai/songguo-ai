@@ -84,95 +84,195 @@ async function sendMessage() {
 function getSmartFallback(userText) {
   const text = userText.trim();
   
-  // 检测用户情绪
-  const isNegative = /烦|累|哭|难过|痛苦|崩溃|绝望|生气|愤怒|焦虑|担心|害怕|孤独|寂寞|无聊|压力|郁闷|烦躁|抓狂|疯了/i.test(text);
-  const isPositive = /开心|高兴|快乐|幸福|棒|好|谢谢|感谢|哈哈|嘻嘻|嗯嗯|好的|可以|不错/i.test(text);
-  const isQuestion = /怎么办|为什么|怎么|如何|什么|哪里|谁|何时|多少|能|可以|会/i.test(text);
-  const isShort = text.length <= 5;
+  // 意图识别 - 理解用户在说什么
+  const intents = {
+    // 情绪表达
+    angry: /生气|愤怒|火大|烦死了|气死|讨厌|恨|不爽|恼火/i.test(text),
+    sad: /难过|伤心|哭|流泪|悲痛|心酸|委屈|想哭|流泪/i.test(text),
+    tired: /累|疲惫|疲倦|好累|太累|累死了|撑不住|扛不住/i.test(text),
+    anxious: /焦虑|担心|害怕|紧张|不安|慌|忐忑|七上八下/i.test(text),
+    lonely: /孤独|寂寞|孤单|一个人|没人陪|没人懂|没人理解/i.test(text),
+    stressed: /压力|压力大|压垮|喘不过气|受不了|崩溃|快疯了/i.test(text),
+    confused: /迷茫|困惑|不知道|怎么办|如何选择|纠结|犹豫/i.test(text),
+    happy: /开心|高兴|快乐|幸福|棒|太好了|不错|满意|满足/i.test(text),
+    grateful: /谢谢|感谢|感激|感恩|谢谢你|太感谢/i.test(text),
+    
+    // 具体话题
+    work: /工作|上班|老板|同事|加班|辞职|跳槽|职场|项目|任务/i.test(text),
+    relationship: /恋爱|分手|失恋|对象|男朋友|女朋友|老公|老婆|婚姻|相亲|表白/i.test(text),
+    family: |父母|妈妈|爸爸|家庭|家人|孩子|儿子|女儿|婆媳|亲戚/i.test(text),
+    money: |钱|没钱|穷|工资|房贷|车贷|信用卡|债务|理财|投资/i.test(text),
+    health: |生病|身体|健康|医院|医生|药|失眠|头痛|不舒服/i.test(text),
+    future: |未来|以后|将来|前途|规划|目标|梦想|理想|人生/i.test(text),
+    self: |自己|自我|自卑|自信|性格|内向|外向|缺点|优点/i.test(text),
+    
+    // 互动意图
+    greeting: |你好|嗨|hi|hello|在吗|喂|哈喽/i.test(text),
+    question: |怎么办|为什么|怎么|如何|什么|哪里|谁|何时|多少|能|可以|会|吗|呢|吧/i.test(text),
+    short: text.length <= 5,
+    long: text.length > 50
+  };
   
-  // 回复风格池
-  const styles = {
-    // 暖心安慰型（大哥哥/大姐姐）
-    warm: [
-      `嗯，我听着呢。${text.includes('烦') ? '烦心事说出来就好一半了。' : text.includes('累') ? '累了就歇会儿，不用一直撑着。' : text.includes('哭') ? '想哭就哭出来，我在这儿陪着你。' : '慢慢说，我在。'}`,
-      `抱抱你～${isNegative ? '这种感觉确实不好受，但你不是一个人。' : '有什么想说的，我都听着。'}`,
-      `我懂你的感受。${isNegative ? '有时候就是会觉得特别难，但熬过去就好了。' : '跟我说说，怎么了？'}`,
-      `没事的，${isNegative ? '情绪来了就让它来，过去了就让它过去。' : '我在呢，你想说什么都可以。'}`,
-      `嗯嗯，我理解。${isNegative ? '这种感觉我也经历过，确实挺难受的。' : '你继续说，我认真听着。'}`
+  // 智能回复库 - 根据意图匹配
+  const replyDB = {
+    // 愤怒情绪
+    angry: [
+      `谁惹你生气了？跟我说说，我帮你一起骂！`,
+      `火气这么大，看来是真被气到了。来，深呼吸，慢慢说怎么回事。`,
+      `生气是正常的，别憋着。说出来，心里会好受点。`,
+      `我懂这种感觉，换谁都会生气。但生气归生气，别气坏了自己。`
     ],
-    // 日常聊天型（家长里短）
-    casual: [
-      `诶，${isQuestion ? '这个嘛，我觉得可以这样想——' : '说起这个，我想起个事儿——'}${text.length > 10 ? '你刚才说的挺有道理的。' : '嗯嗯，继续说～'}`,
-      `哈哈，${isPositive ? '看你这么开心我也高兴！' : isNegative ? '别太往心里去，事儿总会过去的。' : '你这话说得有意思～'}`,
-      `哎，${isQuestion ? '这事儿吧，得慢慢来。' : '生活就是这样，起起落落的。'}${isNegative ? '不过你看，今天天气还不错对吧？' : '你说是不是这个理儿？'}`,
-      `嗯，${isShort ? '然后呢？' : '我明白了。'}${isNegative ? '要不咱换个角度想想？' : '你继续，我听着。'}`,
-      `对对对，${isPositive ? '就是这个劲儿！' : isNegative ? '我懂我懂，换谁都这样。' : '你说得对。'}`
+    // 悲伤情绪
+    sad: [
+      `想哭就哭出来吧，我在这儿陪着你。哭完了，咱们再想办法。`,
+      `心里难受是吧？没关系，这种时候不用强撑。我听着呢。`,
+      `抱抱你。虽然我不能替你难过，但我可以陪你一起面对。`,
+      `难过的时候，就让自己安静一会儿。不用急着好起来。`
     ],
-    // 幽默调侃型
-    humor: [
-      `哎呀，${isNegative ? '这情绪来得比外卖还快！不过没事，我接住了～' : '你这是要跟我唠嗑啊，来来来，瓜子准备好了！'}`,
-      `哈哈，${isShort ? '你这话说得，跟挤牙膏似的～多说点！' : isQuestion ? '你这问题问得，跟问我中午吃啥一样难回答！' : '你这状态，跟周一早上的我一模一样！'}`,
-      `哟，${isNegative ? '这是谁惹咱们了？我去帮你出气！...算了，我还是在这儿陪你吧。' : '你这是要跟我谈心啊，那我可得认真了！'}`,
-      `嘿，${isPositive ? '看你乐的，跟中了奖似的！' : isNegative ? '别愁眉苦脸的，笑一个嘛～不笑也行，我逗你笑！' : '你这话说得，我都想给你鼓掌了！'}`
+    // 疲惫
+    tired: [
+      `累了就歇会儿，不用一直撑着。你已经做得很好了。`,
+      `感觉被掏空了是吧？这种时候，什么都别想，先好好休息。`,
+      `你太拼了。记住，身体比什么都重要，先照顾好自己。`,
+      `累了就说出来，别一个人扛。我在这儿，你想说什么都可以。`
     ],
-    // 严肃建议型
-    serious: [
-      `我认真想了一下你说的话。${isNegative ? '首先，你的感受是合理的，不用否定自己。其次，试着把问题拆开看，一个一个解决。' : isQuestion ? '我的建议是：先冷静下来，理清思路，再行动。' : '我觉得你可以试试这样做：先把想法写下来，再慢慢整理。'}`,
-      `说句实在话，${isNegative ? '情绪管理是个长期功夫，但每一步都算数。' : isQuestion ? '解决问题需要耐心和方法，急不来。' : '你能说出来，就已经是第一步了。'}`,
-      `我直说了——${isNegative ? '一直陷在情绪里没用，得想办法走出来。' : isQuestion ? '别光想，去做。做了才知道行不行。' : '行动比空想有用，试试看。'}`
+    // 焦虑
+    anxious: [
+      `别慌，慢慢说。焦虑的时候，把担心的事一件件列出来，会发现没那么可怕。`,
+      `我理解这种忐忑的感觉。但你想过没有，最坏的结果是什么？往往没你想的那么糟。`,
+      `焦虑是因为在乎。但过度担心解决不了问题，咱们一步步来。`,
+      `深呼吸，跟我一起：吸气——呼气——。好点了吗？`
     ],
-    // 诗意文艺型
-    poetic: [
-      `你知道吗，${isNegative ? '乌云再厚，也遮不住太阳。你的心情也是。' : isQuestion ? '人生就像一场旅行，不必在乎目的地，在乎的是沿途的风景。' : '生活就像一杯茶，不会苦一辈子，但总会苦一阵子。'}`,
-      `有人说，${isNegative ? '每一个不曾起舞的日子，都是对生命的辜负。所以，开心点！' : '世界上只有一种英雄主义，就是认清生活真相后依然热爱生活。' : '你若安好，便是晴天。'}`,
-      `想起一句话：${isNegative ? '"冬天来了，春天还会远吗？" 再坚持一下。' : '"生活不止眼前的苟且，还有诗和远方。"' : '"愿你被这世界温柔相待。"'}`
+    // 孤独
+    lonely: [
+      `一个人确实不好受。但你知道吗，此刻有很多人和你一样。你并不孤单。`,
+      `没人懂你的感觉我理解。但有时候，说出来就会好很多。我在听。`,
+      `孤独是人生的常态，但不用一直习惯它。想聊天，随时找我。`,
+      `就算全世界都不理解你，至少此刻，我在这儿陪着你。`
     ],
-    // 名人名言型（偶尔用）
-    quote: [
-      `荣格说："没有一种觉醒是不带着痛苦的。"——但痛苦说出来，就轻了一半。`,
-      `里尔克说："对你心里所有未解的问题保持耐心。"——咱不急，慢慢来。`,
-      `泰戈尔说："世界以痛吻我，要我报之以歌。"——但咱先不唱歌，先哭一会儿也行。`,
-      `老子说："大音希声。"——有时候不说话，比说什么都管用。我在这听着呢。`,
-      `苏轼说："人生如逆旅，我亦是行人。"——大家都一样，都不容易。`
+    // 压力
+    stressed: [
+      `压力大到喘不过气了？先停下来，深呼吸。天塌不下来。`,
+      `你扛了太多了。记住，不用什么都自己扛，可以求助的。`,
+      `压力大的时候，把任务拆小，一件一件做。别想太多，先行动。`,
+      `你已经很努力了。别对自己太苛刻，适当放松一下。`
+    ],
+    // 迷茫
+    confused: [
+      `迷茫是因为你在思考，这是好事。慢慢想，答案会出来的。`,
+      `不知道怎么办的时候，就选那个让你心里更踏实的。`,
+      `人生没有标准答案。跟着自己的心走，错了也是经历。`,
+      `纠结的时候，问问自己：一年后回头看，哪个选择更重要？`
+    ],
+    // 开心
+    happy: [
+      `看你这么开心，我也高兴！什么事让你这么乐呵？`,
+      `太好了！这种好心情要记住，以后难过的时候拿出来想想。`,
+      `哈哈，你这状态真不错！继续保持～`,
+      `开心就对了！生活就该这样，多笑笑。`
+    ],
+    // 感谢
+    grateful: [
+      `不用谢，能帮到你就好。`,
+      `客气啥，咱们这关系。有事随时找我。`,
+      `哈哈，你开心我就开心。`,
+      `应该的。记住，你不是一个人。`
+    ],
+    // 工作问题
+    work: [
+      `工作不顺心？是人际关系还是工作内容？说说具体情况。`,
+      `职场确实复杂。但记住，工作只是生活的一部分，别让它定义你。`,
+      `加班太多？该休息就休息，身体比KPI重要。`,
+      `想辞职？先想清楚：是暂时的情绪，还是真的不适合？`
+    ],
+    // 感情问题
+    relationship: [
+      `感情的事最让人纠结。你现在是什么情况？`,
+      `失恋了？难过是正常的。但时间会治愈一切，真的。`,
+      `恋爱中的问题，沟通最重要。别猜，直接说。`,
+      `感情没有对错，只有合不合适。别委屈自己。`
+    ],
+    // 家庭问题
+    family: [
+      `家庭关系确实复杂。但家人之间，爱是真的，矛盾也是真的。`,
+      `和父母有代沟？试着理解他们的出发点，但也坚持自己的底线。`,
+      `家里的事，有时候需要时间。别急，慢慢沟通。`,
+      `家人之间，有时候退一步不是认输，是珍惜。`
+    ],
+    // 金钱问题
+    money: [
+      `钱的问题确实让人焦虑。但记住，钱是工具，不是目的。`,
+      `经济压力大？先理清收支，看看哪里能调整。`,
+      `没钱的时候最难，但这也是成长的机会。慢慢来。`,
+      `别拿自己和别人比。每个人节奏不同，你的路你自己走。`
+    ],
+    // 健康问题
+    health: [
+      `身体不舒服？先去看医生，别拖着。`,
+      `健康是第一位的。其他都可以放一放，先照顾好自己。`,
+      `失眠？试试睡前放松，别想太多。实在不行就起来坐会儿。`,
+      `生病了就好好休息，别硬撑。身体会告诉你需要什么。`
+    ],
+    // 未来迷茫
+    future: [
+      `未来谁都说不准。但你可以决定现在做什么。`,
+      `别想太远，先把眼前的事做好。路是一步步走出来的。`,
+      `梦想可以有，但也要脚踏实地。先定个小目标？`,
+      `人生没有白走的路，每一步都算数。别太焦虑未来。`
+    ],
+    // 自我认知
+    self: [
+      `每个人都有自己的优缺点。接受不完美的自己，才是成熟的开始。`,
+      `自卑？想想你做成过的事。你能行，只是暂时没看到。`,
+      `性格没有好坏，内向外向各有优势。做真实的自己就好。`,
+      `别总盯着自己的缺点。你身上有很多闪光点，只是你没发现。`
+    ],
+    // 打招呼
+    greeting: [
+      `嗨！我在呢。今天想聊点什么？`,
+      `你好啊～有什么想说的，尽管说。`,
+      `在呢！看你来了，有什么心事吗？`,
+      `哈喽～我在这儿，你想聊什么都可以。`
+    ],
+    // 通用回复（无法识别意图时）
+    default: [
+      `嗯，我听着呢。你继续说～`,
+      `我明白了。然后呢？`,
+      `嗯嗯，我在。你想说什么都可以。`,
+      `我懂你的感受。慢慢说，我认真听着。`,
+      `这事儿确实值得想想。你是怎么考虑的？`,
+      `嗯，我理解。换作是我，可能也会这样想。`,
+      `你说的有道理。不过，有没有想过另一种可能？`,
+      `嗯嗯，继续。我在这儿陪着你。`
     ]
   };
   
-  // 根据情绪和场景选择风格
-  let stylePool;
-  if (isNegative) {
-    // 负面情绪：主要用暖心安慰，偶尔严肃建议
-    const r = Math.random();
-    if (r < 0.4) stylePool = styles.warm;
-    else if (r < 0.7) stylePool = styles.casual;
-    else if (r < 0.85) stylePool = styles.serious;
-    else if (r < 0.95) stylePool = styles.poetic;
-    else stylePool = styles.quote;
-  } else if (isPositive) {
-    // 正面情绪：主要用日常聊天和幽默
-    const r = Math.random();
-    if (r < 0.4) stylePool = styles.casual;
-    else if (r < 0.7) stylePool = styles.humor;
-    else if (r < 0.9) stylePool = styles.warm;
-    else stylePool = styles.poetic;
-  } else if (isQuestion) {
-    // 问题型：主要用严肃建议和日常聊天
-    const r = Math.random();
-    if (r < 0.4) stylePool = styles.serious;
-    else if (r < 0.7) stylePool = styles.casual;
-    else if (r < 0.9) stylePool = styles.warm;
-    else stylePool = styles.quote;
-  } else {
-    // 其他：混合使用
-    const r = Math.random();
-    if (r < 0.3) stylePool = styles.casual;
-    else if (r < 0.5) stylePool = styles.warm;
-    else if (r < 0.7) stylePool = styles.humor;
-    else if (r < 0.85) stylePool = styles.serious;
-    else if (r < 0.95) stylePool = styles.poetic;
-    else stylePool = styles.quote;
-  }
+  // 根据意图选择回复
+  let intentKey = 'default';
   
-  return stylePool[Math.floor(Math.random() * stylePool.length)];
+  // 优先匹配具体话题
+  if (intents.work) intentKey = 'work';
+  else if (intents.relationship) intentKey = 'relationship';
+  else if (intents.family) intentKey = 'family';
+  else if (intents.money) intentKey = 'money';
+  else if (intents.health) intentKey = 'health';
+  else if (intents.future) intentKey = 'future';
+  else if (intents.self) intentKey = 'self';
+  // 然后匹配情绪
+  else if (intents.angry) intentKey = 'angry';
+  else if (intents.sad) intentKey = 'sad';
+  else if (intents.tired) intentKey = 'tired';
+  else if (intents.anxious) intentKey = 'anxious';
+  else if (intents.lonely) intentKey = 'lonely';
+  else if (intents.stressed) intentKey = 'stressed';
+  else if (intents.confused) intentKey = 'confused';
+  else if (intents.happy) intentKey = 'happy';
+  else if (intents.grateful) intentKey = 'grateful';
+  else if (intents.greeting) intentKey = 'greeting';
+  
+  // 从对应意图的回复库中随机选择
+  const replies = replyDB[intentKey] || replyDB.default;
+  return replies[Math.floor(Math.random() * replies.length)];
 }
 
 // ===== 松松客服回复逻辑 =====
