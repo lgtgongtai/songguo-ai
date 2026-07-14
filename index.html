@@ -79,11 +79,30 @@
   <!-- ===== My Tab ===== -->
   <div id="my-tab" class="tab-content">
     <div class="my-header">
-      <div class="my-avatar">🐿</div>
+      <div class="my-avatar" id="user-avatar" onclick="showAvatarSelector()">🐿</div>
       <h2>松果AI</h2>
       <p>松一口气，换一种活法</p>
     </div>
     <div class="my-content">
+      <div class="my-section">
+        <div class="my-section-title">🎨 我的头像</div>
+        <div class="avatar-selector" id="avatar-selector">
+          <div class="avatar-option selected" onclick="selectAvatar('')">🐿</div>
+          <div class="avatar-option" onclick="selectAvatar('')">🐶</div>
+          <div class="avatar-option" onclick="selectAvatar('🐱')">🐱</div>
+          <div class="avatar-option" onclick="selectAvatar('🦊')">🦊</div>
+          <div class="avatar-option" onclick="selectAvatar('🐻')">🐻</div>
+          <div class="avatar-option" onclick="selectAvatar('🐼')">🐼</div>
+          <div class="avatar-option" onclick="selectAvatar('🐨')">🐨</div>
+          <div class="avatar-option" onclick="selectAvatar('🦁')">🦁</div>
+          <div class="avatar-option" onclick="selectAvatar('👦')">👦</div>
+          <div class="avatar-option" onclick="selectAvatar('👧')">👧</div>
+          <div class="avatar-option" onclick="selectAvatar('👨')">👨</div>
+          <div class="avatar-option" onclick="selectAvatar('👩')">👩</div>
+          <div class="avatar-upload" onclick="document.getElementById('avatar-file-input').click()">+</div>
+        </div>
+        <input type="file" id="avatar-file-input" accept="image/*" style="display:none" onchange="uploadAvatar(event)">
+      </div>
       <div class="my-section">
         <div class="my-section-title">📊 解压维度</div>
         <div id="dimensions"></div>

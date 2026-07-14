@@ -8,19 +8,66 @@ let currentRole = '松果';
 let messageCount = 0;
 
 // ===== Message Rendering =====
-function addMessage(text, isUser) {
+function addMessage(text, isUser, scenes = null) {
   const container = document.getElementById('chat-messages');
   const row = document.createElement('div');
   row.className = 'msg-row ' + (isUser ? 'user' : 'bot');
   const avatar = document.createElement('div');
   avatar.className = 'msg-avatar';
-  avatar.textContent = isUser ? '' : (currentRole === '松松' ? '🐿' : (currentRole === '松果' ? '🐿' : scenes.find(s => s.name === currentRole)?.emoji || ''));
+  if(isUser) {
+    const userAvatar = localStorage.getItem('user_avatar') || '';
+    if(userAvatar.startsWith('data:image')) {
+      avatar.style.backgroundImage = 'url(' + userAvatar + ')';
+      avatar.style.backgroundSize = 'cover';
+      avatar.style.backgroundPosition = 'center';
+      avatar.textContent = '';
+    } else {
+      avatar.textContent = userAvatar || '';
+    }
+  } else {
+    avatar.textContent = currentRole === '松松' ? '' : (currentRole === '松果' ? '' : scenes.find(s => s.name === currentRole)?.emoji || '');
+  }
   const bubble = document.createElement('div');
   bubble.className = 'msg-bubble';
   bubble.innerHTML = text.replace(/\n/g, '<br>');
+  
+  // 添加场景卡片
+  if(scenes && scenes.length > 0) {
+    const cardsDiv = document.createElement('div');
+    cardsDiv.className = 'scene-cards-inline';
+    scenes.forEach(sceneName => {
+      const sceneData = getSceneData(sceneName);
+      const card = document.createElement('div');
+      card.className = 'scene-card-inline';
+      card.onclick = () => selectScene(sceneName);
+      card.innerHTML = `
+        <div class="scene-card-icon">${sceneData.icon}</div>
+        <div class="scene-card-info">
+          <div class="scene-card-name">${sceneName}</div>
+          <div class="scene-card-desc">${sceneData.desc}</div>
+        </div>
+        ${sceneData.vip ? `<span class="scene-card-tag ${sceneData.vipLevel === 'VIP' ? 'vip' : 'member'}">${sceneData.vipLevel === 'VIP' ? 'VIP' : '会员'}</span>` : '<span class="scene-card-tag free">免费</span>'}
+      `;
+      cardsDiv.appendChild(card);
+    });
+    bubble.appendChild(cardsDiv);
+  }
+  
   row.appendChild(avatar); row.appendChild(bubble);
   container.appendChild(row);
   container.scrollTop = container.scrollHeight;
+}
+
+function getSceneData(sceneName) {
+  const data = {
+    '吐槽大会': { icon: '', desc: '找个AI一起痛快吐槽', vip: false },
+    '治愈聊天': { icon: '', desc: '温柔陪伴，被接住的感觉', vip: true },
+    '吵架模拟器': { icon: '', desc: '把憋着的话甩出来', vip: true },
+    '树洞': { icon: '', desc: '什么都可以说，说完就删', vip: true },
+    '复盘引导': { icon: '', desc: '陪你看清情绪的来源', vip: true, vipLevel: 'VIP' },
+    '放松舱': { icon: '', desc: '跟着松果一起深呼吸', vip: false }
+  };
+  return data[sceneName] || { icon: '', desc: '', vip: false };
 }
 
 function showTyping() {
@@ -29,7 +76,7 @@ function showTyping() {
   row.className = 'msg-row bot'; row.id = 'typing-row';
   const avatar = document.createElement('div');
   avatar.className = 'msg-avatar';
-  avatar.textContent = currentRole === '松果' ? '🐿' : (scenes.find(s => s.name === currentRole)?.emoji || '🐿');
+  avatar.textContent = currentRole === '松果' ? '' : (scenes.find(s => s.name === currentRole)?.emoji || '');
   const indicator = document.createElement('div');
   indicator.className = 'typing-indicator';
   indicator.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
@@ -56,7 +103,7 @@ async function sendMessage() {
     setTimeout(() => {
       removeTyping();
       const reply = getSongSongReply(text);
-      addMessage(reply, false);
+      addMessage(reply.text, false, reply.scenes);
     }, 800);
     return;
   }
@@ -281,47 +328,70 @@ function getSongSongReply(userText) {
   
   // 检测会员/VIP意图
   if(text.includes('会员') || text.includes('vip') || text.includes('付费') || text.includes('开通')) {
-    return songSongGuides.membership['会员'];
+    return { text: songSongGuides.membership['会员'], scenes: [] };
   }
   if(text.includes('复盘') || text.includes('深度')) {
-    return songSongGuides.membership['VIP'];
+    return { text: songSongGuides.membership['VIP'], scenes: [] };
   }
   
   // 检测场景选择意图
   if(text.includes('吐槽') || text.includes('发泄') || text.includes('骂')) {
-    return '好的！<b>吐槽大会</b>是免费的，现在就可以去~ 点击左上角←返回首页，选择🔥吐槽大会，我们开始发泄！';
+    return { text: '好的！<b>吐槽大会</b>是免费的，现在就可以去~ 点击下方直接进入👇', scenes: ['吐槽大会'] };
   }
   if(text.includes('治愈') || text.includes('陪伴') || text.includes('温柔')) {
-    return '<b>治愈聊天</b>需要会员哦~ 开通会员后可以无限使用，还有专属角色皮肤和优先客服支持！点击这里开通会员 →';
+    return { text: '<b>治愈聊天</b>需要会员哦~ 开通会员后可以无限使用，还有专属角色皮肤和优先客服支持！点击下方直接进入👇', scenes: ['治愈聊天'], needVip: true };
   }
   if(text.includes('吵架') || text.includes('模拟') || text.includes('')) {
-    return '<b>吵架模拟器</b>需要会员哦~ 把憋着的话甩出来，超解压！开通会员即可使用 →';
+    return { text: '<b>吵架模拟器</b>需要会员哦~ 把憋着的话甩出来，超解压！点击下方直接进入👇', scenes: ['吵架模拟器'], needVip: true };
   }
   if(text.includes('树洞') || text.includes('秘密') || text.includes('删除')) {
-    return '<b>树洞</b>需要会员哦~ 什么都可以说，说完就删，绝对安全！开通会员即可使用 →';
+    return { text: '<b>树洞</b>需要会员哦~ 什么都可以说，说完就删，绝对安全！点击下方直接进入👇', scenes: ['树洞'], needVip: true };
   }
   if(text.includes('复盘') || text.includes('分析') || text.includes('看清')) {
-    return '<b>复盘引导</b>是VIP专属场景哦~ 包含深度情绪分析和专属心理报告！点击这里开通VIP →';
+    return { text: '<b>复盘引导</b>是VIP专属场景哦~ 包含深度情绪分析和专属心理报告！点击下方直接进入👇', scenes: ['复盘引导'], needVip: true, needVipLevel: 'VIP' };
   }
   if(text.includes('放松') || text.includes('呼吸') || text.includes('深呼吸')) {
-    return '好的！<b>放松舱</b>是免费的，跟着松果一起深呼吸~ 点击左上角←返回首页，选择放松舱，我们开始放松！';
+    return { text: '好的！<b>放松舱</b>是免费的，跟着松果一起深呼吸~ 点击下方直接进入', scenes: ['放松舱'] };
   }
   
   // 检测情绪关键词，推荐场景
+  let emotion = null;
   for(const keyword in songSongGuides.recommend) {
     if(keyword !== 'default' && text.includes(keyword)) {
-      return songSongGuides.recommend[keyword];
+      emotion = keyword;
+      break;
     }
+  }
+  
+  if(emotion) {
+    const guide = songSongGuides.recommend[emotion];
+    let scenes = [];
+    if(emotion === '生气') scenes = ['吐槽大会', '吵架模拟器'];
+    else if(emotion === '累') scenes = ['治愈聊天', '放松舱'];
+    else if(emotion === '焦虑') scenes = ['放松舱', '复盘引导'];
+    else if(emotion === '难过') scenes = ['治愈聊天', '树洞'];
+    else if(emotion === '压力') scenes = ['吐槽大会', '树洞'];
+    return { text: guide, scenes: scenes, needVip: scenes.some(s => ['治愈聊天','吵架模拟器','树洞'].includes(s)) };
   }
   
   // 检测场景选择
   if(text.includes('场景') || text.includes('哪个') || text.includes('试试') || text.includes('选择')) {
-    return songSongGuides.opening;
+    return { text: songSongGuides.opening, scenes: ['吐槽大会', '治愈聊天', '吵架模拟器', '树洞', '复盘引导', '放松舱'] };
+  }
+  
+  // 打招呼
+  if(text.includes('你好') || text.includes('嗨') || text.includes('hi') || text.includes('在吗')) {
+    return { text: '嗨！我在呢~ 今天想聊点什么？或者选一个场景开始解压？👇', scenes: ['吐槽大会', '治愈聊天', '吵架模拟器', '树洞', '复盘引导', '放松舱'] };
+  }
+  
+  // 感谢
+  if(text.includes('谢谢') || text.includes('感谢') || text.includes('thanks')) {
+    return { text: '不用谢~ 能帮到你就好！还想继续聊吗？👇', scenes: ['吐槽大会', '治愈聊天', '吵架模拟器', '树洞', '复盘引导', '放松舱'] };
   }
   
   // 默认回复
   const fallback = songSongGuides.fallback[Math.floor(Math.random() * songSongGuides.fallback.length)];
-  return fallback + '\n\n🔥 吐槽大会（免费）\n🫧 放松舱（免费）\n🌿 治愈聊天（会员）\n💢 吵架模拟器（会员）\n🕳 树洞（会员）\n🧭 复盘引导（VIP）';
+  return { text: fallback + ' 👇', scenes: ['吐槽大会', '治愈聊天', '吵架模拟器', '树洞', '复盘引导', '放松舱'] };
 }
 
 function handleKeyDown(e) {

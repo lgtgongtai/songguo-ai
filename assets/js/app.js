@@ -24,17 +24,17 @@ const songSongGuides = {
   opening: '嗨，我是松松，你的解压向导~ ️\n\n我可以帮你：\n🔥 <b>吐槽大会</b>（免费）— 找个AI一起痛快吐槽\n🌿 <b>治愈聊天</b>（会员）— 温柔陪伴，被接住的感觉\n💢 <b>吵架模拟器</b>（会员）— 把憋着的话甩出来\n🕳 <b>树洞</b>（会员）— 什么都可以说，说完就删\n🧭 <b>复盘引导</b>（VIP）— 陪你看清情绪的来源\n🫧 <b>放松舱</b>（免费）— 跟着松果一起深呼吸\n\n你想试试哪个？或者直接跟我说说你的心情~',
   
   recommend: {
-    '生气': '听起来你现在有点火大~ 推荐你去<b>吐槽大会</b>（免费）发泄一下，或者去<b>吵架模拟器</b>（会员）把憋着的话甩出来！',
-    '累': '感觉你今天挺累的~ 推荐去<b>治愈聊天</b>（会员）让松果陪陪你，或者去<b>放松舱</b>（免费）做个深呼吸~',
-    '焦虑': '焦虑的时候，可以先去<b>放松舱</b>（免费）把呼吸慢下来，或者去<b>复盘引导</b>（VIP）看看焦虑的来源~',
-    '难过': '难过的时候，去<b>治愈聊天</b>（会员）吧，松果会温柔地接住你~ 或者去<b>树洞</b>（会员）把情绪倒出来~',
-    '压力': '压力大的话，推荐<b>吐槽大会</b>（免费）先发泄一下，或者去<b>树洞</b>（会员）把压力倒出来~',
-    'default': '我理解你的感受~ 要不要试试我们的场景？\n🔥 吐槽大会（免费）\n🫧 放松舱（免费）\n🌿 治愈聊天（会员）\n💢 吵架模拟器（会员）\n🕳 树洞（会员）\n🧭 复盘引导（VIP）\n\n你想试试哪个？'
+    '生气': '听起来你现在有点火大~ 推荐你去<b>吐槽大会</b>发泄一下，或者去<b>吵架模拟器</b>把憋着的话甩出来！👇点击下方直接进入：',
+    '累': '感觉你今天挺累的~ 推荐去<b>治愈聊天</b>让松果陪陪你，或者去<b>放松舱</b>做个深呼吸~ 👇点击下方直接进入：',
+    '焦虑': '焦虑的时候，可以先去<b>放松舱</b>把呼吸慢下来，或者去<b>复盘引导</b>看看焦虑的来源~ 👇点击下方直接进入：',
+    '难过': '难过的时候，去<b>治愈聊天</b>吧，松果会温柔地接住你~ 或者去<b>树洞</b>把情绪倒出来~ 👇点击下方直接进入：',
+    '压力': '压力大的话，推荐<b>吐槽大会</b>先发泄一下，或者去<b>树洞</b>把压力倒出来~ 👇点击下方直接进入：',
+    'default': '我理解你的感受~ 要不要试试我们的场景？👇点击下方直接进入：'
   },
   
   membership: {
-    '会员': '这个场景需要<b>会员</b>才能使用哦~ 开通会员后可以无限使用所有会员场景，还能解锁更多专属功能！\n\n现在开通会员，立享：\n✅ 6大场景无限畅聊\n✅ 专属角色皮肤\n✅ 优先客服支持\n\n点击这里开通会员 →',
-    'VIP': '这个场景需要<b>VIP</b>才能使用哦~ VIP是我们的最高等级，包含所有会员权益，还能解锁：\n\n✅ 复盘引导（深度情绪分析）\n✅ 专属心理报告\n✅ 1对1专家咨询\n\n点击这里开通VIP →'
+    '会员': '这个场景需要<b>会员</b>才能使用哦~ 开通会员后可以无限使用所有会员场景，还能解锁更多专属功能！\n\n现在开通会员，立享：\n✅ 6大场景无限畅聊\n✅ 专属角色皮肤\n✅ 优先客服支持\n\n💰 会员价格：\n• 月卡：¥19.9\n• 季卡：¥49.9\n• 年卡：¥168\n\n点击这里开通会员 →',
+    'VIP': '这个场景需要<b>VIP</b>才能使用哦~ VIP是我们的最高等级，包含所有会员权益，还能解锁：\n\n✅ 复盘引导（深度情绪分析）\n✅ 专属心理报告\n✅ 1对1专家咨询\n\n💎 VIP价格：\n• 月卡：¥39.9\n• 季卡：¥99.9\n• 年卡：¥368\n\n点击这里开通VIP →'
   },
   
   fallback: ['我理解你的感受~ 要不要选一个场景聊聊？', '听起来你今天有些心事，选个场景跟我说说吧~', '没关系，慢慢来。选一个场景，我们开始解压~', '我在听呢~ 选一个场景，让我更好地帮助你~']
@@ -122,3 +122,61 @@ initCompliance();
 
 document.getElementById('scene-modal').addEventListener('click', function(e) { if(e.target === this) closeModal(); });
 document.getElementById('chat-input').addEventListener('input', function() { this.style.height = 'auto'; this.style.height = Math.min(this.scrollHeight, 100) + 'px'; });
+
+// ===== Avatar Functions =====
+let currentAvatar = localStorage.getItem('user_avatar') || '';
+
+function selectAvatar(emoji) {
+  currentAvatar = emoji;
+  localStorage.setItem('user_avatar', emoji);
+  document.getElementById('user-avatar').textContent = emoji;
+  document.querySelectorAll('.avatar-option').forEach(el => el.classList.remove('selected'));
+  event.target.classList.add('selected');
+}
+
+function uploadAvatar(event) {
+  const file = event.target.files[0];
+  if(!file) return;
+  if(!file.type.startsWith('image/')) {
+    alert('请选择图片文件');
+    return;
+  }
+  if(file.size > 2 * 1024 * 1024) {
+    alert('图片大小不能超过2MB');
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    currentAvatar = e.target.result;
+    localStorage.setItem('user_avatar', currentAvatar);
+    document.getElementById('user-avatar').textContent = '';
+    document.getElementById('user-avatar').style.backgroundImage = 'url(' + currentAvatar + ')';
+    document.getElementById('user-avatar').style.backgroundSize = 'cover';
+    document.getElementById('user-avatar').style.backgroundPosition = 'center';
+    document.querySelectorAll('.avatar-option').forEach(el => el.classList.remove('selected'));
+  };
+  reader.readAsDataURL(file);
+}
+
+function showAvatarSelector() {
+  const selector = document.getElementById('avatar-selector');
+  selector.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+// Load saved avatar on init
+if(currentAvatar) {
+  if(currentAvatar.startsWith('data:image')) {
+    document.getElementById('user-avatar').textContent = '';
+    document.getElementById('user-avatar').style.backgroundImage = 'url(' + currentAvatar + ')';
+    document.getElementById('user-avatar').style.backgroundSize = 'cover';
+    document.getElementById('user-avatar').style.backgroundPosition = 'center';
+  } else {
+    document.getElementById('user-avatar').textContent = currentAvatar;
+  }
+}
+
+// Expose avatar functions
+window.selectAvatar = selectAvatar;
+window.uploadAvatar = uploadAvatar;
+window.showAvatarSelector = showAvatarSelector;
+
