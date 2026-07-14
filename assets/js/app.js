@@ -37,6 +37,21 @@ function enterScene(sceneId) {
   }, 300);
 }
 
+function chatWithSongSong() {
+  currentRole = '松果';
+  sessionId = null;
+  messageCount = 0;
+  document.getElementById('chat-role-name').textContent = '松松';
+  document.getElementById('chat-role-status').textContent = '系统客服 · 在线';
+  document.getElementById('chat-avatar').textContent = '🐿';
+  document.getElementById('chat-messages').innerHTML = '';
+  switchTab('chat');
+  setTimeout(() => {
+    showTyping();
+    setTimeout(() => { removeTyping(); addMessage('嗨，我是松松，你的系统客服~ 有什么可以帮你的吗？', false); }, 600);
+  }, 300);
+}
+
 function backToHome() { switchTab('home'); }
 
 // ===== Dimensions =====

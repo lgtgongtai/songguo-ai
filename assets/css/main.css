@@ -75,7 +75,10 @@ input,textarea,select{font-family:inherit;border:none;outline:none;background:no
 .chat-send-btn.disabled{background:var(--cream-dark);color:#bbb}
 
 /* ===== Home Page ===== */
-.song-song-guide{padding:16px;background:var(--gold-pale);flex-shrink:0}
+.song-song-guide{padding:16px;background:var(--gold-pale);flex-shrink:0;cursor:pointer;transition:background .2s}
+.song-song-guide:active{background:var(--cream-dark)}
+.song-song-guide .msg-bubble{background:#fff;border:1px solid rgba(212,168,67,0.15);box-shadow:0 2px 8px rgba(0,0,0,0.04)}
+.song-song-guide .msg-bubble b{color:var(--gold);font-weight:600}
 .home-scenes{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px;background:var(--cream);min-height:0}
 .home-scenes-title{font-size:16px;font-weight:600;color:var(--brown);margin-bottom:12px}
 .home-scenes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
