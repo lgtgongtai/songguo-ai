@@ -9,8 +9,10 @@ function switchTab(tab) {
   const tabBar = document.querySelector('.tab-bar');
   if(tab === 'chat') {
     tabBar.style.display = 'none';
+    document.body.classList.add('chat-active');
   } else {
     tabBar.style.display = 'flex';
+    document.body.classList.remove('chat-active');
     document.querySelectorAll('.tab-bar-item')[['home','records','my'].indexOf(tab)].classList.add('active');
   }
   if(tab === 'my') setTimeout(animateDimensions, 300);
