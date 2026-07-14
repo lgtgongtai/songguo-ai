@@ -204,14 +204,62 @@ input,textarea,select{font-family:inherit;border:none;outline:none;background:no
 @media(min-width:768px){#app{max-width:480px;margin:0 auto;border-left:1px solid var(--cream-dark);border-right:1px solid var(--cream-dark)}body{background:#E8DFD0}}
 @media(min-width:1024px){#app{max-width:420px;box-shadow:var(--shadow-lg)}}
 @media(max-height:500px) and (orientation:landscape){.chat-header{padding:8px 16px}.chat-messages{padding:8px 16px}.scene-quick{padding:4px 12px}.chat-input-area{padding:6px 12px}}
+
+/* ===== 首页样式 ===== */
+.song-song-guide{padding:16px;background:var(--gold-pale);flex-shrink:0}
+.home-scenes{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px;background:var(--cream)}
+.home-scenes-title{font-size:16px;font-weight:600;color:var(--brown);margin-bottom:12px}
+.home-scenes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.home-scene-card{display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px 8px;border-radius:var(--radius);background:#fff;border:1px solid rgba(212,168,67,0.10);box-shadow:0 2px 8px rgba(0,0,0,0.04);cursor:pointer;transition:all .2s;position:relative}
+.home-scene-card:active{transform:scale(.95);background:var(--gold-pale)}
+.home-scene-card .scene-emoji{font-size:28px}
+.home-scene-card .scene-name{font-size:13px;color:var(--brown);font-weight:500}
+.home-scene-card .scene-tag{position:absolute;top:6px;right:6px;font-size:10px;padding:2px 6px;border-radius:8px;background:var(--gold-pale);color:var(--gold)}
 </style>
 </head>
 <body>
 <div id="app">
-  <div id="chat-tab" class="tab-content active">
+  <div id="home-tab" class="tab-content active">
     <div class="chat-header">
       <div class="chat-header-left">
         <div class="chat-header-avatar">🐿</div>
+        <div class="chat-header-info">
+          <h3>松果AI</h3>
+          <span>你的情绪解压伙伴</span>
+        </div>
+      </div>
+      <div class="chat-header-right">
+        <div class="ai-badge"><span class="ai-badge-dot"></span>AI交互</div>
+      </div>
+    </div>
+    <div class="song-song-guide">
+      <div class="msg-row bot">
+        <div class="msg-avatar">🐿</div>
+        <div class="msg-bubble">嗨，我是松松，你的解压向导~<br><br>今天感觉怎么样？选一个场景开始解压吧，或者跟我说说你的心情~</div>
+      </div>
+    </div>
+    <div class="home-scenes">
+      <div class="home-scenes-title">选择场景，开始解压</div>
+      <div class="home-scenes-grid">
+        <button class="home-scene-card" onclick="enterScene('吐槽大会')"><span class="scene-emoji">🔥</span><span class="scene-name">吐槽大会</span><span class="scene-tag">免费</span></button>
+        <button class="home-scene-card" onclick="enterScene('治愈聊天')"><span class="scene-emoji">🌿</span><span class="scene-name">治愈聊天</span><span class="scene-tag">会员</span></button>
+        <button class="home-scene-card" onclick="enterScene('吵架模拟器')"><span class="scene-emoji">💢</span><span class="scene-name">吵架模拟器</span><span class="scene-tag">会员</span></button>
+        <button class="home-scene-card" onclick="enterScene('安全宣泄')"><span class="scene-emoji">🕳</span><span class="scene-name">树洞</span><span class="scene-tag">会员</span></button>
+        <button class="home-scene-card" onclick="enterScene('复盘引导')"><span class="scene-emoji">🧭</span><span class="scene-name">复盘引导</span><span class="scene-tag">VIP</span></button>
+        <button class="home-scene-card" onclick="enterScene('放松舱')"><span class="scene-emoji">🫧</span><span class="scene-name">放松舱</span><span class="scene-tag">免费</span></button>
+      </div>
+    </div>
+    <div class="chat-input-area">
+      <textarea class="chat-input" id="home-input" placeholder="跟松松说说你的心情..." rows="1" onkeydown="handleHomeKeyDown(event)"></textarea>
+      <button class="chat-send-btn" onclick="sendHomeMessage()"></button>
+    </div>
+  </div>
+
+  <!-- ===== 聊天Tab ===== -->
+  <div id="chat-tab" class="tab-content">
+    <div class="chat-header">
+      <div class="chat-header-left">
+        <div class="chat-header-avatar" id="chat-avatar"></div>
         <div class="chat-header-info">
           <h3 id="chat-role-name">松果</h3>
           <span id="chat-role-status">在线 · 你的解压伙伴</span>
@@ -219,31 +267,16 @@ input,textarea,select{font-family:inherit;border:none;outline:none;background:no
       </div>
       <div class="chat-header-right">
         <div class="ai-badge"><span class="ai-badge-dot"></span>AI交互</div>
-        <button class="chat-header-btn" onclick="resetChat()" title="新对话">↻</button>
+        <button class="chat-header-btn" onclick="backToHome()" title="返回首页">←</button>
       </div>
     </div>
-    <div class="chat-messages" id="chat-messages">
-      <div class="msg-row bot">
-        <div class="msg-avatar">🐿</div>
-        <div class="msg-bubble">嘿，你来啦~ 我是松果，你的解压小伙伴。<br><br>今天过得怎么样？有什么想聊的，或者想玩个解压小游戏？<br>随便说，我都在~</div>
-      </div>
-    </div>
-    <div class="home-scenes" id="home-scenes">
-      <div class="home-scenes-title">选择场景，开始解压</div>
-      <div class="home-scenes-grid">
-        <button class="home-scene-card" onclick="selectScene('吐槽大会')"><span class="scene-emoji">🔥</span><span class="scene-name">吐槽大会</span><span class="scene-tag">免费</span></button>
-        <button class="home-scene-card" onclick="selectScene('治愈聊天')"><span class="scene-emoji">🌿</span><span class="scene-name">治愈聊天</span><span class="scene-tag">会员</span></button>
-        <button class="home-scene-card" onclick="selectScene('吵架模拟器')"><span class="scene-emoji">💢</span><span class="scene-name">吵架模拟器</span><span class="scene-tag">会员</span></button>
-        <button class="home-scene-card" onclick="selectScene('安全宣泄')"><span class="scene-emoji">🕳</span><span class="scene-name">树洞</span><span class="scene-tag">会员</span></button>
-        <button class="home-scene-card" onclick="selectScene('复盘引导')"><span class="scene-emoji">🧭</span><span class="scene-name">复盘引导</span><span class="scene-tag">VIP</span></button>
-        <button class="home-scene-card" onclick="selectScene('放松舱')"><span class="scene-emoji">🫧</span><span class="scene-name">放松舱</span><span class="scene-tag">免费</span></button>
-      </div>
-    </div>
+    <div class="chat-messages" id="chat-messages"></div>
     <div class="chat-input-area">
       <textarea class="chat-input" id="chat-input" placeholder="说点什么..." rows="1" onkeydown="handleKeyDown(event)"></textarea>
       <button class="chat-send-btn" id="chat-send-btn" onclick="sendMessage()">➤</button>
     </div>
   </div>
+
   <div id="records-tab" class="tab-content">
     <div class="records-header">
       <h2>解压记录</h2>
@@ -294,7 +327,7 @@ input,textarea,select{font-family:inherit;border:none;outline:none;background:no
     </div>
   </div>
   <div class="tab-bar">
-    <div class="tab-bar-item active" onclick="switchTab('chat')"><span class="tab-icon">🏠</span><span class="tab-label">首页</span></div>
+    <div class="tab-bar-item active" onclick="switchTab('home')"><span class="tab-icon">🏠</span><span class="tab-label">首页</span></div>
     <div class="tab-bar-item" onclick="switchTab('records')"><span class="tab-icon">📋</span><span class="tab-label">记录</span></div>
     <div class="tab-bar-item" onclick="switchTab('my')"><span class="tab-icon">🐿</span><span class="tab-label">我的</span></div>
   </div>
@@ -653,7 +686,7 @@ function switchTab(tab) {
   document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
   document.querySelectorAll('.tab-bar-item').forEach(el => el.classList.remove('active'));
   document.getElementById(tab + '-tab').classList.add('active');
-  document.querySelectorAll('.tab-bar-item')[['chat','records','my'].indexOf(tab)].classList.add('active');
+  document.querySelectorAll('.tab-bar-item')[['home','records','my'].indexOf(tab)].classList.add('active');
   if(tab === 'my') setTimeout(animateDimensions, 300);
   if(tab === 'records') renderRecords();
 }
@@ -797,6 +830,63 @@ function openSceneModal(scene) {
 }
 function closeModal() { document.getElementById('scene-modal').classList.remove('show'); }
 function startScene(sceneId) { closeModal(); selectScene(sceneId); }
+
+// ===== 首页功能 =====
+function enterScene(sceneId) {
+  const scene = scenes.find(s => s.id === sceneId);
+  if(!scene) return;
+  currentRole = scene.name;
+  sessionId = null;
+  messageCount = 0;
+  document.getElementById('chat-role-name').textContent = scene.name;
+  document.getElementById('chat-role-status').textContent = scene.desc;
+  document.getElementById('chat-avatar').textContent = scene.emoji;
+  document.getElementById('chat-messages').innerHTML = '';
+  switchTab('chat');
+  setTimeout(() => {
+    showTyping();
+    setTimeout(() => { removeTyping(); addMessage(scene.opening, false); }, 600);
+  }, 300);
+}
+function backToHome() { switchTab('home'); }
+function handleHomeKeyDown(e) {
+  if(e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendHomeMessage(); }
+}
+async function sendHomeMessage() {
+  const input = document.getElementById('home-input');
+  const text = input.value.trim();
+  if(!text) return;
+  if(checkCrisisKeywords(text)) showCrisisModal();
+  const guide = document.querySelector('.song-song-guide');
+  const row = document.createElement('div');
+  row.className = 'msg-row user';
+  const avatar = document.createElement('div');
+  avatar.className = 'msg-avatar';
+  avatar.textContent = '🧑';
+  const bubble = document.createElement('div');
+  bubble.className = 'msg-bubble';
+  bubble.textContent = text;
+  row.appendChild(avatar);
+  row.appendChild(bubble);
+  guide.appendChild(row);
+  input.value = '';
+  input.style.height = 'auto';
+  setTimeout(() => {
+    const replies = ['我理解你的感受~ 要不要选一个场景聊聊？','听起来你今天有些心事，选个场景跟我说说吧~','没关系，慢慢来。选一个场景，我们开始解压~','我在听呢~ 选一个场景，让我更好地帮助你~'];
+    const reply = replies[Math.floor(Math.random() * replies.length)];
+    const botRow = document.createElement('div');
+    botRow.className = 'msg-row bot';
+    const botAvatar = document.createElement('div');
+    botAvatar.className = 'msg-avatar';
+    botAvatar.textContent = '🐿';
+    const botBubble = document.createElement('div');
+    botBubble.className = 'msg-bubble';
+    botBubble.textContent = reply;
+    botRow.appendChild(botAvatar);
+    botRow.appendChild(botBubble);
+    guide.appendChild(botRow);
+  }, 800);
+}
 </script>
 </body>
 </html>
