@@ -7,6 +7,10 @@ let sessionId = null;
 let currentRole = '松果';
 let messageCount = 0;
 
+// ===== 回复去重机制 =====
+let recentReplies = []; // 最近使用的回复（最多保留15条）
+const MAX_RECENT_REPLIES = 15;
+
 // ===== Message Rendering =====
 function addMessage(text, isUser, scenes = null) {
   const container = document.getElementById('chat-messages');
@@ -355,9 +359,29 @@ function getSmartFallback(userText) {
   else if (intents.grateful) intentKey = 'grateful';
   else if (intents.greeting) intentKey = 'greeting';
   
-  // 从对应意图的回复库中随机选择
+  // 从对应意图的回复库中随机选择（避免重复）
   const replies = replyDB[intentKey] || replyDB.default;
-  return replies[Math.floor(Math.random() * replies.length)];
+  
+  // 过滤掉最近使用过的回复
+  const availableReplies = replies.filter(r => !recentReplies.includes(r));
+  
+  let selectedReply;
+  if(availableReplies.length > 0) {
+    // 从可用回复中随机选择
+    selectedReply = availableReplies[Math.floor(Math.random() * availableReplies.length)];
+  } else {
+    // 如果所有回复都用过了，清空历史记录，重新选择
+    recentReplies = [];
+    selectedReply = replies[Math.floor(Math.random() * replies.length)];
+  }
+  
+  // 记录到最近使用的回复
+  recentReplies.push(selectedReply);
+  if(recentReplies.length > MAX_RECENT_REPLIES) {
+    recentReplies.shift(); // 移除最旧的
+  }
+  
+  return selectedReply;
 }
 
 // ===== 松松客服回复逻辑 =====
@@ -427,8 +451,19 @@ function getSongSongReply(userText) {
     return { text: '不用谢~ 能帮到你就好！还想继续聊吗？👇', scenes: ['吐槽大会', '治愈聊天', '吵架模拟器', '树洞', '复盘引导', '放松舱'] };
   }
   
-  // 默认回复
-  const fallback = songSongGuides.fallback[Math.floor(Math.random() * songSongGuides.fallback.length)];
+  // 默认回复（避免重复）
+  const availableFallbacks = songSongGuides.fallback.filter(r => !recentReplies.includes(r));
+  let fallback;
+  if(availableFallbacks.length > 0) {
+    fallback = availableFallbacks[Math.floor(Math.random() * availableFallbacks.length)];
+  } else {
+    recentReplies = [];
+    fallback = songSongGuides.fallback[Math.floor(Math.random() * songSongGuides.fallback.length)];
+  }
+  recentReplies.push(fallback);
+  if(recentReplies.length > MAX_RECENT_REPLIES) {
+    recentReplies.shift();
+  }
   return { text: fallback + ' 👇', scenes: ['吐槽大会', '治愈聊天', '吵架模拟器', '树洞', '复盘引导', '放松舱'] };
 }
 
