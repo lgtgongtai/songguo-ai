@@ -56,12 +56,14 @@ async function sendMessage() {
       headers: { 'Content-Type': 'application/json', 'Date': new Date().toUTCString() },
       body: JSON.stringify({ message: text, session_id: sessionId || 'session_' + Date.now(), role: currentRole })
     });
+    if(!response.ok) throw new Error('API returned ' + response.status);
     const data = await response.json();
     removeTyping();
     sessionId = data.session_id;
     addMessage(data.reply, false);
   } catch (error) {
     removeTyping();
+    console.log('API error, using fallback:', error.message);
     const replies = roleReplies[currentRole] || roleReplies['松果'];
     const reply = replies[Math.floor(Math.random() * replies.length)];
     addMessage(reply, false);
@@ -71,6 +73,64 @@ async function sendMessage() {
 function handleKeyDown(e) {
   if(e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
 }
+
+// ===== Voice Input =====
+let recognition = null;
+let isRecording = false;
+
+function initVoiceRecognition() {
+  if(!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+    console.log('Voice recognition not supported');
+    document.getElementById('voice-btn').style.display = 'none';
+    return;
+  }
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  recognition = new SpeechRecognition();
+  recognition.lang = 'zh-CN';
+  recognition.continuous = false;
+  recognition.interimResults = false;
+  
+  recognition.onstart = function() {
+    isRecording = true;
+    document.getElementById('voice-btn').classList.add('recording');
+    document.getElementById('chat-input').placeholder = '正在聆听...';
+  };
+  
+  recognition.onresult = function(event) {
+    const transcript = event.results[0][0].transcript;
+    document.getElementById('chat-input').value = transcript;
+    document.getElementById('chat-input').style.height = 'auto';
+    document.getElementById('chat-input').style.height = Math.min(document.getElementById('chat-input').scrollHeight, 100) + 'px';
+  };
+  
+  recognition.onend = function() {
+    isRecording = false;
+    document.getElementById('voice-btn').classList.remove('recording');
+    document.getElementById('chat-input').placeholder = '说点什么...';
+  };
+  
+  recognition.onerror = function(event) {
+    console.log('Voice error:', event.error);
+    isRecording = false;
+    document.getElementById('voice-btn').classList.remove('recording');
+    document.getElementById('chat-input').placeholder = '说点什么...';
+  };
+}
+
+function toggleVoiceInput() {
+  if(!recognition) {
+    alert('您的浏览器不支持语音输入，请使用Chrome或Edge浏览器');
+    return;
+  }
+  if(isRecording) {
+    recognition.stop();
+  } else {
+    recognition.start();
+  }
+}
+
+// Initialize voice on load
+initVoiceRecognition();
 
 // ===== Scene Selection =====
 async function selectScene(sceneId) {

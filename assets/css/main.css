@@ -67,6 +67,9 @@ input,textarea,select{font-family:inherit;border:none;outline:none;background:no
 
 /* ===== Chat Input ===== */
 .chat-input-area{flex-shrink:0;display:flex;align-items:flex-end;gap:8px;padding:10px 12px calc(10px + var(--safe-bottom));background:rgba(250,247,240,0.97);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid rgba(45,95,62,0.08)}
+.voice-btn{width:36px;height:36px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;transition:all .2s}
+.voice-btn:active{transform:scale(.9)}
+.voice-btn.recording{background:var(--red-soft);animation:pulse 1s infinite}
 .chat-input{flex:1;min-height:36px;max-height:100px;padding:8px 14px;border-radius:20px;background:#fff;font-size:15px;border:1px solid var(--cream-dark);resize:none;line-height:1.4}
 .chat-input:focus{border-color:var(--gold)}
 .chat-input::placeholder{color:#bbb}
