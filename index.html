@@ -15,7 +15,7 @@
   <div id="home-tab" class="tab-content active">
     <div class="chat-header">
       <div class="chat-header-left">
-        <div class="chat-header-avatar">🐿</div>
+        <div class="chat-header-avatar" style="background-image:url(assets/avatars/pinecone.svg);background-size:cover;background-position:center"></div>
         <div class="chat-header-info">
           <h3>松果AI</h3>
           <span>你的情绪解压伙伴</span>
@@ -27,7 +27,7 @@
     </div>
     <div class="song-song-guide" onclick="chatWithSongSong()">
       <div class="msg-row bot">
-        <div class="msg-avatar">🐿</div>
+        <div class="msg-avatar" style="background-image:url(assets/avatars/songguo-default.svg);background-size:cover;background-position:center"></div>
         <div class="msg-bubble">嗨，我是松松，你的解压向导~<br><br>今天感觉怎么样？选一个场景开始解压吧，或者<b>点击这里</b>跟我聊聊~</div>
       </div>
     </div>
@@ -35,10 +35,10 @@
       <div class="home-scenes-title">选择场景，开始解压</div>
       <div class="home-scenes-grid">
         <button class="home-scene-card" onclick="enterScene('吐槽大会')"><span class="scene-emoji">🔥</span><span class="scene-name">吐槽大会</span><span class="scene-tag">免费</span></button>
-        <button class="home-scene-card" onclick="enterScene('治愈聊天')"><span class="scene-emoji">🌿</span><span class="scene-name">治愈聊天</span><span class="scene-tag">会员</span></button>
+        <button class="home-scene-card" onclick="enterScene('治愈聊天')"><span class="scene-emoji"></span><span class="scene-name">治愈聊天</span><span class="scene-tag">会员</span></button>
         <button class="home-scene-card" onclick="enterScene('吵架模拟器')"><span class="scene-emoji">💢</span><span class="scene-name">吵架模拟器</span><span class="scene-tag">会员</span></button>
         <button class="home-scene-card" onclick="enterScene('安全宣泄')"><span class="scene-emoji">🕳</span><span class="scene-name">树洞</span><span class="scene-tag">会员</span></button>
-        <button class="home-scene-card" onclick="enterScene('复盘引导')"><span class="scene-emoji">🧭</span><span class="scene-name">复盘引导</span><span class="scene-tag">VIP</span></button>
+        <button class="home-scene-card" onclick="enterScene('复盘引导')"><span class="scene-emoji"></span><span class="scene-name">复盘引导</span><span class="scene-tag">VIP</span></button>
         <button class="home-scene-card" onclick="enterScene('放松舱')"><span class="scene-emoji">🫧</span><span class="scene-name">放松舱</span><span class="scene-tag">免费</span></button>
       </div>
     </div>
@@ -79,7 +79,7 @@
   <!-- ===== My Tab ===== -->
   <div id="my-tab" class="tab-content">
     <div class="my-header">
-      <div class="my-avatar" id="user-avatar" onclick="showAvatarSelector()">🐿</div>
+      <div class="my-avatar" id="user-avatar" onclick="showAvatarSelector()" style="background-image:url(assets/avatars/user-default.svg);background-size:cover;background-position:center"></div>
       <h2>松果AI</h2>
       <p>松一口气，换一种活法</p>
     </div>
@@ -87,18 +87,11 @@
       <div class="my-section">
         <div class="my-section-title">🎨 我的头像</div>
         <div class="avatar-selector" id="avatar-selector">
-          <div class="avatar-option selected" onclick="selectAvatar('')">🐿</div>
-          <div class="avatar-option" onclick="selectAvatar('')">🐶</div>
-          <div class="avatar-option" onclick="selectAvatar('🐱')">🐱</div>
-          <div class="avatar-option" onclick="selectAvatar('🦊')">🦊</div>
-          <div class="avatar-option" onclick="selectAvatar('🐻')">🐻</div>
-          <div class="avatar-option" onclick="selectAvatar('🐼')">🐼</div>
-          <div class="avatar-option" onclick="selectAvatar('🐨')">🐨</div>
-          <div class="avatar-option" onclick="selectAvatar('🦁')">🦁</div>
-          <div class="avatar-option" onclick="selectAvatar('👦')">👦</div>
-          <div class="avatar-option" onclick="selectAvatar('👧')">👧</div>
-          <div class="avatar-option" onclick="selectAvatar('👨')">👨</div>
-          <div class="avatar-option" onclick="selectAvatar('👩')">👩</div>
+          <div class="avatar-option selected" onclick="selectAvatar('user-default')" style="background-image:url(assets/avatars/user-default.svg);background-size:cover;background-position:center"></div>
+          <div class="avatar-option" onclick="selectAvatar('user-boy')" style="background-image:url(assets/avatars/user-boy.svg);background-size:cover;background-position:center"></div>
+          <div class="avatar-option" onclick="selectAvatar('user-girl')" style="background-image:url(assets/avatars/user-girl.svg);background-size:cover;background-position:center"></div>
+          <div class="avatar-option" onclick="selectAvatar('user-man')" style="background-image:url(assets/avatars/user-man.svg);background-size:cover;background-position:center"></div>
+          <div class="avatar-option" onclick="selectAvatar('user-woman')" style="background-image:url(assets/avatars/user-woman.svg);background-size:cover;background-position:center"></div>
           <div class="avatar-upload" onclick="document.getElementById('avatar-file-input').click()">+</div>
         </div>
         <input type="file" id="avatar-file-input" accept="image/*" style="display:none" onchange="uploadAvatar(event)">
@@ -119,205 +112,96 @@
       <div class="my-section">
         <div class="my-section-title">📁 数据管理</div>
         <div class="data-actions">
-          <div class="data-action-btn" onclick="exportChatData()"><span class="data-action-icon">📋</span><span>复制对话记录</span></div>
-          <div class="data-action-btn danger" onclick="deleteAllData()"><span class="data-action-icon">🗑</span><span>删除所有数据</span></div>
+          <button class="data-btn" onclick="copyChatRecords()">📋 复制记录</button>
+          <button class="data-btn danger" onclick="clearChatRecords()">🗑 清空记录</button>
         </div>
       </div>
       <div class="my-section">
-        <div class="my-section-title">关于</div>
-        <div class="about-links">
-          <div class="about-link" onclick="showLegalPage('terms')">用户协议<span class="about-link-arrow">›</span></div>
-          <div class="about-link" onclick="showLegalPage('privacy')">隐私政策<span class="about-link-arrow">›</span></div>
-          <div class="about-link">版本<span style="color:#999">v1.2.0</span></div>
+        <div class="my-section-title">📄 法律信息</div>
+        <div class="legal-links">
+          <button class="legal-btn" onclick="showLegalPage('terms')">用户协议</button>
+          <button class="legal-btn" onclick="showLegalPage('privacy')">隐私政策</button>
         </div>
       </div>
       <div class="my-section">
-        <div class="data-actions">
-          <div class="data-action-btn" onclick="showExitConfirm()"><span class="data-action-icon">🚪</span><span>退出登录</span></div>
-        </div>
+        <button class="logout-btn" onclick="logout()">退出登录</button>
       </div>
     </div>
   </div>
 
   <!-- ===== Tab Bar ===== -->
-  <div class="tab-bar">
-    <div class="tab-bar-item active" onclick="switchTab('home')"><span class="tab-icon">🏠</span><span class="tab-label">首页</span></div>
-    <div class="tab-bar-item" onclick="switchTab('records')"><span class="tab-icon">📋</span><span class="tab-label">记录</span></div>
-    <div class="tab-bar-item" onclick="switchTab('my')"><span class="tab-icon">🐿</span><span class="tab-label">我的</span></div>
+  <div class="tab-bar" id="tab-bar">
+    <button class="tab-item active" onclick="switchTab('home')">
+      <span class="tab-icon"></span>
+      <span class="tab-label">首页</span>
+    </button>
+    <button class="tab-item" onclick="switchTab('records')">
+      <span class="tab-icon">📋</span>
+      <span class="tab-label">记录</span>
+    </button>
+    <button class="tab-item" onclick="switchTab('my')">
+      <span class="tab-icon">🐿</span>
+      <span class="tab-label">我的</span>
+    </button>
   </div>
 </div>
 
-<!-- ===== Scene Modal ===== -->
-<div class="scene-modal" id="scene-modal">
-  <div class="scene-modal-content">
-    <div class="scene-modal-header">
-      <h3 id="modal-title"></h3>
-      <button class="scene-modal-close" onclick="closeModal()">✕</button>
-    </div>
-    <div class="scene-modal-body" id="modal-body"></div>
-  </div>
-</div>
-
-<!-- ===== Welcome Modal ===== -->
-<div class="compliance-overlay" id="welcome-modal">
-  <div class="compliance-modal">
-    <div class="compliance-modal-logo"><span>🐿</span></div>
+<!-- ===== Modals ===== -->
+<div id="welcome-modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-icon">🐿</div>
     <h2>欢迎来到松果AI</h2>
-    <p class="subtitle">你的情绪解压伙伴</p>
-    <div class="ai-notice">
-      <span class="ai-notice-icon">🤖</span>
-      <div class="ai-notice-text">
-        <strong>你正在与人工智能交互，非自然人。</strong><br>
-        松果AI是一个基于人工智能技术的情感陪伴与解压工具，所有角色均为AI模拟，不代表真实人物。
-      </div>
+    <p>你的情绪解压伙伴</p>
+    <div class="modal-notice">
+      <p>⚠️ 本服务由AI提供，内容仅供参考</p>
+      <p>🔞 未成年人请在监护人指导下使用</p>
     </div>
-    <div class="age-section">
-      <label>请选择你的出生年份（需满18周岁）</label>
-      <select class="age-select" id="birth-year-select"><option value="">请选择</option></select>
+    <div class="modal-age-check">
+      <label>
+        <input type="checkbox" id="age-confirm"> 我已满18周岁
+      </label>
     </div>
-    <div class="agreement-section">
-      <div class="agreement-check" onclick="toggleAgreement()">
-        <div class="agreement-checkbox" id="agreement-checkbox">✓</div>
-        <div class="agreement-text">我已阅读并同意<a onclick="event.stopPropagation();showLegalPage('terms')">《用户协议》</a>和<a onclick="event.stopPropagation();showLegalPage('privacy')">《隐私政策》</a>，了解我的对话数据将被加密存储，且不会用于未经单独同意的模型训练。</div>
-      </div>
+    <div class="modal-agree">
+      <label>
+        <input type="checkbox" id="terms-agree"> 我已阅读并同意<a href="#" onclick="showLegalPage('terms');return false">用户协议</a>和<a href="#" onclick="showLegalPage('privacy');return false">隐私政策</a>
+      </label>
     </div>
-    <button class="compliance-btn primary disabled" id="welcome-enter-btn" onclick="enterApp()">进入松果AI</button>
+    <button class="modal-btn" onclick="acceptWelcome()">开始使用</button>
   </div>
 </div>
 
-<!-- ===== Minor Blocked Modal ===== -->
-<div class="compliance-overlay" id="minor-modal">
-  <div class="compliance-modal">
-    <div class="minor-blocked">
-      <div class="blocked-icon">🔒</div>
-      <h3>暂不提供服务</h3>
-      <p>根据相关法规要求，松果AI目前仅向18周岁及以上用户提供服务。感谢你的理解。</p>
-      <p style="font-size:13px;color:#999;margin-bottom:20px">如果你遇到心理困扰，可以拨打：<br><strong style="color:var(--green)">12356</strong>（青少年服务热线）<br><strong style="color:var(--green)">400-161-9995</strong>（希望24热线）</p>
-      <button class="compliance-btn secondary" onclick="closeMinorModal()">我知道了</button>
+<div id="legal-modal" class="modal">
+  <div class="modal-content legal-content">
+    <h2 id="legal-title"></h2>
+    <div id="legal-body"></div>
+    <button class="modal-btn" onclick="closeLegalPage()">关闭</button>
+  </div>
+</div>
+
+<div id="addiction-modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-icon">⏰</div>
+    <h2>休息一下</h2>
+    <p>你已经连续使用2小时了</p>
+    <p>长时间使用可能影响身心健康</p>
+    <button class="modal-btn" onclick="closeAddictionModal()">我知道了</button>
+  </div>
+</div>
+
+<div id="crisis-modal" class="modal">
+  <div class="modal-content crisis">
+    <div class="modal-icon"></div>
+    <h2>你还好吗？</h2>
+    <p>如果你正在经历困难时刻，请记住你并不孤单</p>
+    <div class="crisis-hotlines">
+      <p>📞 心理援助热线：<strong>400-161-9995</strong></p>
+      <p>📞 北京心理危机研究与干预中心：<strong>010-82951332</strong></p>
+      <p>📞 全国24小时希望热线：<strong>400-161-9995</strong></p>
     </div>
+    <button class="modal-btn" onclick="closeCrisisModal()">我需要帮助</button>
   </div>
 </div>
 
-<!-- ===== Rest Reminder Modal ===== -->
-<div class="compliance-overlay" id="rest-modal">
-  <div class="compliance-modal">
-    <div class="rest-modal-content">
-      <div class="rest-icon">🌿</div>
-      <h3>休息一下</h3>
-      <p>你已经使用松果AI超过 <strong id="rest-hours">2</strong> 小时了。<br>站起来活动活动，喝杯水，看看窗外~<br>松果随时都在，不急这一会儿。</p>
-      <div class="rest-timer" id="rest-timer">30秒后自动关闭</div>
-      <button class="compliance-btn primary" onclick="closeRestModal()">好的，休息一下</button>
-    </div>
-  </div>
-</div>
-
-<!-- ===== Crisis Intervention Modal ===== -->
-<div class="compliance-overlay" id="crisis-modal">
-  <div class="compliance-modal">
-    <div class="crisis-modal-content">
-      <div class="crisis-icon">🫂</div>
-      <h3>你很重要</h3>
-      <p>我注意到你可能正在经历一些很困难的时刻。<br>你的感受是真实的，你值得被帮助。<br>请考虑联系专业人士，他们能给你更好的支持。</p>
-      <div class="crisis-hotlines">
-        <div class="crisis-hotline"><span class="crisis-hotline-icon">📞</span><div class="crisis-hotline-info"><div class="crisis-hotline-name">24小时心理援助热线</div><div class="crisis-hotline-number">400-161-9995</div></div><a href="tel:4001619995" class="crisis-hotline-call">拨打</a></div>
-        <div class="crisis-hotline"><span class="crisis-hotline-icon">📞</span><div class="crisis-hotline-info"><div class="crisis-hotline-name">全国心理援助热线</div><div class="crisis-hotline-number">010-82951332</div></div><a href="tel:01082951332" class="crisis-hotline-call">拨打</a></div>
-        <div class="crisis-hotline"><span class="crisis-hotline-icon">📞</span><div class="crisis-hotline-info"><div class="crisis-hotline-name">生命热线</div><div class="crisis-hotline-number">400-821-1215</div></div><a href="tel:4008211215" class="crisis-hotline-call">拨打</a></div>
-        <div class="crisis-hotline"><span class="crisis-hotline-icon">📞</span><div class="crisis-hotline-info"><div class="crisis-hotline-name">紧急求助</div><div class="crisis-hotline-number">120 / 110</div></div><a href="tel:120" class="crisis-hotline-call">拨打</a></div>
-      </div>
-      <button class="compliance-btn primary" onclick="closeCrisisModal()">我知道了</button>
-    </div>
-  </div>
-</div>
-
-<!-- ===== Exit Confirm Modal ===== -->
-<div class="compliance-overlay" id="exit-modal">
-  <div class="compliance-modal">
-    <div class="rest-modal-content">
-      <div class="rest-icon">👋</div>
-      <h3>确认退出？</h3>
-      <p>退出后需要重新进行年龄验证。<br>你的对话数据仍会保留在本设备上。</p>
-      <button class="compliance-btn primary" onclick="confirmExit()">确认退出</button>
-      <button class="compliance-btn secondary" onclick="closeExitModal()">取消</button>
-    </div>
-  </div>
-</div>
-
-<!-- ===== Delete Confirm Modal ===== -->
-<div class="compliance-overlay" id="delete-modal">
-  <div class="compliance-modal">
-    <div class="rest-modal-content">
-      <div class="rest-icon">⚠️</div>
-      <h3>删除所有数据？</h3>
-      <p>这将永久删除本设备上的所有对话记录、解压记录和个人设置。此操作不可恢复。</p>
-      <button class="compliance-btn primary" style="background:var(--red-soft)" onclick="confirmDeleteAll()">确认删除</button>
-      <button class="compliance-btn secondary" onclick="closeDeleteModal()">取消</button>
-    </div>
-  </div>
-</div>
-
-<!-- ===== Terms Page ===== -->
-<div class="legal-page" id="terms-page">
-  <div class="legal-page-header">
-    <button class="legal-page-back" onclick="closeLegalPage()">←</button>
-    <h3>用户协议</h3>
-  </div>
-  <div class="legal-page-body">
-    <h4>一、服务说明</h4>
-    <p>松果AI（以下简称"本服务"）是一款基于人工智能技术的情绪解压与情感陪伴工具。本服务通过模拟不同人格特征的角色，为用户提供情感倾诉、压力释放、情绪疏导等互动体验。</p>
-    <p><strong>重要提示：你正在与人工智能交互，所有角色均为AI模拟，不代表真实人物。</strong></p>
-    <h4>二、年龄限制</h4>
-    <p>根据相关法规要求，本服务仅向年满18周岁的用户开放。未满18周岁的用户不得使用本服务。我们在注册时要求进行年龄验证，请如实填写。</p>
-    <h4>三、用户行为规范</h4>
-    <p>使用本服务时，你不得：</p>
-    <ul><li>利用本服务生成违法违规内容</li><li>对本服务进行反向工程或试图提取源代码</li><li>将本服务的输出内容用于误导、欺骗他人</li><li>冒充他人或虚构身份</li></ul>
-    <h4>四、内容安全</h4>
-    <p>本服务内置内容安全机制，对语言暴力、自残暗示等违规内容进行拦截。但请注意，AI生成的内容仅供参考，不构成医疗、法律或其他专业建议。</p>
-    <h4>五、健康提醒</h4>
-    <p>本服务不能替代专业心理咨询或医疗服务。如果你正在经历严重的心理危机，请立即联系专业机构或拨打心理援助热线。</p>
-    <h4>六、沉迷防控</h4>
-    <p>本服务设有使用时长提醒机制。连续使用超过2小时将弹出休息提醒。请合理安排使用时间，避免过度依赖。</p>
-    <h4>七、服务变更与终止</h4>
-    <p>我们有权根据需要修改或终止部分或全部服务。你可以随时停止使用本服务，并通过"我的-数据管理"删除所有个人数据。</p>
-    <h4>八、免责声明</h4>
-    <p>本服务按"现状"提供，不对服务的完整性、及时性、安全性作任何明示或暗示的保证。因使用本服务产生的任何风险，由用户自行承担。</p>
-    <h4>九、联系方式</h4>
-    <p>如对本协议有任何疑问，请通过应用内反馈渠道联系我们。</p>
-    <p style="color:#999;font-size:12px;margin-top:20px">更新日期：2026年7月</p>
-  </div>
-</div>
-
-<!-- ===== Privacy Page ===== -->
-<div class="legal-page" id="privacy-page">
-  <div class="legal-page-header">
-    <button class="legal-page-back" onclick="closeLegalPage()">←</button>
-    <h3>隐私政策</h3>
-  </div>
-  <div class="legal-page-body">
-    <h4>一、信息收集</h4>
-    <p>我们收集以下信息：</p>
-    <ul><li><strong>年龄信息</strong>：用于年龄验证，确保仅向成年人提供服务</li><li><strong>对话数据</strong>：你与AI角色的对话内容，用于提供连续的情感互动体验</li><li><strong>设备信息</strong>：设备型号、操作系统版本，用于优化服务体验</li></ul>
-    <h4>二、信息使用</h4>
-    <p>收集的信息仅用于：</p>
-    <ul><li>提供和改善情感互动服务</li><li>年龄验证与合规管理</li><li>危机识别与干预</li><li>服务安全维护</li></ul>
-    <h4>三、信息存储与保护</h4>
-    <p>你的对话数据采用加密存储，我们采取严格的安全措施保护你的个人信息不被未授权访问、泄露或损毁。</p>
-    <h4>四、敏感个人信息</h4>
-    <p>你的情绪倾诉、心理状态等对话内容属于敏感个人信息。我们承诺：</p>
-    <ul><li><strong>不会</strong>将敏感交互数据用于模型训练，除非取得你的单独同意</li><li><strong>不会</strong>向第三方提供你的交互数据，除非法律法规要求</li><li>你可以随时行使复制权和删除权</li></ul>
-    <h4>五、你的权利</h4>
-    <p>你享有以下权利：</p>
-    <ul><li><strong>复制权</strong>：在"我的-数据管理"中复制你的对话记录</li><li><strong>删除权</strong>：在"我的-数据管理"中删除所有个人数据</li><li><strong>撤回同意</strong>：随时停止使用本服务即视为撤回同意</li><li><strong>注销账户</strong>：通过"退出登录"功能注销</li></ul>
-    <h4>六、未成年人保护</h4>
-    <p>本服务不向未满18周岁的用户开放。如果我们发现在未取得监护人同意的情况下收集了未成年人的个人信息，将尽快删除相关数据。</p>
-    <h4>七、政策更新</h4>
-    <p>我们可能会不定期更新本隐私政策。重大变更将通过应用内通知的方式告知。</p>
-    <h4>八、联系我们</h4>
-    <p>如对本隐私政策有任何疑问或建议，请通过应用内反馈渠道联系我们。</p>
-    <p style="color:#999;font-size:12px;margin-top:20px">更新日期：2026年7月</p>
-  </div>
-</div>
-
-<!-- ===== JS Modules (order matters: roles -> compliance -> chat -> app) ===== -->
 <script src="assets/js/roles.js"></script>
 <script src="assets/js/compliance.js"></script>
 <script src="assets/js/chat.js"></script>

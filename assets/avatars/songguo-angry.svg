@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- 松松吉祥物 - 暴躁表情 -->
+  <circle cx="50" cy="55" r="35" fill="#639922"/>
+  <circle cx="35" cy="25" r="12" fill="#639922"/>
+  <circle cx="65" cy="25" r="12" fill="#639922"/>
+  <circle cx="35" cy="25" r="7" fill="#B8E0D2"/>
+  <circle cx="65" cy="25" r="7" fill="#B8E0D2"/>
+  <ellipse cx="50" cy="55" rx="28" ry="30" fill="#639922"/>
+  <ellipse cx="50" cy="65" rx="18" ry="20" fill="#B8E0D2"/>
+  <ellipse cx="50" cy="75" rx="10" ry="12" fill="#FFB38A"/>
+  <path d="M 42 72 Q 50 68 58 72" stroke="#639922" stroke-width="2" fill="none"/>
+  <path d="M 42 78 Q 50 74 58 78" stroke="#639922" stroke-width="2" fill="none"/>
+  <!-- 眼睛 - 生气 -->
+  <circle cx="40" cy="48" r="4" fill="#2C4730"/>
+  <circle cx="60" cy="48" r="4" fill="#2C4730"/>
+  <!-- 眉毛 - 愤怒 -->
+  <line x1="35" y1="42" x2="45" y2="45" stroke="#2C4730" stroke-width="3" stroke-linecap="round"/>
+  <line x1="65" y1="42" x2="55" y2="45" stroke="#2C4730" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="50" cy="55" r="3" fill="#FFB38A"/>
+  <!-- 嘴巴 - 生气 -->
+  <path d="M 44 63 Q 50 59 56 63" stroke="#2C4730" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <circle cx="35" cy="55" r="4" fill="#FFB38A" opacity="0.5"/>
+  <circle cx="65" cy="55" r="4" fill="#FFB38A" opacity="0.5"/>
+  <path d="M 75 60 Q 90 50 85 70 Q 80 80 70 75" fill="#639922"/>
+  <path d="M 78 62 Q 85 55 82 68" fill="#B8E0D2" opacity="0.6"/>
+  <circle cx="75" cy="30" r="8" fill="#B8E0D2" opacity="0.6"/>
+  <text x="75" y="33" font-size="8" fill="#639922" text-anchor="middle">呼~</text>
+</svg>

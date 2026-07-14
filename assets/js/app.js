@@ -124,14 +124,23 @@ document.getElementById('scene-modal').addEventListener('click', function(e) { i
 document.getElementById('chat-input').addEventListener('input', function() { this.style.height = 'auto'; this.style.height = Math.min(this.scrollHeight, 100) + 'px'; });
 
 // ===== Avatar Functions =====
-let currentAvatar = localStorage.getItem('user_avatar') || '';
+let currentAvatar = localStorage.getItem('user_avatar') || 'user-default';
 
-function selectAvatar(emoji) {
-  currentAvatar = emoji;
-  localStorage.setItem('user_avatar', emoji);
-  document.getElementById('user-avatar').textContent = emoji;
+function selectAvatar(avatarName) {
+  currentAvatar = avatarName;
+  localStorage.setItem('user_avatar', avatarName);
+  const userAvatarEl = document.getElementById('user-avatar');
+  if(avatarName.startsWith('data:image')) {
+    userAvatarEl.textContent = '';
+    userAvatarEl.style.backgroundImage = 'url(' + avatarName + ')';
+  } else {
+    userAvatarEl.textContent = '';
+    userAvatarEl.style.backgroundImage = 'url(assets/avatars/' + avatarName + '.svg)';
+  }
+  userAvatarEl.style.backgroundSize = 'cover';
+  userAvatarEl.style.backgroundPosition = 'center';
   document.querySelectorAll('.avatar-option').forEach(el => el.classList.remove('selected'));
-  event.target.classList.add('selected');
+  event.target.closest('.avatar-option').classList.add('selected');
 }
 
 function uploadAvatar(event) {

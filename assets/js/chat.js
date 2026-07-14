@@ -21,16 +21,47 @@ function addMessage(text, isUser, scenes = null) {
       avatar.style.backgroundSize = 'cover';
       avatar.style.backgroundPosition = 'center';
       avatar.textContent = '';
+    } else if(userAvatar) {
+      avatar.style.backgroundImage = 'url(assets/avatars/' + userAvatar + '.svg)';
+      avatar.style.backgroundSize = 'cover';
+      avatar.style.backgroundPosition = 'center';
+      avatar.textContent = '';
     } else {
-      avatar.textContent = userAvatar || '';
+      avatar.style.backgroundImage = 'url(assets/avatars/user-default.svg)';
+      avatar.style.backgroundSize = 'cover';
+      avatar.style.backgroundPosition = 'center';
+      avatar.textContent = '';
     }
   } else {
-    if(currentRole === '松松' || currentRole === '松果') {
+    if(currentRole === '松松') {
+      avatar.style.backgroundImage = 'url(assets/avatars/songguo-default.svg)';
+      avatar.style.backgroundSize = 'cover';
+      avatar.style.backgroundPosition = 'center';
+      avatar.textContent = '';
+    } else if(currentRole === '松果') {
+      avatar.style.backgroundImage = 'url(assets/avatars/pinecone.svg)';
+      avatar.style.backgroundSize = 'cover';
+      avatar.style.backgroundPosition = 'center';
       avatar.textContent = '';
     } else if(scenes) {
       const scene = scenes.find(s => s.name === currentRole);
-      avatar.textContent = scene ? scene.emoji : '';
+      if(scene) {
+        const emojiMap = {'🔥':'songguo-angry','🌿':'songguo-gentle','💢':'songguo-angry','':'songguo-think','🧭':'songguo-think','🫧':'songguo-relax'};
+        const svgName = emojiMap[scene.emoji] || 'songguo-default';
+        avatar.style.backgroundImage = 'url(assets/avatars/' + svgName + '.svg)';
+        avatar.style.backgroundSize = 'cover';
+        avatar.style.backgroundPosition = 'center';
+        avatar.textContent = '';
+      } else {
+        avatar.style.backgroundImage = 'url(assets/avatars/songguo-default.svg)';
+        avatar.style.backgroundSize = 'cover';
+        avatar.style.backgroundPosition = 'center';
+        avatar.textContent = '';
+      }
     } else {
+      avatar.style.backgroundImage = 'url(assets/avatars/songguo-default.svg)';
+      avatar.style.backgroundSize = 'cover';
+      avatar.style.backgroundPosition = 'center';
       avatar.textContent = '';
     }
   }
