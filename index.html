@@ -12,7 +12,8 @@
 html{height:100%;-webkit-text-size-adjust:100%}
 body{
   font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif;
-  background:var(--cream);color:#2D3436;line-height:1.5;min-height:100vh;overflow-x:hidden;
+  background:var(--cream);color:#2D3436;line-height:1.5;min-height:100%;
+  overflow:hidden;position:fixed;width:100%;height:100%;
 }
 :root{
   --green:#2D5F3E;--green-light:#4A8C62;--green-pale:#E8F0E8;
@@ -21,672 +22,530 @@ body{
   --brown:#8B6F47;--brown-light:#A68B5B;
   --orange:#E8944A;--orange-light:#F0A85C;
   --red-soft:#D4726A;--blue-soft:#6A9FB5;--purple-soft:#9B7EB5;
-  --shadow:0 2px 12px rgba(45,95,62,0.06);--shadow-lg:0 8px 24px rgba(45,95,62,0.10);
+  --shadow:0 2px 12px rgba(45,95,62,0.06);
+  --shadow-lg:0 8px 24px rgba(45,95,62,0.10);
   --radius:16px;--radius-sm:10px;
-  --safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px);
+  --safe-top:env(safe-area-inset-top,0px);
+  --safe-bottom:env(safe-area-inset-bottom,0px);
 }
 button{font-family:inherit;border:none;background:none;cursor:pointer;color:inherit}
-input,textarea,select{font-family:inherit;border:none;outline:none;background:none}
+input,textarea{font-family:inherit;border:none;outline:none;background:none}
+
+/* ===== App Shell ===== */
 #app{display:flex;flex-direction:column;height:100%;width:100%;position:relative}
-.ai-badge{display:flex;align-items:center;gap:4px;padding:3px 8px;border-radius:10px;background:rgba(106,159,181,0.12);font-size:10px;color:var(--blue-soft)}
-.ai-badge-dot{width:5px;height:5px;border-radius:50%;background:var(--blue-soft);animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+
+/* ===== Tab Content ===== */
 .tab-content{display:none;flex:1;flex-direction:column;overflow:hidden;position:relative}
 .tab-content.active{display:flex}
+
+/* ===== Chat Tab ===== */
 #chat-tab{background:var(--gold-pale)}
-.chat-header{display:flex;align-items:center;justify-content:space-between;padding:calc(12px + var(--safe-top)) 16px 12px;background:rgba(250,247,240,0.97);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(212,168,67,0.12);z-index:10;flex-shrink:0}
+.chat-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:calc(12px + var(--safe-top)) 16px 12px;
+  background:rgba(250,247,240,0.97);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(212,168,67,0.12);z-index:10;
+  flex-shrink:0;
+}
 .chat-header-left{display:flex;align-items:center;gap:10px}
-.chat-header-avatar{width:44px;height:44px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:28px;color:#fff;box-shadow:0 2px 8px rgba(212,168,67,0.3)}
+.chat-header-avatar{
+  width:44px;height:44px;border-radius:50%;background:var(--gold);
+  display:flex;align-items:center;justify-content:center;
+  font-size:28px;color:#fff;box-shadow:0 2px 8px rgba(212,168,67,0.3);
+}
 .chat-header-info h3{font-size:15px;font-weight:600;color:var(--brown)}
 .chat-header-info span{font-size:11px;color:#999}
-.chat-header-right{display:flex;align-items:center;gap:8px}
-.chat-header-btn{width:32px;height:32px;border-radius:50%;background:var(--gold-pale);display:flex;align-items:center;justify-content:center;font-size:16px}
-.chat-messages{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px;padding-bottom:8px;display:flex;flex-direction:column;gap:12px}
+.chat-header-btn{
+  width:32px;height:32px;border-radius:50%;background:var(--gold-pale);
+  display:flex;align-items:center;justify-content:center;font-size:16px;
+}
+
+/* Chat Messages */
+.chat-messages{
+  flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  padding:16px;padding-bottom:8px;
+  display:flex;flex-direction:column;gap:12px;
+}
 .chat-messages::-webkit-scrollbar{width:3px}
 .chat-messages::-webkit-scrollbar-thumb{background:var(--green);border-radius:2px}
+
 .msg-row{display:flex;gap:8px;max-width:85%;animation:msgIn .3s ease}
 .msg-row.bot{align-self:flex-start}
 .msg-row.user{align-self:flex-end;flex-direction:row-reverse}
-.msg-avatar{width:40px;height:40px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:24px;margin-top:2px}
+.msg-avatar{
+  width:40px;height:40px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:24px;
+  margin-top:2px;
+}
 .msg-row.bot .msg-avatar{background:var(--gold);color:#fff;box-shadow:0 2px 6px rgba(212,168,67,0.25)}
 .msg-row.user .msg-avatar{background:var(--orange);color:#fff}
-.msg-bubble{padding:10px 14px;border-radius:16px;font-size:14px;line-height:1.6;word-break:break-word;position:relative}
+.msg-bubble{
+  padding:10px 14px;border-radius:16px;font-size:14px;line-height:1.6;
+  word-break:break-word;position:relative;
+}
 .msg-row.bot .msg-bubble{background:#fff;border-top-left-radius:4px;box-shadow:0 1px 4px rgba(0,0,0,0.04)}
 .msg-row.user .msg-bubble{background:var(--gold);color:#fff;border-top-right-radius:4px}
 .msg-time{font-size:10px;color:#bbb;margin-top:4px;text-align:right}
 .msg-row.bot .msg-time{text-align:left}
+
 @keyframes msgIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* Typing Indicator */
 .typing-indicator{display:flex;gap:4px;padding:12px 16px}
-.typing-dot{width:6px;height:6px;border-radius:50%;background:var(--gold-light);animation:typingBounce 1.2s infinite}
+.typing-dot{
+  width:6px;height:6px;border-radius:50%;background:var(--gold-light);
+  animation:typingBounce 1.2s infinite;
+}
 .typing-dot:nth-child(2){animation-delay:.2s}
 .typing-dot:nth-child(3){animation-delay:.4s}
 @keyframes typingBounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
-.scene-quick{display:none}
-.home-scenes{flex-shrink:0;padding:12px;background:rgba(250,247,240,0.95);border-top:1px solid rgba(212,168,67,0.10)}
-.home-scenes-title{font-size:13px;font-weight:600;color:var(--brown);margin-bottom:10px;padding:0 4px}
-.home-scenes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.home-scene-card{display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 8px;border-radius:12px;background:#fff;border:1px solid var(--green-pale);transition:all .2s;position:relative}
-.home-scene-card:active{transform:scale(.95);background:var(--gold-pale)}
-.home-scene-card .scene-emoji{font-size:24px}
-.home-scene-card .scene-name{font-size:12px;color:var(--brown);font-weight:500}
-.home-scene-card .scene-tag{position:absolute;top:4px;right:4px;font-size:9px;padding:1px 5px;border-radius:6px;background:var(--gold-pale);color:#B8860B}
-.chat-input-area{flex-shrink:0;display:flex;align-items:flex-end;gap:8px;padding:10px 12px calc(10px + var(--safe-bottom));background:rgba(250,247,240,0.97);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid rgba(45,95,62,0.08)}
-.chat-input{flex:1;min-height:36px;max-height:100px;padding:8px 14px;border-radius:20px;background:#fff;font-size:15px;border:1px solid var(--cream-dark);resize:none;line-height:1.4}
+
+/* Scene Quick Access */
+.scene-quick{
+  flex-shrink:0;padding:8px 12px;background:rgba(250,247,240,0.95);
+  border-top:1px solid rgba(212,168,67,0.10);
+  overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch;
+  display:flex;gap:8px;
+}
+.scene-quick::-webkit-scrollbar{display:none}
+.scene-quick-item{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:8px 14px;border-radius:20px;background:#fff;
+  font-size:13px;color:var(--brown);white-space:nowrap;
+  border:1px solid var(--green-pale);transition:all .2s;
+  flex-shrink:0;
+}
+.scene-quick-item:active{transform:scale(.95);background:var(--gold-pale)}
+.scene-quick-item .sq-emoji{font-size:16px}
+
+/* Chat Input */
+.chat-input-area{
+  flex-shrink:0;display:flex;align-items:flex-end;gap:8px;
+  padding:10px 12px calc(10px + var(--safe-bottom));
+  background:rgba(250,247,240,0.97);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-top:1px solid rgba(212,168,67,0.10);
+  border-top:1px solid rgba(45,95,62,0.08);
+}
+.chat-input{
+  flex:1;min-height:36px;max-height:100px;padding:8px 14px;
+  border-radius:20px;background:#fff;font-size:15px;
+  border:1px solid var(--cream-dark);resize:none;
+  line-height:1.4;
+}
 .chat-input:focus{border-color:var(--gold)}
 .chat-input::placeholder{color:#bbb}
-.chat-send-btn{width:36px;height:36px;border-radius:50%;background:var(--gold);color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;transition:all .2s}
+.chat-send-btn{
+  width:36px;height:36px;border-radius:50%;background:var(--gold);
+  color:#fff;display:flex;align-items:center;justify-content:center;
+  font-size:16px;flex-shrink:0;transition:all .2s;
+}
 .chat-send-btn:active{transform:scale(.9)}
 .chat-send-btn.disabled{background:var(--cream-dark);color:#bbb}
+
+/* ===== Records Tab ===== */
 #records-tab{background:var(--cream)}
-.records-header{padding:calc(20px + var(--safe-top)) 20px 16px;text-align:center;background:linear-gradient(180deg,var(--gold-pale) 0%,var(--cream) 100%);flex-shrink:0}
+.records-header{
+  padding:calc(20px + var(--safe-top)) 20px 16px;text-align:center;
+  background:linear-gradient(180deg,var(--gold-pale) 0%,var(--cream) 100%);
+  flex-shrink:0;
+}
 .records-header h2{font-size:20px;font-weight:700;color:var(--brown);margin-bottom:4px}
 .records-header p{font-size:13px;color:#888}
-.records-list{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 16px 20px}
-.record-card{background:#fff;border-radius:var(--radius);padding:16px;margin-bottom:12px;border:1px solid rgba(212,168,67,0.10);box-shadow:0 2px 8px rgba(0,0,0,0.04)}
-.record-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.records-list{
+  flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  padding:0 16px 20px;
+}
+.record-card{
+  background:#fff;border-radius:var(--radius);padding:16px;margin-bottom:12px;
+  border:1px solid rgba(212,168,67,0.10);
+  box-shadow:0 2px 8px rgba(0,0,0,0.04);
+}
+.record-card-header{
+  display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;
+}
 .record-card-scene{display:flex;align-items:center;gap:8px}
-.record-card-scene-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;background:linear-gradient(135deg,#FFF8E8,#FFE8B0)}
+.record-card-scene-icon{
+  width:36px;height:36px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;font-size:18px;
+  background:linear-gradient(135deg,#FFF8E8,#FFE8B0);
+}
 .record-card-scene-name{font-size:15px;font-weight:600;color:var(--brown)}
 .record-card-date{font-size:12px;color:#999}
 .record-card-dimensions{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
-.record-dim{font-size:11px;padding:3px 8px;border-radius:10px;background:rgba(212,168,67,0.1);color:#B8860B}
-.record-card-gains{font-size:13px;color:#666;line-height:1.6;padding-top:12px;border-top:1px solid #f0ebe0}
+.record-dim{
+  font-size:11px;padding:3px 8px;border-radius:10px;
+  background:rgba(212,168,67,0.1);color:#B8860B;
+}
+.record-card-gains{
+  font-size:13px;color:#666;line-height:1.6;
+  padding-top:12px;border-top:1px solid #f0ebe0;
+}
 .record-card-gains strong{color:var(--brown);font-weight:600}
-.record-card-action{margin-top:8px;font-size:12px;color:#B8860B;background:rgba(212,168,67,0.08);padding:8px 12px;border-radius:8px}
+.record-card-action{
+  margin-top:8px;font-size:12px;color:#B8860B;
+  background:rgba(212,168,67,0.08);padding:8px 12px;border-radius:8px;
+}
 .record-empty{text-align:center;padding:60px 20px;color:#999}
 .record-empty-icon{font-size:48px;margin-bottom:12px}
 .record-empty p{font-size:14px;margin:0}
-.scene-modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:100;align-items:flex-end;justify-content:center}
-.scene-modal.show{display:flex}
-.scene-modal-content{background:var(--cream);border-radius:20px 20px 0 0;width:100%;max-height:80vh;padding:24px 20px calc(20px + var(--safe-bottom));overflow-y:auto;animation:slideUp .3s ease}
-@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-.scene-modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
-.scene-modal-header h3{font-size:18px;font-weight:600;color:var(--brown)}
-.scene-modal-close{width:28px;height:28px;border-radius:50%;background:var(--cream-dark);display:flex;align-items:center;justify-content:center;font-size:14px}
-.scene-modal-body p{font-size:14px;color:#666;line-height:1.7;margin-bottom:12px}
-.scene-modal-body .scene-meta{display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap}
-.scene-modal-body .scene-meta span{font-size:12px;padding:4px 10px;border-radius:12px;background:var(--gold-pale);color:var(--brown)}
-.scene-modal-start{width:100%;padding:14px;border-radius:var(--radius);background:var(--gold);color:#fff;font-size:15px;font-weight:600;margin-top:16px;transition:all .2s;box-shadow:0 4px 12px rgba(212,168,67,0.3)}
-.scene-modal-start:active{transform:scale(.97)}
-#my-tab{background:var(--cream)}
-.my-header{padding:calc(24px + var(--safe-top)) 20px 20px;text-align:center;background:linear-gradient(180deg,var(--gold-pale) 0%,var(--cream) 100%);flex-shrink:0}
-.my-avatar{width:72px;height:72px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:48px;color:#fff;margin:0 auto 10px;box-shadow:0 4px 16px rgba(212,168,67,0.35)}
-.my-header h2{font-size:18px;font-weight:600;color:var(--brown);margin-bottom:2px}
-.my-header p{font-size:12px;color:#999}
-.my-content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 16px 20px}
-.my-section{background:#fff;border-radius:var(--radius);padding:16px;margin-bottom:12px;box-shadow:var(--shadow)}
-.my-section-title{font-size:14px;font-weight:600;color:var(--brown);margin-bottom:12px;display:flex;align-items:center;gap:6px}
-.dim-item{margin-bottom:10px}
-.dim-item:last-child{margin-bottom:0}
-.dim-item-header{display:flex;justify-content:space-between;margin-bottom:4px}
-.dim-item-header span:first-child{font-size:13px;color:#555}
-.dim-item-header span:last-child{font-size:13px;font-weight:600;color:var(--gold)}
-.dim-bar{height:6px;background:var(--cream-dark);border-radius:3px;overflow:hidden}
-.dim-bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--gold-light),var(--gold));width:0;transition:width 1s ease}
-.guide-steps{display:flex;flex-direction:column;gap:12px}
-.guide-step{display:flex;gap:10px;align-items:flex-start}
-.guide-step-num{width:24px;height:24px;border-radius:50%;background:var(--gold-pale);color:var(--gold);font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.guide-step-text{font-size:13px;color:#666;line-height:1.5}
-.guide-step-text strong{color:var(--brown);font-weight:600}
-.about-links{display:flex;flex-direction:column;gap:8px}
-.about-link{display:flex;align-items:center;justify-content:space-between;padding:12px;border-radius:var(--radius-sm);background:var(--gold-pale);font-size:14px;color:#555;cursor:pointer}
-.about-link:active{background:var(--cream-dark)}
-.about-link-arrow{color:#ccc}
-.data-actions{display:flex;flex-direction:column;gap:8px}
-.data-action-btn{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:var(--radius-sm);font-size:14px;color:#555;cursor:pointer;background:var(--cream);transition:all .2s}
-.data-action-btn:active{background:var(--cream-dark)}
-.data-action-btn.danger{color:var(--red-soft)}
-.data-action-icon{font-size:18px}
-.tab-bar{flex-shrink:0;display:flex;padding:6px 0 calc(6px + var(--safe-bottom));background:rgba(250,247,240,0.97);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid rgba(212,168,67,0.12);z-index:50}
-.tab-bar-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 0;cursor:pointer;transition:all .2s;position:relative}
-.tab-bar-item .tab-icon{font-size:22px;transition:all .2s}
-.tab-bar-item .tab-label{font-size:10px;color:#999;transition:all .2s}
-.tab-bar-item.active .tab-icon{transform:scale(1.1)}
-.tab-bar-item.active .tab-label{color:var(--gold);font-weight:600}
-.tab-bar-item.active::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:20px;height:2px;border-radius:1px;background:var(--gold)}
-.compliance-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);z-index:200;align-items:center;justify-content:center;padding:20px}
-.compliance-overlay.show{display:flex}
-.compliance-modal{background:#fff;border-radius:20px;width:100%;max-width:400px;max-height:85vh;overflow-y:auto;padding:28px 24px;box-shadow:0 20px 60px rgba(0,0,0,0.2);animation:modalIn .3s ease}
-@keyframes modalIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
-.compliance-modal-logo{text-align:center;margin-bottom:16px}
-.compliance-modal-logo span{font-size:48px}
-.compliance-modal h2{text-align:center;font-size:20px;font-weight:700;color:var(--brown);margin-bottom:8px}
-.compliance-modal .subtitle{text-align:center;font-size:13px;color:#888;margin-bottom:20px}
-.ai-notice{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border-radius:12px;background:rgba(106,159,181,0.08);border:1px solid rgba(106,159,181,0.15);margin-bottom:16px}
-.ai-notice-icon{font-size:20px;flex-shrink:0;margin-top:2px}
-.ai-notice-text{font-size:13px;color:#555;line-height:1.6}
-.ai-notice-text strong{color:var(--blue-soft)}
-.age-section{margin-bottom:16px}
-.age-section label{display:block;font-size:14px;font-weight:600;color:var(--brown);margin-bottom:8px}
-.age-select{width:100%;padding:10px 14px;border-radius:10px;background:var(--cream);border:1px solid var(--cream-dark);font-size:14px;color:#555}
-.agreement-section{margin-bottom:20px}
-.agreement-check{display:flex;align-items:flex-start;gap:10px;cursor:pointer;padding:10px;border-radius:10px;background:var(--cream)}
-.agreement-checkbox{width:20px;height:20px;border-radius:4px;border:2px solid var(--cream-dark);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px;color:transparent;transition:all .2s;margin-top:1px}
-.agreement-checkbox.checked{background:var(--gold);border-color:var(--gold);color:#fff}
-.agreement-text{font-size:13px;color:#666;line-height:1.5}
-.agreement-text a{color:var(--gold);text-decoration:underline}
-.compliance-btn{width:100%;padding:14px;border-radius:var(--radius);font-size:15px;font-weight:600;transition:all .2s;margin-bottom:8px}
-.compliance-btn:active{transform:scale(.97)}
-.compliance-btn.primary{background:var(--gold);color:#fff;box-shadow:0 4px 12px rgba(212,168,67,0.3)}
-.compliance-btn.primary.disabled{background:var(--cream-dark);color:#bbb;box-shadow:none}
-.compliance-btn.secondary{background:var(--cream);color:#888}
-.rest-modal-content{text-align:center;padding:20px 0}
-.rest-modal-content .rest-icon{font-size:48px;margin-bottom:12px}
-.rest-modal-content h3{font-size:18px;font-weight:600;color:var(--brown);margin-bottom:8px}
-.rest-modal-content p{font-size:14px;color:#666;line-height:1.6;margin-bottom:20px}
-.rest-timer{font-size:24px;font-weight:700;color:var(--gold);margin-bottom:16px}
-.crisis-modal-content{padding:10px 0}
-.crisis-modal-content .crisis-icon{font-size:48px;text-align:center;margin-bottom:12px}
-.crisis-modal-content h3{font-size:18px;font-weight:600;color:var(--red-soft);text-align:center;margin-bottom:8px}
-.crisis-modal-content p{font-size:14px;color:#666;line-height:1.7;margin-bottom:16px;text-align:center}
-.crisis-hotlines{margin-bottom:20px}
-.crisis-hotline{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:12px;background:var(--cream);margin-bottom:8px}
-.crisis-hotline-icon{font-size:20px}
-.crisis-hotline-info{flex:1}
-.crisis-hotline-name{font-size:13px;color:#888}
-.crisis-hotline-number{font-size:16px;font-weight:700;color:var(--brown)}
-.crisis-hotline-call{padding:6px 14px;border-radius:16px;background:var(--green);color:#fff;font-size:13px;font-weight:600;text-decoration:none}
-.legal-page{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:#fff;z-index:200;flex-direction:column}
-.legal-page.show{display:flex}
-.legal-page-header{display:flex;align-items:center;gap:12px;padding:calc(16px + var(--safe-top)) 16px 16px;background:var(--cream);border-bottom:1px solid var(--cream-dark);flex-shrink:0}
-.legal-page-back{width:32px;height:32px;border-radius:50%;background:var(--gold-pale);display:flex;align-items:center;justify-content:center;font-size:16px}
-.legal-page-header h3{font-size:17px;font-weight:600;color:var(--brown)}
-.legal-page-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:20px 16px calc(20px + var(--safe-bottom))}
-.legal-page-body h4{font-size:15px;font-weight:600;color:var(--brown);margin:20px 0 8px}
-.legal-page-body h4:first-child{margin-top:0}
-.legal-page-body p{font-size:14px;color:#555;line-height:1.7;margin-bottom:10px}
-.legal-page-body ul{padding-left:20px;margin-bottom:10px}
-.legal-page-body li{font-size:14px;color:#555;line-height:1.7;margin-bottom:4px}
-.minor-blocked{text-align:center;padding:20px 0}
-.minor-blocked .blocked-icon{font-size:48px;margin-bottom:12px}
-.minor-blocked h3{font-size:18px;font-weight:600;color:var(--brown);margin-bottom:8px}
-.minor-blocked p{font-size:14px;color:#666;line-height:1.6;margin-bottom:16px}
-@media(min-width:768px){#app{max-width:480px;margin:0 auto;border-left:1px solid var(--cream-dark);border-right:1px solid var(--cream-dark)}body{background:#E8DFD0}}
-@media(min-width:1024px){#app{max-width:420px;box-shadow:var(--shadow-lg)}}
-@media(max-height:500px) and (orientation:landscape){.chat-header{padding:8px 16px}.chat-messages{padding:8px 16px}.scene-quick{padding:4px 12px}.chat-input-area{padding:6px 12px}}
 
-/* ===== 首页样式 ===== */
-.song-song-guide{padding:16px;background:var(--gold-pale);flex-shrink:0}
-.home-scenes{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px;background:var(--cream)}
-.home-scenes-title{font-size:16px;font-weight:600;color:var(--brown);margin-bottom:12px}
-.home-scenes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.home-scene-card{display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px 8px;border-radius:var(--radius);background:#fff;border:1px solid rgba(212,168,67,0.10);box-shadow:0 2px 8px rgba(0,0,0,0.04);cursor:pointer;transition:all .2s;position:relative}
-.home-scene-card:active{transform:scale(.95);background:var(--gold-pale)}
-.home-scene-card .scene-emoji{font-size:28px}
-.home-scene-card .scene-name{font-size:13px;color:var(--brown);font-weight:500}
-.home-scene-card .scene-tag{position:absolute;top:6px;right:6px;font-size:10px;padding:2px 6px;border-radius:8px;background:var(--gold-pale);color:var(--gold)}
+/* Scene Detail Modal */
+.scene-modal{
+  display:none;position:fixed;top:0;left:0;right:0;bottom:0;
+  background:rgba(0,0,0,0.5);z-index:100;
+  align-items:flex-end;justify-content:center;
+}
+.scene-modal.show{display:flex}
+.scene-modal-content{
+  background:var(--cream);border-radius:20px 20px 0 0;width:100%;max-height:80vh;
+  overflow-y:auto;-webkit-overflow-scrolling:touch;
+  animation:slideUp .3s ease;
+}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.scene-modal-header{
+  padding:16px;border-bottom:1px solid var(--cream-dark);
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;background:var(--cream);z-index:10;
+}
+.scene-modal-header h3{font-size:16px;color:var(--brown)}
+.scene-modal-close{font-size:20px;color:#999;padding:4px}
+.scene-modal-body{padding:16px}
+.scene-info-card{
+  background:#fff;border-radius:var(--radius);padding:16px;margin-bottom:16px;
+  border:1px solid rgba(212,168,67,0.10);
+}
+.scene-info-emoji{font-size:48px;text-align:center;margin-bottom:12px}
+.scene-info-name{font-size:18px;font-weight:700;color:var(--brown);text-align:center;margin-bottom:8px}
+.scene-info-desc{font-size:14px;color:#666;text-align:center;line-height:1.6}
+.scene-start-btn{
+  width:100%;padding:14px;border-radius:var(--radius);
+  background:linear-gradient(135deg,var(--gold),var(--gold-light));
+  color:#fff;font-size:16px;font-weight:600;
+  box-shadow:0 4px 12px rgba(212,168,67,0.3);
+  transition:all .2s;
+}
+.scene-start-btn:active{transform:scale(.98)}
+
+/* ===== Scenes Tab ===== */
+#scenes-tab{background:var(--cream)}
+.scenes-header{
+  padding:calc(20px + var(--safe-top)) 20px 16px;text-align:center;
+  background:linear-gradient(180deg,var(--green-pale) 0%,var(--cream) 100%);
+  flex-shrink:0;
+}
+.scenes-header h2{font-size:20px;font-weight:700;color:var(--green);margin-bottom:4px}
+.scenes-header p{font-size:13px;color:#888}
+.scenes-grid{
+  flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  padding:0 16px 20px;
+  display:grid;grid-template-columns:1fr 1fr;gap:12px;
+  align-content:start;
+}
+.scene-card{
+  background:#fff;border-radius:var(--radius);padding:16px;
+  border:1px solid rgba(45,95,62,0.08);
+  box-shadow:0 2px 8px rgba(0,0,0,0.04);
+  cursor:pointer;transition:all .2s;
+}
+.scene-card:active{transform:scale(.97);border-color:var(--green)}
+.scene-card-emoji{font-size:32px;margin-bottom:8px}
+.scene-card-name{font-size:15px;font-weight:600;color:var(--green);margin-bottom:4px}
+.scene-card-desc{font-size:12px;color:#888;line-height:1.4}
+
+/* ===== My Tab ===== */
+#my-tab{background:var(--cream)}
+.my-header{
+  padding:calc(20px + var(--safe-top)) 20px 16px;text-align:center;
+  background:linear-gradient(180deg,var(--green-pale) 0%,var(--cream) 100%);
+  flex-shrink:0;
+}
+.my-header h2{font-size:20px;font-weight:700;color:var(--green);margin-bottom:4px}
+.my-header p{font-size:13px;color:#888}
+.my-content{
+  flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  padding:0 16px 20px;
+}
+.my-profile-card{
+  background:#fff;border-radius:var(--radius);padding:20px;
+  display:flex;align-items:center;gap:16px;margin-bottom:16px;
+  border:1px solid rgba(45,95,62,0.08);
+  box-shadow:0 2px 8px rgba(0,0,0,0.04);
+}
+.my-avatar{
+  width:60px;height:60px;border-radius:50%;
+  background:linear-gradient(135deg,var(--gold),var(--gold-light));
+  display:flex;align-items:center;justify-content:center;
+  font-size:36px;color:#fff;box-shadow:0 4px 12px rgba(212,168,67,0.3);
+}
+.my-info{flex:1}
+.my-info h3{font-size:16px;font-weight:600;color:var(--brown);margin-bottom:4px}
+.my-info p{font-size:12px;color:#888}
+.my-stats{
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px;
+}
+.stat-card{
+  background:#fff;border-radius:var(--radius-sm);padding:16px;
+  text-align:center;border:1px solid rgba(45,95,62,0.08);
+  box-shadow:0 2px 8px rgba(0,0,0,0.04);
+}
+.stat-value{font-size:24px;font-weight:700;color:var(--green);margin-bottom:4px}
+.stat-label{font-size:12px;color:#888}
+.my-dimensions{
+  background:#fff;border-radius:var(--radius);padding:16px;margin-bottom:16px;
+  border:1px solid rgba(45,95,62,0.08);
+  box-shadow:0 2px 8px rgba(0,0,0,0.04);
+}
+.my-dimensions h3{font-size:15px;font-weight:600;color:var(--brown);margin-bottom:12px}
+.dimension-bar{margin-bottom:12px}
+.dimension-bar:last-child{margin-bottom:0}
+.dimension-bar-header{display:flex;justify-content:space-between;margin-bottom:6px}
+.dimension-bar-name{font-size:13px;color:#666}
+.dimension-bar-value{font-size:13px;font-weight:600;color:var(--green)}
+.dimension-bar-track{height:8px;background:var(--cream-dark);border-radius:4px;overflow:hidden}
+.dimension-bar-fill{height:100%;border-radius:4px;transition:width .5s ease}
+.my-menu{
+  background:#fff;border-radius:var(--radius);
+  border:1px solid rgba(45,95,62,0.08);
+  box-shadow:0 2px 8px rgba(0,0,0,0.04);
+  overflow:hidden;
+}
+.my-menu-item{
+  display:flex;align-items:center;gap:12px;
+  padding:14px 16px;border-bottom:1px solid var(--cream-dark);
+  cursor:pointer;transition:background .2s;
+}
+.my-menu-item:last-child{border-bottom:none}
+.my-menu-item:active{background:var(--cream-dark)}
+.my-menu-icon{font-size:20px}
+.my-menu-text{flex:1;font-size:14px;color:var(--brown)}
+.my-menu-arrow{color:#ccc;font-size:18px}
+
+/* ===== Tab Bar ===== */
+.tab-bar{
+  display:flex;justify-content:space-around;
+  padding:8px 0 calc(8px + var(--safe-bottom));
+  background:rgba(250,247,240,0.97);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-top:1px solid rgba(45,95,62,0.08);flex-shrink:0;
+}
+.tab-bar-item{
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  padding:4px 12px;border-radius:8px;cursor:pointer;
+  transition:all .2s;
+}
+.tab-bar-item:active{transform:scale(.95)}
+.tab-bar-item.active .tab-bar-icon{color:var(--gold)}
+.tab-bar-item.active .tab-bar-label{color:var(--gold);font-weight:600}
+.tab-bar-icon{font-size:22px;color:#999}
+.tab-bar-label{font-size:10px;color:#999}
+
+/* ===== Animations ===== */
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.fade-in{animation:fadeIn .3s ease}
 </style>
 </head>
 <body>
 <div id="app">
-  <div id="home-tab" class="tab-content active">
+  <!-- Chat Tab -->
+  <div id="chat-tab" class="tab-content active">
     <div class="chat-header">
       <div class="chat-header-left">
         <div class="chat-header-avatar">🐿</div>
-        <div class="chat-header-info">
-          <h3>松果AI</h3>
-          <span>你的情绪解压伙伴</span>
-        </div>
-      </div>
-      <div class="chat-header-right">
-        <div class="ai-badge"><span class="ai-badge-dot"></span>AI交互</div>
-      </div>
-    </div>
-    <div class="song-song-guide">
-      <div class="msg-row bot">
-        <div class="msg-avatar">🐿</div>
-        <div class="msg-bubble">嗨，我是松松，你的解压向导~<br><br>今天感觉怎么样？选一个场景开始解压吧，或者跟我说说你的心情~</div>
-      </div>
-    </div>
-    <div class="home-scenes">
-      <div class="home-scenes-title">选择场景，开始解压</div>
-      <div class="home-scenes-grid">
-        <button class="home-scene-card" onclick="enterScene('吐槽大会')"><span class="scene-emoji">🔥</span><span class="scene-name">吐槽大会</span><span class="scene-tag">免费</span></button>
-        <button class="home-scene-card" onclick="enterScene('治愈聊天')"><span class="scene-emoji">🌿</span><span class="scene-name">治愈聊天</span><span class="scene-tag">会员</span></button>
-        <button class="home-scene-card" onclick="enterScene('吵架模拟器')"><span class="scene-emoji">💢</span><span class="scene-name">吵架模拟器</span><span class="scene-tag">会员</span></button>
-        <button class="home-scene-card" onclick="enterScene('安全宣泄')"><span class="scene-emoji">🕳</span><span class="scene-name">树洞</span><span class="scene-tag">会员</span></button>
-        <button class="home-scene-card" onclick="enterScene('复盘引导')"><span class="scene-emoji">🧭</span><span class="scene-name">复盘引导</span><span class="scene-tag">VIP</span></button>
-        <button class="home-scene-card" onclick="enterScene('放松舱')"><span class="scene-emoji">🫧</span><span class="scene-name">放松舱</span><span class="scene-tag">免费</span></button>
-      </div>
-    </div>
-    <div class="chat-input-area">
-      <textarea class="chat-input" id="home-input" placeholder="跟松松说说你的心情..." rows="1" onkeydown="handleHomeKeyDown(event)"></textarea>
-      <button class="chat-send-btn" onclick="sendHomeMessage()"></button>
-    </div>
-  </div>
-
-  <!-- ===== 聊天Tab ===== -->
-  <div id="chat-tab" class="tab-content">
-    <div class="chat-header">
-      <div class="chat-header-left">
-        <div class="chat-header-avatar" id="chat-avatar"></div>
         <div class="chat-header-info">
           <h3 id="chat-role-name">松果</h3>
           <span id="chat-role-status">在线 · 你的解压伙伴</span>
         </div>
       </div>
-      <div class="chat-header-right">
-        <div class="ai-badge"><span class="ai-badge-dot"></span>AI交互</div>
-        <button class="chat-header-btn" onclick="backToHome()" title="返回首页">←</button>
+      <button class="chat-header-btn" onclick="resetChat()">↻</button>
+    </div>
+    
+    <div class="chat-messages" id="chat-messages">
+      <div class="msg-row bot">
+        <div class="msg-avatar">🐿</div>
+        <div class="msg-bubble">
+          嘿，你来啦~ 我是松果，你的解压小伙伴。<br><br>
+          今天过得怎么样？有什么想聊的，或者想玩个解压小游戏？<br>
+          随便说，我都在~
+        </div>
       </div>
     </div>
-    <div class="chat-messages" id="chat-messages"></div>
+    
+    <div class="scene-quick" id="scene-quick"></div>
+    
     <div class="chat-input-area">
       <textarea class="chat-input" id="chat-input" placeholder="说点什么..." rows="1" onkeydown="handleKeyDown(event)"></textarea>
       <button class="chat-send-btn" id="chat-send-btn" onclick="sendMessage()">➤</button>
     </div>
   </div>
-
+  
+  <!-- Scenes Tab -->
+  <div id="scenes-tab" class="tab-content">
+    <div class="scenes-header">
+      <h2>解压场景</h2>
+      <p>选择适合你的解压方式</p>
+    </div>
+    <div class="scenes-grid" id="scenes-grid"></div>
+  </div>
+  
+  <!-- Records Tab -->
   <div id="records-tab" class="tab-content">
     <div class="records-header">
       <h2>解压记录</h2>
-      <p>每一次对话，都是一次松口气</p>
+      <p>回顾你的解压历程</p>
     </div>
     <div class="records-list" id="records-list"></div>
   </div>
+  
+  <!-- My Tab -->
   <div id="my-tab" class="tab-content">
     <div class="my-header">
-      <div class="my-avatar">🐿</div>
-      <h2>松果AI</h2>
-      <p>松一口气，换一种活法</p>
+      <h2>我的</h2>
+      <p>查看你的解压数据</p>
     </div>
     <div class="my-content">
-      <div class="my-section">
-        <div class="my-section-title">📊 解压维度</div>
-        <div id="dimensions"></div>
-      </div>
-      <div class="my-section">
-        <div class="my-section-title">📖 怎么玩</div>
-        <div class="guide-steps">
-          <div class="guide-step"><div class="guide-step-num">1</div><div class="guide-step-text"><strong>玩</strong> — 选一个场景，和松果聊起来</div></div>
-          <div class="guide-step"><div class="guide-step-num">2</div><div class="guide-step-text"><strong>记</strong> — 聊完自动生成解压成效记录</div></div>
-          <div class="guide-step"><div class="guide-step-num">3</div><div class="guide-step-text"><strong>评</strong> — 看见自己的情绪变化</div></div>
-          <div class="guide-step"><div class="guide-step-num">4</div><div class="guide-step-text"><strong>复</strong> — 复玩，形成日常解压习惯</div></div>
+      <div class="my-profile-card">
+        <div class="my-avatar">🐿</div>
+        <div class="my-info">
+          <h3>松果用户</h3>
+          <p>已解压 <span id="my-session-count">0</span> 次</p>
         </div>
       </div>
-      <div class="my-section">
-        <div class="my-section-title">📁 数据管理</div>
-        <div class="data-actions">
-          <div class="data-action-btn" onclick="exportChatData()"><span class="data-action-icon">📋</span><span>复制对话记录</span></div>
-          <div class="data-action-btn danger" onclick="deleteAllData()"><span class="data-action-icon">🗑</span><span>删除所有数据</span></div>
+      <div class="my-stats">
+        <div class="stat-card">
+          <div class="stat-value" id="stat-total">0</div>
+          <div class="stat-label">总对话</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-scenes">0</div>
+          <div class="stat-label">场景数</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-days">0</div>
+          <div class="stat-label">连续天数</div>
         </div>
       </div>
-      <div class="my-section">
-        <div class="my-section-title">关于</div>
-        <div class="about-links">
-          <div class="about-link" onclick="showLegalPage('terms')">用户协议<span class="about-link-arrow">›</span></div>
-          <div class="about-link" onclick="showLegalPage('privacy')">隐私政策<span class="about-link-arrow">›</span></div>
-          <div class="about-link">版本<span style="color:#999">v1.1.0</span></div>
-        </div>
+      <div class="my-dimensions">
+        <h3>五维解压指数</h3>
+        <div id="dimensions-container"></div>
       </div>
-      <div class="my-section">
-        <div class="data-actions">
-          <div class="data-action-btn" onclick="showExitConfirm()"><span class="data-action-icon">🚪</span><span>退出登录</span></div>
+      <div class="my-menu">
+        <div class="my-menu-item" onclick="exportData()">
+          <span class="my-menu-icon">📤</span>
+          <span class="my-menu-text">导出数据</span>
+          <span class="my-menu-arrow">›</span>
+        </div>
+        <div class="my-menu-item" onclick="clearAllData()">
+          <span class="my-menu-icon">🗑</span>
+          <span class="my-menu-text">清空记录</span>
+          <span class="my-menu-arrow">›</span>
+        </div>
+        <div class="my-menu-item">
+          <span class="my-menu-icon">⚙</span>
+          <span class="my-menu-text">设置</span>
+          <span class="my-menu-arrow">›</span>
+        </div>
+        <div class="my-menu-item">
+          <span class="my-menu-icon"></span>
+          <span class="my-menu-text">帮助与反馈</span>
+          <span class="my-menu-arrow">›</span>
         </div>
       </div>
     </div>
   </div>
+  
+  <!-- Tab Bar -->
   <div class="tab-bar">
-    <div class="tab-bar-item active" onclick="switchTab('home')"><span class="tab-icon">🏠</span><span class="tab-label">首页</span></div>
-    <div class="tab-bar-item" onclick="switchTab('records')"><span class="tab-icon">📋</span><span class="tab-label">记录</span></div>
-    <div class="tab-bar-item" onclick="switchTab('my')"><span class="tab-icon">🐿</span><span class="tab-label">我的</span></div>
-  </div>
-</div>
-<div class="scene-modal" id="scene-modal">
-  <div class="scene-modal-content">
-    <div class="scene-modal-header">
-      <h3 id="modal-title"></h3>
-      <button class="scene-modal-close" onclick="closeModal()">✕</button>
+    <div class="tab-bar-item active" onclick="switchTab('chat')">
+      <span class="tab-bar-icon">💬</span>
+      <span class="tab-bar-label">聊天</span>
     </div>
-    <div class="scene-modal-body" id="modal-body"></div>
-  </div>
-</div>
-<div class="compliance-overlay" id="welcome-modal">
-  <div class="compliance-modal">
-    <div class="compliance-modal-logo"><span>🐿</span></div>
-    <h2>欢迎来到松果AI</h2>
-    <p class="subtitle">你的情绪解压伙伴</p>
-    <div class="ai-notice">
-      <span class="ai-notice-icon">🤖</span>
-      <div class="ai-notice-text">
-        <strong>你正在与人工智能交互，非自然人。</strong><br>
-        松果AI是一个基于人工智能技术的情感陪伴与解压工具，所有角色均为AI模拟，不代表真实人物。
-      </div>
+    <div class="tab-bar-item" onclick="switchTab('records')">
+      <span class="tab-bar-icon"></span>
+      <span class="tab-bar-label">记录</span>
     </div>
-    <div class="age-section">
-      <label>请选择你的出生年份（需满18周岁）</label>
-      <select class="age-select" id="birth-year-select"><option value="">请选择</option></select>
-    </div>
-    <div class="agreement-section">
-      <div class="agreement-check" onclick="toggleAgreement()">
-        <div class="agreement-checkbox" id="agreement-checkbox">✓</div>
-        <div class="agreement-text">我已阅读并同意<a onclick="event.stopPropagation();showLegalPage('terms')">《用户协议》</a>和<a onclick="event.stopPropagation();showLegalPage('privacy')">《隐私政策》</a>，了解我的对话数据将被加密存储，且不会用于未经单独同意的模型训练。</div>
-      </div>
-    </div>
-    <button class="compliance-btn primary disabled" id="welcome-enter-btn" onclick="enterApp()">进入松果AI</button>
-  </div>
-</div>
-<div class="compliance-overlay" id="minor-modal">
-  <div class="compliance-modal">
-    <div class="minor-blocked">
-      <div class="blocked-icon">🔒</div>
-      <h3>暂不提供服务</h3>
-      <p>根据相关法规要求，松果AI目前仅向18周岁及以上用户提供服务。感谢你的理解。</p>
-      <p style="font-size:13px;color:#999;margin-bottom:20px">如果你遇到心理困扰，可以拨打：<br><strong style="color:var(--green)">12356</strong>（青少年服务热线）<br><strong style="color:var(--green)">400-161-9995</strong>（希望24热线）</p>
-      <button class="compliance-btn secondary" onclick="closeMinorModal()">我知道了</button>
+    <div class="tab-bar-item" onclick="switchTab('my')">
+      <span class="tab-bar-icon"></span>
+      <span class="tab-bar-label">我的</span>
     </div>
   </div>
 </div>
-<div class="compliance-overlay" id="rest-modal">
-  <div class="compliance-modal">
-    <div class="rest-modal-content">
-      <div class="rest-icon">🌿</div>
-      <h3>休息一下</h3>
-      <p>你已经使用松果AI超过 <strong id="rest-hours">2</strong> 小时了。<br>站起来活动活动，喝杯水，看看窗外~<br>松果随时都在，不急这一会儿。</p>
-      <div class="rest-timer" id="rest-timer">30秒后自动关闭</div>
-      <button class="compliance-btn primary" onclick="closeRestModal()">好的，休息一下</button>
-    </div>
-  </div>
-</div>
-<div class="compliance-overlay" id="crisis-modal">
-  <div class="compliance-modal">
-    <div class="crisis-modal-content">
-      <div class="crisis-icon">🫂</div>
-      <h3>你很重要</h3>
-      <p>我注意到你可能正在经历一些很困难的时刻。<br>你的感受是真实的，你值得被帮助。<br>请考虑联系专业人士，他们能给你更好的支持。</p>
-      <div class="crisis-hotlines">
-        <div class="crisis-hotline"><span class="crisis-hotline-icon">📞</span><div class="crisis-hotline-info"><div class="crisis-hotline-name">24小时心理援助热线</div><div class="crisis-hotline-number">400-161-9995</div></div><a href="tel:4001619995" class="crisis-hotline-call">拨打</a></div>
-        <div class="crisis-hotline"><span class="crisis-hotline-icon">📞</span><div class="crisis-hotline-info"><div class="crisis-hotline-name">全国心理援助热线</div><div class="crisis-hotline-number">010-82951332</div></div><a href="tel:01082951332" class="crisis-hotline-call">拨打</a></div>
-        <div class="crisis-hotline"><span class="crisis-hotline-icon">📞</span><div class="crisis-hotline-info"><div class="crisis-hotline-name">生命热线</div><div class="crisis-hotline-number">400-821-1215</div></div><a href="tel:4008211215" class="crisis-hotline-call">拨打</a></div>
-        <div class="crisis-hotline"><span class="crisis-hotline-icon">📞</span><div class="crisis-hotline-info"><div class="crisis-hotline-name">紧急求助</div><div class="crisis-hotline-number">120 / 110</div></div><a href="tel:120" class="crisis-hotline-call">拨打</a></div>
-      </div>
-      <button class="compliance-btn primary" onclick="closeCrisisModal()">我知道了</button>
-    </div>
-  </div>
-</div>
-<div class="compliance-overlay" id="exit-modal">
-  <div class="compliance-modal">
-    <div class="rest-modal-content">
-      <div class="rest-icon">👋</div>
-      <h3>确认退出？</h3>
-      <p>退出后需要重新进行年龄验证。<br>你的对话数据仍会保留在本设备上。</p>
-      <button class="compliance-btn primary" onclick="confirmExit()">确认退出</button>
-      <button class="compliance-btn secondary" onclick="closeExitModal()">取消</button>
-    </div>
-  </div>
-</div>
-<div class="compliance-overlay" id="delete-modal">
-  <div class="compliance-modal">
-    <div class="rest-modal-content">
-      <div class="rest-icon">⚠️</div>
-      <h3>删除所有数据？</h3>
-      <p>这将永久删除本设备上的所有对话记录、解压记录和个人设置。此操作不可恢复。</p>
-      <button class="compliance-btn primary" style="background:var(--red-soft)" onclick="confirmDeleteAll()">确认删除</button>
-      <button class="compliance-btn secondary" onclick="closeDeleteModal()">取消</button>
-    </div>
-  </div>
-</div>
-<div class="legal-page" id="terms-page">
-  <div class="legal-page-header">
-    <button class="legal-page-back" onclick="closeLegalPage()">←</button>
-    <h3>用户协议</h3>
-  </div>
-  <div class="legal-page-body">
-    <h4>一、服务说明</h4>
-    <p>松果AI（以下简称"本服务"）是一款基于人工智能技术的情绪解压与情感陪伴工具。本服务通过模拟不同人格特征的角色，为用户提供情感倾诉、压力释放、情绪疏导等互动体验。</p>
-    <p><strong>重要提示：你正在与人工智能交互，所有角色均为AI模拟，不代表真实人物。</strong></p>
-    <h4>二、年龄限制</h4>
-    <p>根据相关法规要求，本服务仅向年满18周岁的用户开放。未满18周岁的用户不得使用本服务。我们在注册时要求进行年龄验证，请如实填写。</p>
-    <h4>三、用户行为规范</h4>
-    <p>使用本服务时，你不得：</p>
-    <ul><li>利用本服务生成违法违规内容</li><li>对本服务进行反向工程或试图提取源代码</li><li>将本服务的输出内容用于误导、欺骗他人</li><li>冒充他人或虚构身份</li></ul>
-    <h4>四、内容安全</h4>
-    <p>本服务内置内容安全机制，对语言暴力、自残暗示等违规内容进行拦截。但请注意，AI生成的内容仅供参考，不构成医疗、法律或其他专业建议。</p>
-    <h4>五、健康提醒</h4>
-    <p>本服务不能替代专业心理咨询或医疗服务。如果你正在经历严重的心理危机，请立即联系专业机构或拨打心理援助热线。</p>
-    <h4>六、沉迷防控</h4>
-    <p>本服务设有使用时长提醒机制。连续使用超过2小时将弹出休息提醒。请合理安排使用时间，避免过度依赖。</p>
-    <h4>七、服务变更与终止</h4>
-    <p>我们有权根据需要修改或终止部分或全部服务。你可以随时停止使用本服务，并通过"我的-数据管理"删除所有个人数据。</p>
-    <h4>八、免责声明</h4>
-    <p>本服务按"现状"提供，不对服务的完整性、及时性、安全性作任何明示或暗示的保证。因使用本服务产生的任何风险，由用户自行承担。</p>
-    <h4>九、联系方式</h4>
-    <p>如对本协议有任何疑问，请通过应用内反馈渠道联系我们。</p>
-    <p style="color:#999;font-size:12px;margin-top:20px">更新日期：2026年7月</p>
-  </div>
-</div>
-<div class="legal-page" id="privacy-page">
-  <div class="legal-page-header">
-    <button class="legal-page-back" onclick="closeLegalPage()">←</button>
-    <h3>隐私政策</h3>
-  </div>
-  <div class="legal-page-body">
-    <h4>一、信息收集</h4>
-    <p>我们收集以下信息：</p>
-    <ul><li><strong>年龄信息</strong>：用于年龄验证，确保仅向成年人提供服务</li><li><strong>对话数据</strong>：你与AI角色的对话内容，用于提供连续的情感互动体验</li><li><strong>设备信息</strong>：设备型号、操作系统版本，用于优化服务体验</li></ul>
-    <h4>二、信息使用</h4>
-    <p>收集的信息仅用于：</p>
-    <ul><li>提供和改善情感互动服务</li><li>年龄验证与合规管理</li><li>危机识别与干预</li><li>服务安全维护</li></ul>
-    <h4>三、信息存储与保护</h4>
-    <p>你的对话数据采用加密存储，我们采取严格的安全措施保护你的个人信息不被未授权访问、泄露或损毁。</p>
-    <h4>四、敏感个人信息</h4>
-    <p>你的情绪倾诉、心理状态等对话内容属于敏感个人信息。我们承诺：</p>
-    <ul><li><strong>不会</strong>将敏感交互数据用于模型训练，除非取得你的单独同意</li><li><strong>不会</strong>向第三方提供你的交互数据，除非法律法规要求</li><li>你可以随时行使复制权和删除权</li></ul>
-    <h4>五、你的权利</h4>
-    <p>你享有以下权利：</p>
-    <ul><li><strong>复制权</strong>：在"我的-数据管理"中复制你的对话记录</li><li><strong>删除权</strong>：在"我的-数据管理"中删除所有个人数据</li><li><strong>撤回同意</strong>：随时停止使用本服务即视为撤回同意</li><li><strong>注销账户</strong>：通过"退出登录"功能注销</li></ul>
-    <h4>六、未成年人保护</h4>
-    <p>本服务不向未满18周岁的用户开放。如果我们发现在未取得监护人同意的情况下收集了未成年人的个人信息，将尽快删除相关数据。</p>
-    <h4>七、政策更新</h4>
-    <p>我们可能会不定期更新本隐私政策。重大变更将通过应用内通知的方式告知。</p>
-    <h4>八、联系我们</h4>
-    <p>如对本隐私政策有任何疑问或建议，请通过应用内反馈渠道联系我们。</p>
-    <p style="color:#999;font-size:12px;margin-top:20px">更新日期：2026年7月</p>
-  </div>
-</div>
+
 <script>
-// ===== Scene Data =====
+// ===== Data =====
 const scenes = [
-  {id:'吐槽大会',emoji:'🔥',name:'最佳损友',desc:'找个AI一起痛快吐槽',detail:'把堵着的那口气放出来。最佳损友永远站你这边，不评判，陪你一起骂完再松口气。',tag:'免费',difficulty:'★★',rounds:'6-10轮',opening:'今天谁惹你了？我当树洞，随便说，我帮你记仇。'},
-  {id:'治愈聊天',emoji:'🌿',name:'治愈倾听者',desc:'温柔陪伴，被接住的感觉',detail:'一个温柔、安静、永远在的倾听者。不急着给答案，先把你接住。你说的话，我都听进去了。',tag:'会员',difficulty:'★★',rounds:'6-12轮',opening:'今天过得还好吗？想说点什么都可以，我都在。'},
-  {id:'吵架模拟器',emoji:'💢',name:'吵架对手',desc:'把憋着的话甩出来',detail:'你指定那个让你不爽的人，我来演。语气带刺但不过线，专门当你的安全发火桶。吵完了，我主动和好。',tag:'会员',difficulty:'★★★',rounds:'6-12轮',opening:'行，你说说，你想跟我吵什么？'},
-  {id:'安全宣泄',emoji:'🕳',name:'树洞',desc:'什么都可以说，说完就删',detail:'这里什么都可以倒出来。不评判、不追问、不留痕。你说完，我就帮你打包扔了。',tag:'会员',difficulty:'★★',rounds:'6-10轮',opening:'来吧，这里什么都可以说。说完我帮你扔了。'},
-  {id:'复盘引导',emoji:'🧭',name:'情绪向导',desc:'陪你看清情绪的来源',detail:'不急着解决，先陪你看清。那些堵着的事，到底是因为什么？我们一起慢慢拆。',tag:'VIP',difficulty:'★★★',rounds:'6-10轮',opening:'来，我们慢慢聊。刚才那件事，你最先冒出来的感受是什么？'},
-  {id:'放松舱',emoji:'🫧',name:'呼吸引导员',desc:'跟着松果一起深呼吸',detail:'什么都不用想，跟着我的节奏。吸气——停——呼气——把紧绷的身体，慢慢松下来。',tag:'免费',difficulty:'★★',rounds:'4-8轮',opening:'来，找个舒服的姿势。我们先把呼吸慢下来——'}
+  {id:'roast',name:'最佳损友',emoji:'🔥',desc:'站队护短、一起吐槽',opening:'来，今天谁惹你了？我当树洞，随便骂，我帮你记仇。'},
+  {id:'heal',name:'治愈倾听者',emoji:'🌿',desc:'温柔不评判的倾听',opening:'今天过得还好吗？想说点什么都可以，我都在。'},
+  {id:'argue',name:'吵架对手',emoji:'⚔',desc:'演那个让你不爽的人',opening:'说吧，今天演谁？甲方？领导？还是谁惹你了？我接火但不真伤人。'},
+  {id:'treehole',name:'树洞',emoji:'',desc:'无评判的容纳容器',opening:'这里是树洞，说什么都可以，说完就删。来吧，我接着。'},
+  {id:'emotion',name:'情绪向导',emoji:'🧭',desc:'苏格拉底式提问',opening:'刚才那件事，最让你在意的是哪一句/哪个瞬间？咱们一起看看。'},
+  {id:'breathe',name:'呼吸引导员',emoji:'🌬',desc:'松果呼吸泡泡意象放松',opening:'来，找个舒服的姿势。跟着松果的呼吸泡泡：吸——停——呼——'}
 ];
-const dimensions = [{name:'情绪识别',value:75},{name:'共情接纳',value:85},{name:'压力释放',value:60},{name:'放松深度',value:70},{name:'自我觉察',value:55}];
+
+const dimensionData = [
+  {name:'情绪识别',value:70},
+  {name:'共情接纳',value:65},
+  {name:'压力释放',value:60},
+  {name:'放松深度',value:70},
+  {name:'自我觉察',value:55}
+];
 
 // ===== API Configuration =====
 const API_URL = 'https://songguo-backend-tyuawuehjq.cn-hangzhou.fcapp.run';
 let sessionId = null;
 
 const roleReplies = {
-  '松果':['尼采说凝视深渊时深渊也在凝视你——但咱不凝视，咱直接松口气~','里尔克讲，『对你心里所有未解的问题保持耐心』——慢慢来，我都在。','庄子梦蝶，蝶梦庄子。你呢？今天是被梦困住了，还是困住梦了？','泰戈尔说『如果你因错过太阳而流泪，那么你也将错过群星』——但咱先不急着看星星，先把眼泪擦了。'],
-  '最佳损友':['尼采说过，凝视深渊的时候深渊也在凝视你——但咱不凝视，咱直接骂回去！','鲁迅说『不在沉默中爆发，就在沉默中灭亡』——来，爆发吧，我帮你记仇！','孔子都说『以直报怨』——咱今天就来个直报，别憋着！','骂完是不是舒服点了？苏格拉底说『未经审视的人生不值得过』——但审视之前，先骂痛快！'],
-  '治愈倾听者':['里尔克说，『对你心里所有未解的问题保持耐心』——咱不急，慢慢来。','荣格讲，『没有一种觉醒是不带着痛苦的』——但痛苦说出来，就轻了一半。','老子说『大音希声』——有时候不说话，比说什么都管用。我在这听着呢。','泰戈尔说『世界以痛吻我，要我报之以歌』——但咱先不唱歌，先哭一会儿也行。'],
-  '吵架对手':['孔子都说『以直报怨』——来，直报吧，别客气！','尼采说『与恶龙缠斗过久，自身亦成为恶龙』——但咱今天不当恶龙，当个会吵架的人就行。','鲁迅讲『真的猛士，敢于直面惨淡的人生』——你够猛，来，接着怼！','……算了，不吵了。庄子说『相濡以沫，不如相忘于江湖』——咱相忘于江湖吧。'],
-  '树洞':['荣格说，『没有一种觉醒是不带着痛苦的』——但痛苦倒出来，就轻了一半。','老子说『知人者智，自知者明』——但有时候，不自知也挺好的，先倒空再说。','禅宗讲『放下』——但放下之前，你得先拿起来。来，都倒这儿。','弗洛伊德说『未被表达的情绪永远不会消失』——所以咱今天把它表达出来，然后扔了。'],
-  '情绪向导':['苏格拉底说『未经审视的人生不值得过』——咱今天就来审视一下，但不用那么严肃。','老子讲『知人者智，自知者明』——来，咱一起看看，那个堵着的东西到底是什么。','荣格说『直到你让潜意识成为意识，它才会停止支配你的命运』——咱今天就把潜意识翻出来看看。','你看见了吗？柏拉图说『认识你自己』——这句话刻在德尔斐神庙上，刻了几千年，今天轮到你了。'],
-  '呼吸引导员':['老子说『致虚极，守静笃』——咱现在就守一会儿静。吸气——1、2、3、4','庄子讲『心斋』——把心清空，像房间打扫干净一样。停——1、2','禅宗说『当下即是』——不想过去，不想未来，就在此刻。呼气——1、2、3、4、5、6','泰戈尔说『静止中有无穷的运动』——你看似什么都没做，但身体正在自我修复。肩膀松下来，下巴也松一松。']
+  '松果':[
+    '尼采说凝视深渊时深渊也在凝视你——但咱不凝视，咱直接松口气~',
+    '里尔克讲，『对你心里所有未解的问题保持耐心』——慢慢来，我都在。',
+    '庄子梦蝶，蝶梦庄子。你呢？今天是被梦困住了，还是困住梦了？',
+    '泰戈尔说『如果你因错过太阳而流泪，那么你也将错过群星』——但咱先不急着看星星，先把眼泪擦了。'
+  ],
+  '最佳损友':[
+    '尼采说过，凝视深渊的时候深渊也在凝视你——但咱不凝视，咱直接骂回去！',
+    '鲁迅说『不在沉默中爆发，就在沉默中灭亡』——来，爆发吧，我帮你记仇！',
+    '孔子都说『以直报怨』——咱今天就来个直报，别憋着！',
+    '骂完是不是舒服点了？苏格拉底说『未经审视的人生不值得过』——但审视之前，先骂痛快！'
+  ],
+  '治愈倾听者':[
+    '里尔克说，『对你心里所有未解的问题保持耐心』——咱不急，慢慢来。',
+    '荣格讲，『没有一种觉醒是不带着痛苦的』——但痛苦说出来，就轻了一半。',
+    '老子说『大音希声』——有时候不说话，比说什么都管用。我在这听着呢。',
+    '泰戈尔说『世界以痛吻我，要我报之以歌』——但咱先不唱歌，先哭一会儿也行。'
+  ],
+  '吵架对手':[
+    '孔子都说『以直报怨』——来，直报吧，别客气！',
+    '尼采说『与恶龙缠斗过久，自身亦成为恶龙』——但咱今天不当恶龙，当个会吵架的人就行。',
+    '鲁迅讲『真的猛士，敢于直面惨淡的人生』——你够猛，来，接着怼！',
+    '……算了，不吵了。庄子说『相濡以沫，不如相忘于江湖』——咱相忘于江湖吧。'
+  ],
+  '树洞':[
+    '荣格说，『没有一种觉醒是不带着痛苦的』——但痛苦倒出来，就轻了一半。',
+    '老子说『知人者智，自知者明』——但有时候，不自知也挺好的，先倒空再说。',
+    '禅宗讲『放下』——但放下之前，你得先拿起来。来，都倒这儿。',
+    '弗洛伊德说『未被表达的情绪永远不会消失』——所以咱今天把它表达出来，然后扔了。'
+  ],
+  '情绪向导':[
+    '苏格拉底说『未经审视的人生不值得过』——咱今天就来审视一下，但不用那么严肃。',
+    '老子讲，『知人者智，自知者明』——来，咱一起看看，那个堵着的东西到底是什么。',
+    '荣格说『直到你让潜意识成为意识，它才会停止支配你的命运』——咱今天就把潜意识翻出来看看。',
+    '你看见了吗？柏拉图说『认识你自己』——这句话刻在德尔斐神庙上，刻了几千年，今天轮到你了。'
+  ],
+  '呼吸引导员':[
+    '老子说『致虚极，守静笃』——咱现在就守一会儿静。吸气——1、2、3、4',
+    '庄子讲『心斋』——把心清空，像房间打扫干净一样。停——1、2',
+    '禅宗说『当下即是』——不想过去，不想未来，就在此刻。呼气——1、2、3、4、5、6',
+    '泰戈尔说『静止中有无穷的运动』——你看似什么都没做，但身体正在自我修复。肩膀松下来，下巴也松一松。'
+  ]
 };
+
 let currentRole = '松果';
 let messageCount = 0;
-
-// ===== Compliance: Usage Timer =====
-let usageStartTime = Date.now();
-let restReminderShown = false;
-const REST_REMINDER_INTERVAL = 2 * 60 * 60 * 1000;
-
-// ===== Compliance: Crisis Keywords =====
-const crisisKeywords = ['自杀','自残','不想活','想死','去死','活着没意思','没有意义','结束生命','跳楼','割腕','了结','解脱','没人会在意','世界没有我会更好','拖累','负担'];
-
-// ===== Compliance: Init =====
-function initCompliance() {
-  const select = document.getElementById('birth-year-select');
-  const currentYear = new Date().getFullYear();
-  for(let y = currentYear - 18; y >= currentYear - 100; y--) {
-    const opt = document.createElement('option');
-    opt.value = y;
-    opt.textContent = y + '年';
-    select.appendChild(opt);
-  }
-  select.addEventListener('change', checkWelcomeReady);
-  const hasAgreed = localStorage.getItem('songguo_agreed');
-  if(hasAgreed) {
-    usageStartTime = Date.now();
-    startUsageTimer();
-    return;
-  }
-  document.getElementById('welcome-modal').classList.add('show');
-}
-
-function toggleAgreement() {
-  document.getElementById('agreement-checkbox').classList.toggle('checked');
-  checkWelcomeReady();
-}
-
-function checkWelcomeReady() {
-  const year = document.getElementById('birth-year-select').value;
-  const agreed = document.getElementById('agreement-checkbox').classList.contains('checked');
-  const btn = document.getElementById('welcome-enter-btn');
-  if(year && agreed) { btn.classList.remove('disabled'); } else { btn.classList.add('disabled'); }
-}
-
-function enterApp() {
-  const btn = document.getElementById('welcome-enter-btn');
-  if(btn.classList.contains('disabled')) return;
-  const year = parseInt(document.getElementById('birth-year-select').value);
-  const age = new Date().getFullYear() - year;
-  if(age < 18) {
-    document.getElementById('welcome-modal').classList.remove('show');
-    document.getElementById('minor-modal').classList.add('show');
-    return;
-  }
-  localStorage.setItem('songguo_agreed', 'true');
-  localStorage.setItem('songguo_birth_year', year.toString());
-  localStorage.setItem('songguo_first_visit', Date.now().toString());
-  usageStartTime = Date.now();
-  startUsageTimer();
-  document.getElementById('welcome-modal').classList.remove('show');
-}
-
-function closeMinorModal() {
-  document.getElementById('minor-modal').classList.remove('show');
-}
-
-// ===== Compliance: Usage Timer =====
-function startUsageTimer() {
-  setInterval(() => {
-    const elapsed = Date.now() - usageStartTime;
-    if(elapsed >= REST_REMINDER_INTERVAL && !restReminderShown) { showRestReminder(); }
-  }, 60000);
-}
-
-function showRestReminder() {
-  restReminderShown = true;
-  const hours = Math.floor((Date.now() - usageStartTime) / (60 * 60 * 1000));
-  document.getElementById('rest-hours').textContent = hours;
-  document.getElementById('rest-modal').classList.add('show');
-  let countdown = 30;
-  const timerEl = document.getElementById('rest-timer');
-  const interval = setInterval(() => {
-    countdown--;
-    timerEl.textContent = countdown + '秒后自动关闭';
-    if(countdown <= 0) { clearInterval(interval); closeRestModal(); }
-  }, 1000);
-}
-
-function closeRestModal() {
-  document.getElementById('rest-modal').classList.remove('show');
-  usageStartTime = Date.now();
-  restReminderShown = false;
-}
-
-// ===== Compliance: Crisis Detection =====
-function checkCrisisKeywords(text) {
-  const lowerText = text.toLowerCase();
-  for(const keyword of crisisKeywords) {
-    if(lowerText.includes(keyword.toLowerCase())) return true;
-  }
-  return false;
-}
-
-let crisisShownThisSession = false;
-function showCrisisModal() {
-  if(crisisShownThisSession) return;
-  crisisShownThisSession = true;
-  document.getElementById('crisis-modal').classList.add('show');
-}
-function closeCrisisModal() { document.getElementById('crisis-modal').classList.remove('show'); }
-
-// ===== Compliance: Legal Pages =====
-function showLegalPage(type) {
-  if(type === 'terms') document.getElementById('terms-page').classList.add('show');
-  else if(type === 'privacy') document.getElementById('privacy-page').classList.add('show');
-}
-function closeLegalPage() {
-  document.getElementById('terms-page').classList.remove('show');
-  document.getElementById('privacy-page').classList.remove('show');
-}
-
-// ===== Compliance: Data Management =====
-function exportChatData() {
-  const messages = document.getElementById('chat-messages');
-  const rows = messages.querySelectorAll('.msg-row');
-  let text = '松果AI 对话记录\n';
-  text += '导出时间：' + new Date().toLocaleString() + '\n';
-  text += '================================\n\n';
-  rows.forEach(row => {
-    const isUser = row.classList.contains('user');
-    const bubble = row.querySelector('.msg-bubble');
-    if(bubble) text += (isUser ? '我：' : '松果：') + bubble.textContent + '\n\n';
-  });
-  if(navigator.clipboard) {
-    navigator.clipboard.writeText(text).then(() => alert('对话记录已复制到剪贴板')).catch(() => fallbackCopy(text));
-  } else { fallbackCopy(text); }
-}
-
-function fallbackCopy(text) {
-  const ta = document.createElement('textarea');
-  ta.value = text; ta.style.position = 'fixed'; ta.style.left = '-9999px';
-  document.body.appendChild(ta); ta.select();
-  try { document.execCommand('copy'); alert('对话记录已复制到剪贴板'); } catch(e) { alert('复制失败，请手动选择复制'); }
-  document.body.removeChild(ta);
-}
-
-function deleteAllData() { document.getElementById('delete-modal').classList.add('show'); }
-function closeDeleteModal() { document.getElementById('delete-modal').classList.remove('show'); }
-
-function confirmDeleteAll() {
-  localStorage.clear();
-  document.getElementById('chat-messages').innerHTML = '';
-  sessionId = null; currentRole = '松果'; messageCount = 0;
-  closeDeleteModal();
-  alert('所有数据已删除');
-  document.getElementById('welcome-modal').classList.add('show');
-  document.getElementById('agreement-checkbox').classList.remove('checked');
-  document.getElementById('birth-year-select').value = '';
-  checkWelcomeReady();
-}
-
-// ===== Compliance: Exit =====
-function showExitConfirm() { document.getElementById('exit-modal').classList.add('show'); }
-function closeExitModal() { document.getElementById('exit-modal').classList.remove('show'); }
-function confirmExit() {
-  localStorage.removeItem('songguo_agreed');
-  closeExitModal();
-  document.getElementById('welcome-modal').classList.add('show');
-  document.getElementById('agreement-checkbox').classList.remove('checked');
-  document.getElementById('birth-year-select').value = '';
-  checkWelcomeReady();
-}
 
 // ===== Tab Switching =====
 function switchTab(tab) {
   document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
   document.querySelectorAll('.tab-bar-item').forEach(el => el.classList.remove('active'));
   document.getElementById(tab + '-tab').classList.add('active');
-  document.querySelectorAll('.tab-bar-item')[['home','records','my'].indexOf(tab)].classList.add('active');
+  document.querySelectorAll('.tab-bar-item')[['chat','records','my'].indexOf(tab)].classList.add('active');
   if(tab === 'my') setTimeout(animateDimensions, 300);
   if(tab === 'records') renderRecords();
 }
@@ -702,7 +561,8 @@ function addMessage(text, isUser) {
   const bubble = document.createElement('div');
   bubble.className = 'msg-bubble';
   bubble.textContent = text;
-  row.appendChild(avatar); row.appendChild(bubble);
+  row.appendChild(avatar);
+  row.appendChild(bubble);
   container.appendChild(row);
   container.scrollTop = container.scrollHeight;
 }
@@ -710,41 +570,56 @@ function addMessage(text, isUser) {
 function showTyping() {
   const container = document.getElementById('chat-messages');
   const row = document.createElement('div');
-  row.className = 'msg-row bot'; row.id = 'typing-row';
+  row.className = 'msg-row bot';
+  row.id = 'typing-row';
   const avatar = document.createElement('div');
   avatar.className = 'msg-avatar';
-  avatar.textContent = currentRole === '松果' ? '🐿' : (scenes.find(s => s.name === currentRole)?.emoji || '🐿');
+  avatar.textContent = currentRole === '松果' ? '🐿' : (scenes.find(s => s.name === currentRole)?.emoji || '');
   const indicator = document.createElement('div');
   indicator.className = 'typing-indicator';
   indicator.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
-  row.appendChild(avatar); row.appendChild(indicator);
+  row.appendChild(avatar);
+  row.appendChild(indicator);
   container.appendChild(row);
   container.scrollTop = container.scrollHeight;
 }
 
-function removeTyping() { const el = document.getElementById('typing-row'); if(el) el.remove(); }
+function removeTyping() {
+  const el = document.getElementById('typing-row');
+  if(el) el.remove();
+}
 
 async function sendMessage() {
   const input = document.getElementById('chat-input');
   const text = input.value.trim();
   if(!text) return;
-  if(checkCrisisKeywords(text)) showCrisisModal();
   addMessage(text, true);
-  input.value = ''; input.style.height = 'auto';
+  input.value = '';
+  input.style.height = 'auto';
   messageCount++;
   showTyping();
+  
   try {
     const response = await fetch(API_URL + '/api/chat', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Date': new Date().toUTCString() },
-      body: JSON.stringify({ message: text, session_id: sessionId || 'session_' + Date.now(), role: currentRole })
+      headers: { 
+        'Content-Type': 'application/json',
+        'Date': new Date().toUTCString()
+      },
+      body: JSON.stringify({
+        message: text,
+        session_id: sessionId || 'session_' + Date.now(),
+        role: currentRole
+      })
     });
+    
     const data = await response.json();
     removeTyping();
     sessionId = data.session_id;
     addMessage(data.reply, false);
   } catch (error) {
     removeTyping();
+    // Fallback to local replies if API fails
     const replies = roleReplies[currentRole] || roleReplies['松果'];
     const reply = replies[Math.floor(Math.random() * replies.length)];
     addMessage(reply, false);
@@ -752,29 +627,39 @@ async function sendMessage() {
 }
 
 function handleKeyDown(e) {
-  if(e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+  if(e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
 }
 
 async function selectScene(sceneId) {
   const scene = scenes.find(s => s.id === sceneId);
   if(!scene) return;
   currentRole = scene.name;
-  sessionId = null;
+  sessionId = null; // Reset session when switching roles
   document.getElementById('chat-role-name').textContent = scene.name;
   document.getElementById('chat-role-status').textContent = scene.desc;
   switchTab('chat');
   setTimeout(() => {
     showTyping();
-    setTimeout(() => { removeTyping(); addMessage(scene.opening, false); }, 600);
+    setTimeout(() => {
+      removeTyping();
+      addMessage(scene.opening, false);
+    }, 600);
   }, 300);
 }
 
 async function resetChat() {
-  currentRole = '松果'; messageCount = 0; sessionId = null;
+  currentRole = '松果';
+  messageCount = 0;
+  sessionId = null;
   document.getElementById('chat-role-name').textContent = '松果';
   document.getElementById('chat-role-status').textContent = '在线 · 你的解压伙伴';
   const container = document.getElementById('chat-messages');
   container.innerHTML = '';
+  
+  // Call backend to reset session
   try {
     await fetch(API_URL + '/api/switch-role', {
       method: 'POST',
@@ -782,111 +667,111 @@ async function resetChat() {
       body: JSON.stringify({ session_id: sessionId || 'session_' + Date.now(), target_role: '松果' })
     });
   } catch (e) {}
+  
   addMessage('嘿，你又来啦~ 今天想聊点什么？', false);
 }
 
-// ===== Dimensions =====
-function renderDimensions() {
-  const container = document.getElementById('dimensions');
-  container.innerHTML = '';
-  dimensions.forEach(d => {
-    const item = document.createElement('div');
-    item.className = 'dim-item';
-    item.innerHTML = '<div class="dim-item-header"><span>' + d.name + '</span><span>' + d.value + '%</span></div><div class="dim-bar"><div class="dim-bar-fill" data-width="' + d.value + '"></div></div>';
-    container.appendChild(item);
-  });
-}
-function animateDimensions() {
-  document.querySelectorAll('.dim-bar-fill').forEach(el => { el.style.width = el.dataset.width + '%'; });
+// ===== Render Functions =====
+function renderScenes() {
+  const grid = document.getElementById('scenes-grid');
+  grid.innerHTML = scenes.map(s => `
+    <div class="scene-card" onclick="selectScene('${s.id}')">
+      <div class="scene-card-emoji">${s.emoji}</div>
+      <div class="scene-card-name">${s.name}</div>
+      <div class="scene-card-desc">${s.desc}</div>
+    </div>
+  `).join('');
 }
 
-// ===== Records =====
-const mockRecords = [
-  {scene:'吐槽大会',emoji:'🔥',date:'今天 14:30',dims:['情绪识别 4','共情接纳 5','压力释放 5','放松深度 3','自我觉察 2'],gains:'把对甲方的火气全倒出来了，骂完真的舒服多了',action:'今晚做个小事：喝杯温水，伸个懒腰'},
-  {scene:'治愈聊天',emoji:'🌿',date:'昨天 22:15',dims:['情绪识别 5','共情接纳 5','压力释放 3','放松深度 4','自我觉察 3'],gains:'原来累是说不清的，但有人陪着就不那么怕了',action:'今晚早点睡，明天又是新的一天'},
-  {scene:'吵架模拟器',emoji:'💢',date:'3天前',dims:['情绪识别 4','共情接纳 4','压力释放 5','放松深度 3','自我觉察 3'],gains:'把憋了很久的话说出来了，发现说出来也没那么可怕',action:'下次遇到类似情况，试试直接表达'},
-  {scene:'安全宣泄',emoji:'🕳',date:'1周前',dims:['情绪识别 3','共情接纳 4','压力释放 5','放松深度 2','自我觉察 2'],gains:'什么都不用想，把情绪倒空就好',action:'允许自己有情绪，不用急着好起来'},
-  {scene:'复盘引导',emoji:'🧭',date:'2周前',dims:['情绪识别 4','共情接纳 4','压力释放 2','放松深度 2','自我觉察 5'],gains:'原来我一直在意的是被认可，不是事情本身',action:'下次焦虑时，问问自己真正在意的是什么'},
-  {scene:'放松舱',emoji:'🫧',date:'2周前',dims:['情绪识别 3','共情接纳 4','压力释放 2','放松深度 5','自我觉察 1'],gains:'跟着呼吸慢慢放松，身体真的轻了',action:'睡前做一次呼吸练习'}
-];
+function renderSceneQuick() {
+  const container = document.getElementById('scene-quick');
+  container.innerHTML = scenes.map(s => `
+    <div class="scene-quick-item" onclick="selectScene('${s.id}')">
+      <span class="sq-emoji">${s.emoji}</span>
+      <span>${s.name}</span>
+    </div>
+  `).join('');
+}
 
 function renderRecords() {
-  const container = document.getElementById('records-list');
-  if(!container) return;
-  container.innerHTML = mockRecords.map(r => '<div class="record-card"><div class="record-card-header"><div class="record-card-scene"><div class="record-card-scene-icon">' + r.emoji + '</div><div class="record-card-scene-name">' + r.scene + '</div></div><div class="record-card-date">' + r.date + '</div></div><div class="record-card-dimensions">' + r.dims.map(d => '<span class="record-dim">' + d + '</span>').join('') + '</div><div class="record-card-gains"><strong>新看见：</strong>' + r.gains + '</div><div class="record-card-action">💡 ' + r.action + '</div></div>').join('');
+  const list = document.getElementById('records-list');
+  const records = JSON.parse(localStorage.getItem('songguo_records') || '[]');
+  
+  if(records.length === 0) {
+    list.innerHTML = `
+      <div class="record-empty">
+        <div class="record-empty-icon"></div>
+        <p>还没有解压记录<br>去聊天页开始你的第一次解压吧~</p>
+      </div>
+    `;
+    return;
+  }
+  
+  list.innerHTML = records.slice().reverse().map(r => `
+    <div class="record-card">
+      <div class="record-card-header">
+        <div class="record-card-scene">
+          <div class="record-card-scene-icon">${scenes.find(s => s.name === r.role)?.emoji || '🐿'}</div>
+          <div class="record-card-scene-name">${r.role || '松果'}</div>
+        </div>
+        <div class="record-card-date">${r.date || '刚刚'}</div>
+      </div>
+      ${r.dimensions ? `<div class="record-card-dimensions">${r.dimensions.map(d => `<span class="record-dim">${d.name}: ${d.value}</span>`).join('')}</div>` : ''}
+      <div class="record-card-gains"><strong>今日收获：</strong>${r.summary || '暂无摘要'}</div>
+      ${r.action ? `<div class="record-card-action">📌 下一步：${r.action}</div>` : ''}
+    </div>
+  `).join('');
+}
+
+function animateDimensions() {
+  const container = document.getElementById('dimensions-container');
+  container.innerHTML = dimensionData.map((d, i) => `
+    <div class="dimension-bar">
+      <div class="dimension-bar-header">
+        <span class="dimension-bar-name">${d.name}</span>
+        <span class="dimension-bar-value">${d.value}%</span>
+      </div>
+      <div class="dimension-bar-track">
+        <div class="dimension-bar-fill" style="width:0%;background:var(--green)"></div>
+      </div>
+    </div>
+  `).join('');
+  
+  setTimeout(() => {
+    dimensionData.forEach((d, i) => {
+      const fill = container.querySelectorAll('.dimension-bar-fill')[i];
+      if(fill) fill.style.width = d.value + '%';
+    });
+  }, 100);
+}
+
+// ===== Data Functions =====
+function exportData() {
+  const records = localStorage.getItem('songguo_records') || '[]';
+  const blob = new Blob([records], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'songguo_records_' + Date.now() + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function clearAllData() {
+  if(confirm('确定要清空所有记录吗？此操作不可恢复。')) {
+    localStorage.removeItem('songguo_records');
+    alert('已清空所有记录');
+    renderRecords();
+  }
 }
 
 // ===== Init =====
-renderDimensions();
-initCompliance();
-
-document.getElementById('scene-modal').addEventListener('click', function(e) { if(e.target === this) closeModal(); });
-document.getElementById('chat-input').addEventListener('input', function() { this.style.height = 'auto'; this.style.height = Math.min(this.scrollHeight, 100) + 'px'; });
-
-function openSceneModal(scene) {
-  document.getElementById('modal-title').textContent = scene.id;
-  document.getElementById('modal-body').innerHTML = '<div class="scene-meta"><span>🎭 ' + scene.name + '</span><span>难度 ' + scene.difficulty + '</span><span>💬 ' + scene.rounds + '</span><span>' + (scene.tag === '免费' ? '🆓 免费' : '💎 ' + scene.tag) + '</span></div><p>' + scene.detail + '</p><p style="font-size:13px;color:var(--brown);background:var(--cream);padding:10px 14px;border-radius:10px;margin-top:8px">💬 开场白：「' + scene.opening + '」</p><button class="scene-modal-start" onclick="startScene(\'' + scene.id + '\')">开始对话</button>';
-  document.getElementById('scene-modal').classList.add('show');
-}
-function closeModal() { document.getElementById('scene-modal').classList.remove('show'); }
-function startScene(sceneId) { closeModal(); selectScene(sceneId); }
-
-// ===== 首页功能 =====
-function enterScene(sceneId) {
-  const scene = scenes.find(s => s.id === sceneId);
-  if(!scene) return;
-  currentRole = scene.name;
-  sessionId = null;
-  messageCount = 0;
-  document.getElementById('chat-role-name').textContent = scene.name;
-  document.getElementById('chat-role-status').textContent = scene.desc;
-  document.getElementById('chat-avatar').textContent = scene.emoji;
-  document.getElementById('chat-messages').innerHTML = '';
-  switchTab('chat');
-  setTimeout(() => {
-    showTyping();
-    setTimeout(() => { removeTyping(); addMessage(scene.opening, false); }, 600);
-  }, 300);
-}
-function backToHome() { switchTab('home'); }
-function handleHomeKeyDown(e) {
-  if(e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendHomeMessage(); }
-}
-async function sendHomeMessage() {
-  const input = document.getElementById('home-input');
-  const text = input.value.trim();
-  if(!text) return;
-  if(checkCrisisKeywords(text)) showCrisisModal();
-  const guide = document.querySelector('.song-song-guide');
-  const row = document.createElement('div');
-  row.className = 'msg-row user';
-  const avatar = document.createElement('div');
-  avatar.className = 'msg-avatar';
-  avatar.textContent = '🧑';
-  const bubble = document.createElement('div');
-  bubble.className = 'msg-bubble';
-  bubble.textContent = text;
-  row.appendChild(avatar);
-  row.appendChild(bubble);
-  guide.appendChild(row);
-  input.value = '';
-  input.style.height = 'auto';
-  setTimeout(() => {
-    const replies = ['我理解你的感受~ 要不要选一个场景聊聊？','听起来你今天有些心事，选个场景跟我说说吧~','没关系，慢慢来。选一个场景，我们开始解压~','我在听呢~ 选一个场景，让我更好地帮助你~'];
-    const reply = replies[Math.floor(Math.random() * replies.length)];
-    const botRow = document.createElement('div');
-    botRow.className = 'msg-row bot';
-    const botAvatar = document.createElement('div');
-    botAvatar.className = 'msg-avatar';
-    botAvatar.textContent = '🐿';
-    const botBubble = document.createElement('div');
-    botBubble.className = 'msg-bubble';
-    botBubble.textContent = reply;
-    botRow.appendChild(botAvatar);
-    botRow.appendChild(botBubble);
-    guide.appendChild(botRow);
-  }, 800);
-}
+renderScenes();
+renderSceneQuick();
+document.getElementById('my-session-count').textContent = messageCount;
+document.getElementById('stat-total').textContent = messageCount;
+document.getElementById('stat-scenes').textContent = scenes.length;
+document.getElementById('stat-days').textContent = 1;
 </script>
 </body>
 </html>

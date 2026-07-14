@@ -215,6 +215,9 @@ input,textarea,select{font-family:inherit;border:none;outline:none;background:no
 .home-scene-card .scene-emoji{font-size:28px}
 .home-scene-card .scene-name{font-size:13px;color:var(--brown);font-weight:500}
 .home-scene-card .scene-tag{position:absolute;top:6px;right:6px;font-size:10px;padding:2px 6px;border-radius:8px;background:var(--gold-pale);color:var(--gold)}
+
+/* 聊天页隐藏Tab栏 */
+#chat-tab.active ~ .tab-bar { display: none !important; }
 </style>
 </head>
 <body>
@@ -248,10 +251,6 @@ input,textarea,select{font-family:inherit;border:none;outline:none;background:no
         <button class="home-scene-card" onclick="enterScene('复盘引导')"><span class="scene-emoji">🧭</span><span class="scene-name">复盘引导</span><span class="scene-tag">VIP</span></button>
         <button class="home-scene-card" onclick="enterScene('放松舱')"><span class="scene-emoji">🫧</span><span class="scene-name">放松舱</span><span class="scene-tag">免费</span></button>
       </div>
-    </div>
-    <div class="chat-input-area">
-      <textarea class="chat-input" id="home-input" placeholder="跟松松说说你的心情..." rows="1" onkeydown="handleHomeKeyDown(event)"></textarea>
-      <button class="chat-send-btn" onclick="sendHomeMessage()"></button>
     </div>
   </div>
 
@@ -686,7 +685,13 @@ function switchTab(tab) {
   document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
   document.querySelectorAll('.tab-bar-item').forEach(el => el.classList.remove('active'));
   document.getElementById(tab + '-tab').classList.add('active');
-  document.querySelectorAll('.tab-bar-item')[['home','records','my'].indexOf(tab)].classList.add('active');
+  const tabBar = document.querySelector('.tab-bar');
+  if(tab === 'chat') {
+    tabBar.style.display = 'none';
+  } else {
+    tabBar.style.display = 'flex';
+    document.querySelectorAll('.tab-bar-item')[['home','records','my'].indexOf(tab)].classList.add('active');
+  }
   if(tab === 'my') setTimeout(animateDimensions, 300);
   if(tab === 'records') renderRecords();
 }
