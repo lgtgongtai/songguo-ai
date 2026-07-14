@@ -1,6 +1,6 @@
 [skill]
   skill_package = "songguo-ai.skill"
   name = "songguo-ai"
-  description = "AI角色扮演解压伙伴系统，含松果主角色与六大解压角色(吐槽/治愈/吵架/树洞/复盘/呼吸)，支持情绪驱动角色切换与五维解压成效记录；当用户需要情绪解压、角色扮演对话、压力释放或情绪陪伴时使用"
+  description = "基于《人工智能拟人化互动服务管理暂行办法》的合规化松果AI角色扮演解压游戏，包含年龄核验、未成年人硬隔离、AI标识、沉迷防控、危机干预、数据合规等全套合规模块；当用户需要情绪解压、角色扮演聊天、压力释放或心理疏导时使用"
   project_name = "松果AI技能"
-  project_description = "AI角色扮演解压伙伴，六大角色随时切换"
+  project_description = "合规化AI角色扮演解压游戏"
