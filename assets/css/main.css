@@ -384,3 +384,150 @@ body.chat-active .tab-bar { display: none !important; }
   border-color: var(--gold);
 }
 
+/* ===== Modal ===== */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal.show {
+  display: flex;
+}
+
+.modal-content {
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+}
+
+.modal-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.modal-content h2 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--brown);
+  margin-bottom: 8px;
+}
+
+.modal-content p {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.modal-notice {
+  background: var(--cream);
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 16px;
+}
+
+.modal-notice p {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.modal-age-check,
+.modal-agree {
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+.modal-age-check label,
+.modal-agree label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #666;
+  cursor: pointer;
+}
+
+.modal-age-check input,
+.modal-agree input {
+  width: 18px;
+  height: 18px;
+}
+
+.modal-agree a {
+  color: var(--gold);
+  text-decoration: underline;
+}
+
+.modal-btn {
+  width: 100%;
+  padding: 14px;
+  border-radius: var(--radius);
+  background: var(--gold);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.modal-btn:active {
+  transform: scale(0.97);
+}
+
+.modal-content.crisis {
+  text-align: center;
+}
+
+.crisis-hotlines {
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.crisis-hotlines p {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.crisis-hotlines strong {
+  color: var(--brown);
+}
+
+.legal-content {
+  max-height: 80vh;
+  overflow-y: auto;
+  text-align: left;
+}
+
+.legal-content h2 {
+  text-align: center;
+}
+
+.legal-content h4 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--brown);
+  margin: 16px 0 8px;
+}
+
+.legal-content p {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+
