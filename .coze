@@ -1,6 +1,6 @@
 [skill]
   skill_package = "songguo-ai.skill"
   name = "songguo-ai"
-  description = "松果AI角色扮演解压互动游戏平台，基于Vue 3重构，包含三圈15场景（情绪解压、社交训练、亲子互动）、7种风格混合回复系统、Pinia状态管理、Vue Router路由、语音输入、监管合规功能（年龄核验、AI标识、沉迷防控、危机干预、数据管理）"
+  description = "松果AI角色扮演解压互动游戏平台，包含Vue 3前端、Node.js后端API、三圈15场景、7种风格混合回复系统、Pinia状态管理、SQLite数据库、JWT认证、监管合规功能"
   project_name = "松果AI技能"
-  project_description = "松果AI角色扮演解压游戏平台（Vue 3重构版）"
+  project_description = "松果AI角色扮演解压游戏平台（前后端完整版）"

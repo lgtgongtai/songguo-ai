@@ -78,6 +78,7 @@
 import { ref, computed, onMounted, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { useChatStore } from '@/stores/chat'
+import { apiService } from '@/services/api'
 
 const router = useRouter()
 const chatStore = useChatStore()
@@ -115,14 +116,27 @@ const sendMessage = async () => {
   await nextTick()
   scrollToBottom()
   
-  // 获取AI回复
-  const reply = await chatStore.getAIReply(text)
-  
-  // 隐藏正在输入
-  isTyping.value = false
-  
-  // 添加AI消息
-  chatStore.addMessage('ai', reply)
+  try {
+    // 调用后端API发送消息
+    const result = await apiService.sendMessage(chatStore.currentSessionId, text)
+    
+    // 隐藏正在输入
+    isTyping.value = false
+    
+    // 添加AI消息
+    chatStore.addMessage('ai', result.reply)
+    
+    // 更新五维得分
+    if (result.dimension_scores) {
+      chatStore.updateDimensionScores(result.dimension_scores)
+    }
+  } catch (error) {
+    console.error('发送消息失败:', error)
+    isTyping.value = false
+    // 使用本地回复作为fallback
+    const reply = await chatStore.getAIReply(text)
+    chatStore.addMessage('ai', reply)
+  }
   
   await nextTick()
   scrollToBottom()

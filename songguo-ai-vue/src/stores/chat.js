@@ -14,6 +14,14 @@ export const useChatStore = defineStore('chat', () => {
   const vipLevel = ref(0)
   const sessionStartTime = ref(null)
   const addictionShown = ref(false)
+  const currentSessionId = ref(null)
+  const dimensionScores = ref({
+    emotionRecognition: 0,
+    empathyAcceptance: 0,
+    stressRelease: 0,
+    relaxationDepth: 0,
+    selfAwareness: 0
+  })
 
   // 初始化
   const init = () => {
@@ -113,6 +121,10 @@ export const useChatStore = defineStore('chat', () => {
   }
 
   // 清空记录
+  const updateDimensionScores = (scores) => {
+    dimensionScores.value = { ...dimensionScores.value, ...scores }
+  }
+
   const clearRecords = () => {
     records.value = []
     localStorage.removeItem('chatRecords')
@@ -150,6 +162,8 @@ export const useChatStore = defineStore('chat', () => {
   }
 
   return {
+    currentSessionId,
+    dimensionScores,
     messages,
     records,
     currentRole,
@@ -165,6 +179,7 @@ export const useChatStore = defineStore('chat', () => {
     setNickname,
     clearRecords,
     saveRecord,
+    updateDimensionScores,
     logout
   }
 })
