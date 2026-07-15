@@ -135,13 +135,42 @@ const scrollToBottom = () => {
 }
 
 const startRecording = () => {
-  isRecording.value = true
-  // TODO: 实现语音识别
+  if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+    alert('您的浏览器不支持语音识别功能')
+    return
+  }
+  
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
+  const recognition = new SpeechRecognition()
+  
+  recognition.lang = 'zh-CN'
+  recognition.continuous = false
+  recognition.interimResults = false
+  
+  recognition.onstart = () => {
+    isRecording.value = true
+  }
+  
+  recognition.onresult = (event) => {
+    const transcript = event.results[0][0].transcript
+    inputText.value = transcript
+    isRecording.value = false
+  }
+  
+  recognition.onerror = (event) => {
+    console.error('语音识别错误:', event.error)
+    isRecording.value = false
+  }
+  
+  recognition.onend = () => {
+    isRecording.value = false
+  }
+  
+  recognition.start()
 }
 
 const stopRecording = () => {
   isRecording.value = false
-  // TODO: 实现语音识别
 }
 
 const closeCrisisModal = () => {
