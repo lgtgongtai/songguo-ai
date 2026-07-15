@@ -79,7 +79,8 @@ function backToHome() { switchTab('home'); }
 function renderDimensions() {
   const container = document.getElementById('dimensions');
   container.innerHTML = '';
-  dimensions.forEach(d => {
+  const dimArray = Object.values(dimensions);
+  dimArray.forEach(d => {
     const item = document.createElement('div');
     item.className = 'dim-item';
     item.innerHTML = '<div class="dim-item-header"><span>' + d.name + '</span><span>' + d.value + '%</span></div><div class="dim-bar"><div class="dim-bar-fill" data-width="' + d.value + '"></div></div>';
