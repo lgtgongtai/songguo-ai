@@ -6,21 +6,11 @@ let usageStartTime = Date.now();
 let restReminderShown = false;
 const REST_REMINDER_INTERVAL = 2 * 60 * 60 * 1000; // 2 hours
 
-// ===== Crisis Keywords =====
+// ===== Crisis Keyword =====
 const crisisKeywords = ['自杀','自残','不想活','想死','去死','活着没意思','没有意义','结束生命','跳楼','割腕','了结','解脱','没人会在意','世界没有我会更好','拖累','负担'];
 
 // ===== Init Compliance =====
 function initCompliance() {
-  const select = document.getElementById('birth-year-select');
-  const currentYear = new Date().getFullYear();
-  for(let y = currentYear - 18; y >= currentYear - 100; y--) {
-    const opt = document.createElement('option');
-    opt.value = y;
-    opt.textContent = y + '年';
-    select.appendChild(opt);
-  }
-  select.addEventListener('change', checkWelcomeReady);
-  
   const hasAgreed = localStorage.getItem('songguo_agreed');
   if(hasAgreed) {
     usageStartTime = Date.now();
@@ -30,64 +20,41 @@ function initCompliance() {
   document.getElementById('welcome-modal').classList.add('show');
 }
 
-function toggleAgreement() {
-  document.getElementById('agreement-checkbox').classList.toggle('checked');
-  checkWelcomeReady();
-}
-
-function checkWelcomeReady() {
-  const year = document.getElementById('birth-year-select').value;
-  const agreed = document.getElementById('agreement-checkbox').classList.contains('checked');
-  const btn = document.getElementById('welcome-enter-btn');
-  if(year && agreed) { btn.classList.remove('disabled'); } else { btn.classList.add('disabled'); }
-}
-
-function enterApp() {
-  const btn = document.getElementById('welcome-enter-btn');
-  if(btn.classList.contains('disabled')) return;
-  const year = parseInt(document.getElementById('birth-year-select').value);
-  const age = new Date().getFullYear() - year;
-  if(age < 18) {
-    document.getElementById('welcome-modal').classList.remove('show');
-    document.getElementById('minor-modal').classList.add('show');
+function acceptWelcome() {
+  const ageConfirm = document.getElementById('age-confirm');
+  const termsAgree = document.getElementById('terms-agree');
+  
+  if(!ageConfirm.checked) {
+    alert('请确认您已满18周岁');
     return;
   }
+  if(!termsAgree.checked) {
+    alert('请阅读并同意用户协议和隐私政策');
+    return;
+  }
+  
   localStorage.setItem('songguo_agreed', 'true');
-  localStorage.setItem('songguo_birth_year', year.toString());
   localStorage.setItem('songguo_first_visit', Date.now().toString());
   usageStartTime = Date.now();
   startUsageTimer();
   document.getElementById('welcome-modal').classList.remove('show');
 }
 
-function closeMinorModal() {
-  document.getElementById('minor-modal').classList.remove('show');
-}
-
 // ===== Usage Timer =====
 function startUsageTimer() {
   setInterval(() => {
     const elapsed = Date.now() - usageStartTime;
-    if(elapsed >= REST_REMINDER_INTERVAL && !restReminderShown) { showRestReminder(); }
+    if(elapsed >= REST_REMINDER_INTERVAL && !restReminderShown) { showAddictionModal(); }
   }, 60000);
 }
 
-function showRestReminder() {
+function showAddictionModal() {
   restReminderShown = true;
-  const hours = Math.floor((Date.now() - usageStartTime) / (60 * 60 * 1000));
-  document.getElementById('rest-hours').textContent = hours;
-  document.getElementById('rest-modal').classList.add('show');
-  let countdown = 30;
-  const timerEl = document.getElementById('rest-timer');
-  const interval = setInterval(() => {
-    countdown--;
-    timerEl.textContent = countdown + '秒后自动关闭';
-    if(countdown <= 0) { clearInterval(interval); closeRestModal(); }
-  }, 1000);
+  document.getElementById('addiction-modal').classList.add('show');
 }
 
-function closeRestModal() {
-  document.getElementById('rest-modal').classList.remove('show');
+function closeAddictionModal() {
+  document.getElementById('addiction-modal').classList.remove('show');
   usageStartTime = Date.now();
   restReminderShown = false;
 }
@@ -111,16 +78,51 @@ function closeCrisisModal() { document.getElementById('crisis-modal').classList.
 
 // ===== Legal Pages =====
 function showLegalPage(type) {
-  if(type === 'terms') document.getElementById('terms-page').classList.add('show');
-  else if(type === 'privacy') document.getElementById('privacy-page').classList.add('show');
+  const modal = document.getElementById('legal-modal');
+  const title = document.getElementById('legal-title');
+  const body = document.getElementById('legal-body');
+  
+  if(type === 'terms') {
+    title.textContent = '用户协议';
+    body.innerHTML = `
+      <h3>松果AI用户协议</h3>
+      <p>欢迎使用松果AI角色扮演解压互动游戏平台。</p>
+      <h4>1. 服务说明</h4>
+      <p>松果AI提供AI角色扮演解压互动服务，不是心理咨询的替代品，不参与任何医疗诊断的最终决策。</p>
+      <h4>2. 用户责任</h4>
+      <p>用户应确保已满18周岁，或在监护人指导下使用。用户应遵守相关法律法规，不得利用本服务从事违法活动。</p>
+      <h4>3. 隐私保护</h4>
+      <p>我们重视用户隐私，对话内容去标识化存储，详见隐私政策。</p>
+      <h4>4. 免责声明</h4>
+      <p>本服务由AI提供，内容仅供参考。如有严重心理问题，请咨询专业心理咨询师。</p>
+    `;
+  } else if(type === 'privacy') {
+    title.textContent = '隐私政策';
+    body.innerHTML = `
+      <h3>松果AI隐私政策</h3>
+      <p>我们重视您的隐私保护。</p>
+      <h4>1. 信息收集</h4>
+      <p>我们收集对话内容用于提供服务和改进产品，对话内容去标识化存储。</p>
+      <h4>2. 信息使用</h4>
+      <p>您的对话内容仅用于提供解压服务和生成松劲报告，不会用于其他商业目的。</p>
+      <h4>3. 信息保护</h4>
+      <p>我们采用加密存储和访问控制，保护您的对话内容安全。</p>
+      <h4>4. 信息共享</h4>
+      <p>除法律要求外，我们不会向第三方共享您的个人信息。</p>
+      <h4>5. 您的权利</h4>
+      <p>您可以随时查看、复制或删除您的对话记录。</p>
+    `;
+  }
+  
+  modal.classList.add('show');
 }
+
 function closeLegalPage() {
-  document.getElementById('terms-page').classList.remove('show');
-  document.getElementById('privacy-page').classList.remove('show');
+  document.getElementById('legal-modal').classList.remove('show');
 }
 
 // ===== Data Management =====
-function exportChatData() {
+function copyChatRecords() {
   const messages = document.getElementById('chat-messages');
   const rows = messages.querySelectorAll('.msg-row');
   let text = '松果AI 对话记录\n';
@@ -144,29 +146,17 @@ function fallbackCopy(text) {
   document.body.removeChild(ta);
 }
 
-function deleteAllData() { document.getElementById('delete-modal').classList.add('show'); }
-function closeDeleteModal() { document.getElementById('delete-modal').classList.remove('show'); }
-
-function confirmDeleteAll() {
-  localStorage.clear();
+function clearChatRecords() {
+  if(!confirm('确定要清空所有对话记录吗？此操作不可恢复。')) return;
+  localStorage.removeItem('songguo_chat_history');
   document.getElementById('chat-messages').innerHTML = '';
   sessionId = null; currentRole = '松果'; messageCount = 0;
-  closeDeleteModal();
-  alert('所有数据已删除');
-  document.getElementById('welcome-modal').classList.add('show');
-  document.getElementById('agreement-checkbox').classList.remove('checked');
-  document.getElementById('birth-year-select').value = '';
-  checkWelcomeReady();
+  alert('对话记录已清空');
 }
 
-// ===== Exit =====
-function showExitConfirm() { document.getElementById('exit-modal').classList.add('show'); }
-function closeExitModal() { document.getElementById('exit-modal').classList.remove('show'); }
-function confirmExit() {
+// ===== Logout =====
+function logout() {
+  if(!confirm('确定要退出登录吗？')) return;
   localStorage.removeItem('songguo_agreed');
-  closeExitModal();
-  document.getElementById('welcome-modal').classList.add('show');
-  document.getElementById('agreement-checkbox').classList.remove('checked');
-  document.getElementById('birth-year-select').value = '';
-  checkWelcomeReady();
+  location.reload();
 }
