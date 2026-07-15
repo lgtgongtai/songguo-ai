@@ -42,14 +42,14 @@ const songSongGuides = {
 
 // ===== Home Page Functions =====
 function enterScene(sceneId) {
-  const scene = scenes.find(s => s.id === sceneId);
+  const scene = scenes.find(s => s.name === sceneId || s.id === sceneId);
   if(!scene) return;
   currentRole = scene.name;
   sessionId = null;
   messageCount = 0;
   document.getElementById('chat-role-name').textContent = scene.name;
-  document.getElementById('chat-role-status').textContent = scene.desc;
-  document.getElementById('chat-avatar').textContent = scene.emoji;
+  document.getElementById('chat-role-status').textContent = scene.role.style;
+  document.getElementById('chat-avatar').textContent = scene.icon;
   document.getElementById('chat-messages').innerHTML = '';
   switchTab('chat');
   setTimeout(() => {
