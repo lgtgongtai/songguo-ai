@@ -65,28 +65,7 @@ export const useChatStore = defineStore('chat', () => {
 
   // 获取AI回复
   const getAIReply = async (userText) => {
-    // 尝试调用API
-    try {
-      const response = await fetch('https://your-api-endpoint.com/chat', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          message: userText,
-          scene: currentRole.value?.id
-        })
-      })
-      
-      if (response.ok) {
-        const data = await response.json()
-        return data.reply
-      }
-    } catch (error) {
-      console.error('API调用失败:', error)
-    }
-    
-    // API失败时使用本地回复
+    // 使用本地回复
     return getSmartFallback(userText)
   }
 
