@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>松果AI · 手机UI设计</title>
+<style>
+  :root{
+    --g900:#16382B; --g800:#1E4A38; --g700:#2F6B4F; --g600:#3E8265;
+    --g500:#54A07E; --g300:#9DCBB8; --g100:#E3F0EA; --g50:#F1F7F4;
+    --bg:#EAF1ED; --cream:#FBF6EC; --nut:#C68A4E; --nut-d:#9C6531;
+    --ink:#21302A; --mut:#6E8178; --line:#DCE7E1;
+    --pink:#E4869F; --blue:#6FA8CF; --warn:#E08A4E; --gold:#E0B25A;
+    --r:14px; --r-s:10px; --shadow:0 6px 22px rgba(31,74,56,.10);
+    --safe:env(safe-area-inset-bottom,0px);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    background:#D9E4DE; color:var(--ink); font-size:15px; line-height:1.5;
+    display:flex; justify-content:center; align-items:stretch; min-height:100vh;
+  }
+  /* phone column */
+  .phone{
+    width:100%; max-width:430px; background:var(--bg); position:relative;
+    min-height:100vh; overflow:hidden; display:flex; flex-direction:column;
+  }
+  @media(min-width:480px){
+    body{align-items:center; padding:18px 0}
+    .phone{max-width:390px; min-height:auto; height:844px; border-radius:16px;
+      box-shadow:0 20px 60px rgba(22,56,43,.28); border:1px solid #cfe0d8}
+  }
+  /* screens */
+  .screen{display:none; flex:1; flex-direction:column; min-height:0; background:var(--bg)}
+  .screen.on{display:flex}
+  .scroll{flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; padding-bottom:calc(74px + var(--safe))}
+  .scroll.nb{padding-bottom:0}
+
+  /* top bar */
+  .topbar{display:flex; align-items:center; gap:10px; padding:14px 16px 10px; background:var(--bg)}
+  .topbar .brand{display:flex; align-items:center; gap:8px; font-weight:800; font-size:17px; letter-spacing:.5px}
+  .topbar .brand .dot{width:26px;height:26px}
+  .topbar .sp{flex:1}
+  .ico-btn{width:38px;height:38px;border-radius:12px;border:none;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow);color:var(--g700);font-size:17px}
+  .back{width:34px;height:34px;border-radius:50%;background:#fff;border:none;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;color:var(--g700);font-size:18px}
+
+  /* bottom nav */
+  .nav{position:absolute; left:0; right:0; bottom:0; width:100%; display:flex; justify-content:space-around; background:#fff;
+    border-top:1px solid var(--line); padding:8px 6px calc(8px + var(--safe));
+    box-shadow:0 -4px 18px rgba(31,74,56,.06); z-index:30}
+  .nav.hide{display:none}
+  .nav a{flex:none; width:23%; text-align:center; border:none; background:none; color:var(--mut); font-size:10.5px;
+    padding:4px 0; cursor:pointer}
+  .nav a .g{display:block; font-size:18px; line-height:1; margin-bottom:3px}
+  .nav a.act{color:var(--g700)}
+  .nav a.act .g{transform:translateY(-1px)}
+
+  /* generic */
+  .pad{padding:0 16px}
+  .card{background:#fff; border-radius:var(--r); box-shadow:var(--shadow); padding:16px}
+  .pill{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:999px;font-size:12px;font-weight:700}
+  .btn{border:none;border-radius:14px;padding:14px;font-size:16px;font-weight:800;cursor:pointer;width:100%}
+  .btn.g{background:var(--g700);color:#fff}
+  .btn.g:active{background:var(--g800)}
+  .btn.ghost{background:#fff;color:var(--g700);border:1.5px solid var(--g300)}
+  .btn.lite{background:var(--g100);color:var(--g800)}
+  .muted{color:var(--mut)}
+  .sectit{font-size:13px;font-weight:800;color:var(--mut);letter-spacing:1px;margin:18px 0 10px}
+  .row{display:flex;align-items:center;gap:10px}
+
+  /* ===== splash ===== */
+  #splash{background:linear-gradient(160deg,var(--g800),var(--g600));color:#fff;align-items:center;justify-content:center;text-align:center;padding:30px}
+  #splash .mascot{width:150px;height:150px;margin-bottom:8px}
+  #splash h1{font-size:30px;margin:6px 0 4px;letter-spacing:2px;font-weight:900}
+  #splash .en{font-size:12px;letter-spacing:4px;opacity:.85;font-weight:600}
+  #splash .slo{margin:18px 0 28px;font-size:15px;opacity:.95}
+  #splash .cta{background:#fff;color:var(--g800);border-radius:14px;padding:14px 40px;font-weight:800;font-size:16px;border:none}
+  #splash .sub{margin-top:16px;font-size:12px;opacity:.8}
+
+  /* ===== onboard ===== */
+  #onboard{background:linear-gradient(160deg,var(--g50),#fff);padding:0}
+  .ob-hero{background:linear-gradient(160deg,var(--g700),var(--g500));color:#fff;padding:54px 22px 30px;text-align:center}
+  .ob-hero h2{font-size:26px;margin:10px 0;font-weight:900;letter-spacing:1px}
+  .ob-hero p{opacity:.95;font-size:14px;margin:0}
+  .ob-mascot{width:130px;height:130px;margin:0 auto}
+  .ob-list{padding:22px 18px 30px}
+  .ob-item{display:flex;gap:14px;align-items:flex-start;margin-bottom:18px}
+  .ob-item .n{flex:0 0 38px;height:38px;border-radius:12px;background:var(--g100);color:var(--g700);
+    display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px}
+  .ob-item b{font-size:15px}
+  .ob-item p{margin:3px 0 0;font-size:13px;color:var(--mut)}
+  .ob-cta{padding:0 18px 26px}
+
+  /* ===== home ===== */
+  .greet{background:linear-gradient(135deg,var(--g700),var(--g500));color:#fff;margin:0 0 4px;padding:16px;border-radius:0}
+  .greet .row{justify-content:flex-start}
+  .greet .face{width:52px;height:52px;flex:0 0 52px}
+  .greet b{font-size:16px}
+  .greet p{margin:4px 0 0;font-size:13.5px;opacity:.95}
+  .nuts{display:flex;gap:10px;padding:14px 16px;overflow-x:auto}
+  .nut{flex:0 0 auto;background:var(--cream);border:1px solid #efdfc6;border-radius:14px;padding:10px 12px;min-width:116px;display:flex;flex-direction:column;gap:6px}
+  .nut .t{font-size:13px;font-weight:700;color:#7a5326}
+  .nut .smash{background:var(--nut);color:#fff;border:none;border-radius:10px;padding:6px;font-size:12px;font-weight:800}
+  .circles{display:flex;flex-direction:column;gap:12px;padding:6px 16px 4px}
+  .ccard{background:#fff;border-radius:var(--r);box-shadow:var(--shadow);padding:14px;display:flex;align-items:center;gap:14px;cursor:pointer}
+  .ccard .emo{width:50px;height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;flex:0 0 50px}
+  .ccard .c1{background:var(--g100)} .ccard .c2{background:#FBE6EC} .ccard .c3{background:#E6F1F8}
+  .ccard b{font-size:16px} .ccard .d{font-size:12.5px;color:var(--mut)}
+  .quick{display:flex;gap:10px;padding:6px 16px 8px;overflow-x:auto}
+  .qchip{flex:0 0 auto;background:#fff;border-radius:12px;box-shadow:var(--shadow);padding:10px 12px;display:flex;flex-direction:column;gap:4px;min-width:96px;cursor:pointer}
+  .qchip .e{font-size:20px} .qchip .n{font-size:12.5px;font-weight:700}
+
+  /* ===== scenes (circle) ===== */
+  .chero{background:linear-gradient(135deg,var(--g700),var(--g500));color:#fff;padding:8px 0 18px}
+  .chero .topbar{background:transparent;padding-bottom:6px}
+  .chero h2{font-size:22px;margin:2px 0 2px;font-weight:900}
+  .chero .d{font-size:13px;opacity:.95;padding:0 16px}
+  .slist{padding:12px 16px 16px;display:flex;flex-direction:column;gap:11px}
+  .srow{background:#fff;border-radius:var(--r);box-shadow:var(--shadow);padding:13px 14px;display:flex;align-items:center;gap:12px;cursor:pointer}
+  .srow .e{width:44px;height:44px;border-radius:12px;background:var(--g100);display:flex;align-items:center;justify-content:center;font-size:23px;flex:0 0 44px}
+  .srow b{font-size:15px} .srow .d{font-size:12.5px;color:var(--mut)}
+  .srow .go{margin-left:auto;background:var(--g100);color:var(--g700);border:none;border-radius:10px;padding:7px 13px;font-weight:800;font-size:13px}
+
+  /* ===== chat ===== */
+  #chat{background:var(--g50)}
+  .chat-top{background:#fff;display:flex;align-items:center;gap:10px;padding:12px 14px;box-shadow:0 2px 10px rgba(31,74,56,.05);position:relative;z-index:5}
+  .chat-top .ava{width:40px;height:40px;border-radius:12px;background:var(--g100);display:flex;align-items:center;justify-content:center;font-size:21px}
+  .chat-top b{font-size:15px} .chat-top .st{font-size:11.5px;color:var(--mut)}
+  .chat-top .end{margin-left:auto;background:var(--g100);color:var(--g700);border:none;border-radius:10px;padding:7px 12px;font-weight:800;font-size:12.5px}
+  .chat-area{flex:1;overflow-y:auto;padding:14px 14px 10px;display:flex;flex-direction:column;gap:12px}
+  .syshint{align-self:center;background:#fff5ea;color:#a96a2f;border:1px solid #f3dcbf;border-radius:999px;padding:6px 14px;font-size:12px;font-weight:700;max-width:88%}
+  .bub{max-width:80%;padding:11px 14px;border-radius:16px;font-size:14.5px;line-height:1.55}
+  .bub.ai{align-self:flex-start;background:#fff;border:1px solid var(--line);border-bottom-left-radius:5px}
+  .bub.me{align-self:flex-end;background:var(--g700);color:#fff;border-bottom-right-radius:5px}
+  .bub .who{font-size:11px;color:var(--mut);margin-bottom:3px;font-weight:700}
+  .bub.me .who{color:rgba(255,255,255,.7)}
+  .typing{align-self:flex-start;background:#fff;border:1px solid var(--line);border-radius:16px;border-bottom-left-radius:5px;padding:12px 14px;display:flex;gap:5px}
+  .typing i{width:7px;height:7px;border-radius:50%;background:var(--g300);animation:bl 1s infinite}
+  .typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+  @keyframes bl{0%,60%,100%{opacity:.3;transform:translateY(0)}30%{opacity:1;transform:translateY(-3px)}}
+  .chat-end{position:absolute;left:14px;right:14px;bottom:calc(78px + var(--safe));z-index:20}
+  .chat-end .btn{box-shadow:0 8px 24px rgba(47,107,79,.35)}
+  .inputbar{position:absolute;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);
+    padding:9px 12px calc(9px + var(--safe));display:flex;align-items:center;gap:10px;z-index:25}
+  .inputbar .field{flex:1;background:var(--g50);border:1px solid var(--line);border-radius:14px;padding:11px 14px;color:var(--mut);font-size:14px}
+  .inputbar .snd{width:42px;height:42px;border-radius:14px;background:var(--g700);border:none;color:#fff;font-size:18px;display:flex;align-items:center;justify-content:center}
+
+  /* ===== report ===== */
+  #report{background:var(--g50)}
+  .r-hero{background:linear-gradient(135deg,var(--g700),var(--g500));color:#fff;padding:10px 16px 20px}
+  .r-hero .topbar{background:transparent;padding:6px 0 8px}
+  .r-stage{display:flex;align-items:center;gap:16px}
+  .r-stage .badge{width:84px;height:84px;border-radius:50%;background:rgba(255,255,255,.16);border:3px solid rgba(255,255,255,.5);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;flex:0 0 84px}
+  .r-stage .badge .big{font-size:30px;font-weight:900;line-height:1}
+  .r-stage .badge .lab{font-size:12px;font-weight:800;margin-top:2px}
+  .r-stage h3{margin:0;font-size:19px;font-weight:900}
+  .r-stage p{margin:5px 0 0;font-size:13px;opacity:.95}
+  .r-card{background:#fff;border-radius:var(--r);box-shadow:var(--shadow);padding:15px;margin:12px 16px}
+  .r-card h4{margin:0 0 12px;font-size:14px;font-weight:800;display:flex;align-items:center;gap:7px}
+  .dim{margin-bottom:11px}
+  .dim:last-child{margin-bottom:0}
+  .dim .top{display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px}
+  .dim .top b{font-weight:700} .dim .top span{color:var(--g700);font-weight:800}
+  .track{height:9px;background:var(--g100);border-radius:999px;overflow:hidden}
+  .fill{height:100%;background:linear-gradient(90deg,var(--g600),var(--g500));border-radius:999px}
+  .quote{font-size:14.5px;line-height:1.6;color:var(--ink);background:var(--g50);border-left:4px solid var(--g500);
+    border-radius:0 12px 12px 0;padding:11px 13px}
+  .act{display:flex;gap:10px;background:var(--cream);border:1px solid #efdfc6;border-radius:12px;padding:11px 13px;font-size:14px}
+  .act .e{flex:0 0 26px;height:26px;border-radius:8px;background:var(--nut);color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px}
+  .next{display:flex;gap:10px;align-items:center;background:#fff;border:1px dashed var(--g300);border-radius:12px;padding:11px 13px}
+  .next .e{flex:0 0 30px;font-size:20px}
+  .next b{font-size:14px}.next p{margin:2px 0 0;font-size:12.5px;color:var(--mut)}
+  .spark{display:flex;align-items:flex-end;gap:7px;height:46px;margin-top:10px}
+  .spark .b{flex:1;background:var(--g300);border-radius:4px 4px 0 0;position:relative}
+  .spark .b.now{background:var(--g600)}
+  .spark .b span{position:absolute;bottom:-18px;left:0;right:0;text-align:center;font-size:10px;color:var(--mut)}
+  .r-actions{display:flex;gap:10px;padding:6px 16px 16px}
+  .r-actions .btn{flex:1}
+
+  /* ===== breathe ===== */
+  #breathe{background:linear-gradient(170deg,var(--g800),var(--g600));color:#fff;align-items:center;justify-content:center;text-align:center;padding:30px}
+  .breath-wrap{display:flex;flex-direction:column;align-items:center;gap:26px}
+  .bubble{width:200px;height:200px;border-radius:50%;border:2px solid rgba(255,255,255,.5);
+    display:flex;align-items:center;justify-content:center;background:radial-gradient(circle,rgba(255,255,255,.18),rgba(255,255,255,.04));
+    animation:breathe 8s ease-in-out infinite}
+  .bubble .mascot{width:96px;height:96px}
+  @keyframes breathe{0%,100%{transform:scale(.82)}50%{transform:scale(1.08)}}
+  #breathe .phase{font-size:22px;font-weight:900;letter-spacing:2px}
+  #breathe .tip{font-size:14px;opacity:.92;max-width:280px}
+  #breathe .exit{position:absolute;top:calc(16px + env(safe-area-inset-top,0px));left:16px;background:rgba(255,255,255,.15);border:none;color:#fff;border-radius:50%;width:38px;height:38px;font-size:18px}
+  #breathe .count{font-size:14px;opacity:.8;margin-top:4px}
+
+  /* ===== pricing ===== */
+  .plan{background:#fff;border-radius:var(--r);box-shadow:var(--shadow);padding:16px;margin:12px 16px;position:relative;border:1.5px solid var(--line)}
+  .plan.hot{border-color:var(--g500);background:linear-gradient(180deg,#fff,var(--g50))}
+  .plan .tag{position:absolute;top:-11px;right:14px;background:var(--g700);color:#fff;font-size:11px;font-weight:800;padding:4px 11px;border-radius:999px}
+  .plan .nm{font-size:16px;font-weight:900}
+  .plan .pr{font-size:30px;font-weight:900;color:var(--g700);margin:6px 0 2px}
+  .plan .pr small{font-size:13px;font-weight:700;color:var(--mut)}
+  .plan .sub{font-size:12.5px;color:var(--mut);margin-bottom:10px}
+  .plan ul{list-style:none;padding:0;margin:0 0 12px}
+  .plan li{font-size:13.5px;padding:5px 0;display:flex;gap:8px;align-items:flex-start}
+  .plan li .ck{color:var(--g600);font-weight:900}
+  .props{display:flex;gap:10px;padding:4px 16px 6px}
+  .prop{flex:1;background:#fff;border-radius:12px;box-shadow:var(--shadow);padding:12px 8px;text-align:center}
+  .prop .e{font-size:22px}.prop b{display:block;font-size:12.5px;margin-top:4px}.prop p{margin:2px 0 0;font-size:11px;color:var(--mut)}
+
+  /* ===== mine ===== */
+  .m-hero{background:linear-gradient(135deg,var(--g700),var(--g500));color:#fff;padding:18px 16px 22px}
+  .m-hero .row{justify-content:flex-start}
+  .m-ava{width:60px;height:60px;border-radius:16px;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-size:30px;flex:0 0 60px}
+  .m-hero b{font-size:18px}.m-hero .vip{display:inline-block;margin-top:6px;background:var(--gold);color:#5a3d05;font-size:11px;font-weight:800;padding:3px 10px;border-radius:999px}
+  .m-stats{display:flex;background:#fff;border-radius:var(--r);box-shadow:var(--shadow);margin:-14px 16px 0;position:relative;z-index:2}
+  .m-stats .s{flex:1;text-align:center;padding:13px 6px;border-right:1px solid var(--line)}
+  .m-stats .s:last-child{border-right:none}
+  .m-stats .s b{font-size:19px;color:var(--g700);font-weight:900}.m-stats .s span{font-size:11.5px;color:var(--mut)}
+  .menu{background:#fff;border-radius:var(--r);box-shadow:var(--shadow);margin:14px 16px;overflow:hidden}
+  .mitem{display:flex;align-items:center;gap:12px;padding:14px 14px;border-bottom:1px solid var(--line);cursor:pointer}
+  .mitem:last-child{border-bottom:none}
+  .mitem .e{width:34px;height:34px;border-radius:10px;background:var(--g100);display:flex;align-items:center;justify-content:center;font-size:18px;flex:0 0 34px}
+  .mitem b{font-size:14.5px}.mitem .ar{margin-left:auto;color:var(--mut);font-size:18px}
+  .mitem .badge{margin-left:auto;background:var(--g100);color:var(--g700);font-size:11px;font-weight:800;padding:3px 9px;border-radius:999px}
+
+  /* small clean-mode for screenshots */
+  body.clean{background:#EAF1ED;padding:0;width:390px;margin:0;justify-content:flex-start;align-items:flex-start}
+  body.clean .phone{max-width:none;height:100vh;border-radius:0;box-shadow:none;border:none}
+  @media(min-width:480px){body.clean .phone{height:100vh}}
+</style>
+</head>
+<body>
+<!-- ===== reusable SVG symbols (矢量绘制，无AI图片水印) ===== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <!-- pinecone / 松果 -->
+    <symbol id="i-songguo" viewBox="0 0 48 48">
+      <path d="M24 3 C14 12 12 26 24 45 C36 26 34 12 24 3 Z" fill="#C68A4E"/>
+      <g fill="none" stroke="#9C6531" stroke-width="2" stroke-linecap="round">
+        <path d="M16 16 Q24 22 32 16"/><path d="M15 23 Q24 29 33 23"/>
+        <path d="M16 30 Q24 35 32 30"/><path d="M18 37 Q24 41 30 37"/>
+      </g>
+      <path d="M24 3 l-4 6 4 3 4-3 z" fill="#E0B25A"/>
+    </symbol>
+    <!-- 松松 mascot: cute squirrel holding a pinecone -->
+    <symbol id="i-song" viewBox="0 0 120 120">
+      <!-- tail -->
+      <path d="M86 64 C112 58 116 22 92 14 C108 30 96 46 84 50 C100 44 96 28 84 30 C96 40 86 52 80 54 Z" fill="#C68A4E"/>
+      <path d="M90 60 C108 56 110 30 92 24 C104 38 94 50 84 52 Z" fill="#E0B25A" opacity=".5"/>
+      <!-- body -->
+      <ellipse cx="56" cy="78" rx="30" ry="32" fill="#C68A4E"/>
+      <ellipse cx="56" cy="84" rx="19" ry="22" fill="#F3DEC2"/>
+      <!-- head -->
+      <circle cx="52" cy="46" r="26" fill="#C68A4E"/>
+      <!-- ears -->
+      <circle cx="36" cy="26" r="9" fill="#C68A4E"/><circle cx="36" cy="26" r="4.5" fill="#F3DEC2"/>
+      <circle cx="68" cy="26" r="9" fill="#C68A4E"/><circle cx="68" cy="26" r="4.5" fill="#F3DEC2"/>
+      <!-- face -->
+      <circle cx="44" cy="46" r="4.5" fill="#21302A"/><circle cx="62" cy="46" r="4.5" fill="#21302A"/>
+      <circle cx="45.5" cy="44.5" r="1.5" fill="#fff"/><circle cx="63.5" cy="44.5" r="1.5" fill="#fff"/>
+      <circle cx="38" cy="54" r="4.5" fill="#E4869F" opacity=".55"/><circle cx="68" cy="54" r="4.5" fill="#E4869F" opacity=".55"/>
+      <path d="M50 54 Q53 58 56 54" stroke="#21302A" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <!-- arms holding pinecone -->
+      <ellipse cx="42" cy="74" rx="9" ry="7" fill="#C68A4E"/>
+      <ellipse cx="72" cy="74" rx="9" ry="7" fill="#C68A4E"/>
+      <path d="M60 66 C53 73 52 84 60 92 C68 84 67 73 60 66 Z" fill="#9C6531"/>
+      <g stroke="#7a4d22" stroke-width="1.6" fill="none" stroke-linecap="round">
+        <path d="M55 74 Q60 78 65 74"/><path d="M54 80 Q60 84 66 80"/><path d="M55 86 Q60 89 65 86"/>
+      </g>
+    </symbol>
+    <!-- pressure nut / 压力坚果 -->
+    <symbol id="i-nut" viewBox="0 0 48 48">
+      <ellipse cx="24" cy="30" rx="15" ry="14" fill="#C68A4E"/>
+      <path d="M24 12 q-7 4 -7 12 M24 12 q7 4 7 12" stroke="#9C6531" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <ellipse cx="24" cy="27" rx="7" ry="6" fill="#E0B25A"/>
+      <path d="M19 27 q5 -6 10 0" stroke="#9C6531" stroke-width="2" fill="none"/>
+      <circle cx="21" cy="27" r="1.6" fill="#21302A"/><circle cx="27" cy="27" r="1.6" fill="#21302A"/>
+    </symbol>
+    <!-- breathing bubble -->
+    <symbol id="i-bubble" viewBox="0 0 48 48">
+      <circle cx="24" cy="24" r="20" fill="none" stroke="#9DCBB8" stroke-width="3"/>
+      <circle cx="24" cy="24" r="12" fill="none" stroke="#54A07E" stroke-width="3"/>
+      <circle cx="24" cy="24" r="5" fill="#2F6B4F"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="phone" id="phone">
+
+  <!-- ============ SPLASH ============ -->
+  <section class="screen" id="splash">
+    <svg class="mascot"><use href="#i-song"/></svg>
+    <h1>松果AI</h1>
+    <div class="en">SONGGUO · AI ROLEPLAY</div>
+    <div class="slo">松一口气，换一种活法</div>
+    <button class="cta" onclick="go('onboard')">进入松果 →</button>
+    <div class="sub">已有 120 万人把压力存进了松果</div>
+  </section>
+
+  <!-- ============ ONBOARD ============ -->
+  <section class="screen" id="onboard">
+    <div class="ob-hero">
+      <svg class="ob-mascot"><use href="#i-song"/></svg>
+      <h2>把压力，<br>一颗颗敲碎</h2>
+      <p>像小松鼠囤坚果一样，把每天的压力攒下来，<br>和 AI 角色一局局敲开。</p>
+    </div>
+    <div class="ob-list">
+      <div class="ob-item"><div class="n">🌰</div><div><b>一颗松果一个小世界</b><p>天然 IP、天然温暖，把紧绷的日子过成松软的。</p></div></div>
+      <div class="ob-item"><div class="n">15</div><div><b>15 个解压互动场景</b><p>情绪解压 / 社交训练 / 亲子互动，总有一颗坚果为你而开。</p></div></div>
+      <div class="ob-item"><div class="n">♻</div><div><b>玩 · 评 · 报 · 复 闭环</b><p>每次互动结束，松松都给你一份「松劲报告」。</p></div></div>
+    </div>
+    <div class="ob-cta"><button class="btn g" onclick="go('home')">免费领取松果 →</button></div>
+  </section>
+
+  <!-- ============ HOME · 压力仓库 ============ -->
+  <section class="screen" id="home">
+    <div class="scroll nb">
+      <div class="greet">
+        <div class="row">
+          <svg class="face"><use href="#i-song"/></svg>
+          <div>
+            <b>果果跟你问好 👋</b>
+            <p>今天攒了 3 颗压力坚果，要敲开哪颗？</p>
+          </div>
+        </div>
+      </div>
+      <div class="nuts">
+        <div class="nut"><span class="t">周一例会焦虑</span><button class="smash" onclick="go('chat')">敲开 🌰</button></div>
+        <div class="nut"><span class="t">和室友吵架</span><button class="smash" onclick="go('chat')">敲开 🌰</button></div>
+        <div class="nut"><span class="t">失眠的夜</span><button class="smash" onclick="go('chat')">敲开 🌰</button></div>
+      </div>
+
+      <div class="sectit pad">三圈场景，总有一颗坚果为你而开</div>
+      <div class="circles">
+        <div class="ccard" onclick="go('scenes')">
+          <div class="emo c1">🌬️</div>
+          <div><b>情绪解压</b><div class="d">5 个场景 · 最高频 · 安全宣泄出口</div></div>
+        </div>
+        <div class="ccard" onclick="go('scenes')">
+          <div class="emo c2">💬</div>
+          <div><b>社交训练</b><div class="d">5 个场景 · 练完更敢 · 社交焦虑缓解</div></div>
+        </div>
+        <div class="ccard" onclick="go('scenes')">
+          <div class="emo c3">🧸</div>
+          <div><b>亲子互动</b><div class="d">5 个场景 · 全家一起 · 家长练沟通</div></div>
+        </div>
+      </div>
+
+      <div class="sectit pad">快速开始</div>
+      <div class="quick">
+        <div class="qchip" onclick="go('chat')"><span class="e">🎭</span><span class="n">AI 吐槽大会</span></div>
+        <div class="qchip" onclick="go('chat')"><span class="e">🔥</span><span class="n">AI 吵架模拟</span></div>
+        <div class="qchip" onclick="go('chat')"><span class="e">💗</span><span class="n">AI 治愈聊天</span></div>
+        <div class="qchip" onclick="go('breathe')"><span class="e">🌿</span><span class="n">呼吸引导</span></div>
+      </div>
+      <div style="height:18px"></div>
+    </div>
+    <nav class="nav" id="nav-home">
+      <a class="act" onclick="go('home')"><span class="g">🏠</span>首页</a>
+      <a onclick="go('scenes')"><span class="g">🗺️</span>场景</a>
+      <a onclick="go('report')"><span class="g">📊</span>松劲</a>
+      <a onclick="go('mine')"><span class="g">🐿️</span>我的</a>
+    </nav>
+  </section>
+
+  <!-- ============ SCENES · 圈层详情 ============ -->
+  <section class="screen" id="scenes">
+    <div class="scroll nb">
+      <div class="chero">
+        <div class="topbar">
+          <button class="back" onclick="go('home')">‹</button>
+          <div class="brand"><svg class="dot" style="width:22px;height:22px"><use href="#i-songguo"/></svg>松果AI</div>
+          <div class="sp"></div>
+        </div>
+        <h2 id="chero-t">🌬️ 情绪解压</h2>
+        <div class="d" id="chero-d">最高频 · 安全宣泄出口，把紧绷慢慢松成轻盈。</div>
+      </div>
+      <div class="slist" id="slist"><!-- injected --></div>
+    </div>
+    <nav class="nav" id="nav-scenes">
+      <a onclick="go('home')"><span class="g">🏠</span>首页</a>
+      <a class="act" onclick="go('scenes')"><span class="g">🗺️</span>场景</a>
+      <a onclick="go('report')"><span class="g">📊</span>松劲</a>
+      <a onclick="go('mine')"><span class="g">🐿️</span>我的</a>
+    </nav>
+  </section>
+
+  <!-- ============ CHAT · 角色扮演对话 ============ -->
+  <section class="screen" id="chat">
+    <div class="chat-top">
+      <button class="back" onclick="go('scenes')">‹</button>
+      <div class="ava" id="chat-ava">🎭</div>
+      <div><b id="chat-name">最佳损友</b><div class="st">● 在线 · 一局接一局</div></div>
+      <button class="end" onclick="go('report')">结束</button>
+    </div>
+    <div class="chat-area" id="chat-area">
+      <div class="syshint">安全环境，随便骂——松果帮你接住，不评判、不外传。</div>
+      <div class="bub ai"><div class="who">最佳损友</div>哟，今天又是谁让你想翻白眼了？别憋着，冲我来，我帮你骂回去。</div>
+      <div class="bub me">我们组那个同事，又把我做的活儿抢功汇报了……</div>
+      <div class="bub ai"><div class="who">最佳损友</div>哈？这种人就是典型的「伸手党+汇报精」。来，咱演一遍你该怎么当着他面把功劳捡回来——你先说，他一般会怎么接？</div>
+      <div class="typing"><i></i><i></i><i></i></div>
+    </div>
+    <div class="chat-end"><button class="btn g" onclick="go('report')">结束这局，看松劲报告 →</button></div>
+    <div class="inputbar">
+      <div class="field">说点什么，松果接着你…</div>
+      <button class="snd">➤</button>
+    </div>
+  </section>
+
+  <!-- ============ REPORT · 松劲报告 ============ -->
+  <section class="screen" id="report">
+    <div class="scroll nb">
+      <div class="r-hero">
+        <div class="topbar">
+          <button class="back" onclick="go('chat')">‹</button>
+          <div class="brand" style="color:#fff"><svg class="dot" style="width:22px;height:22px"><use href="#i-songguo"/></svg>松劲报告</div>
+          <div class="sp"></div>
+          <button class="ico-btn" style="background:rgba(255,255,255,.18);color:#fff;box-shadow:none">↗</button>
+        </div>
+        <div class="r-stage">
+          <div class="badge"><span class="big">A</span><span class="lab">松弛</span></div>
+          <div>
+            <h3>这局，你松下来一点了</h3>
+            <p>综合阶段：松弛（A）· 五维综合 4.2 → 比上次 +0.6</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="r-card">
+        <h4>🌿 五维状态条（与历史基线对比）</h4>
+        <div id="dims"><!-- injected --></div>
+      </div>
+
+      <div class="r-card">
+        <h4>💡 新看见</h4>
+        <div class="quote">原来让我最堵的，不是被抢功，是「怕被觉得矫情」——其实我的付出，值得被看见。</div>
+      </div>
+
+      <div class="r-card">
+        <h4>🌰 今晚的微小行动</h4>
+        <div class="act"><div class="e">✓</div><div>写完这段话，就关灯听一首慢歌，不急着回消息。</div></div>
+      </div>
+
+      <div class="r-card">
+        <h4>🔁 再来一局建议</h4>
+        <div class="next"><div class="e">💗</div><div><b>试试「AI 治愈聊天」</b><p>把今天的好状态，记进情绪日记再睡。</p></div></div>
+      </div>
+
+      <div class="r-actions">
+        <button class="btn lite" onclick="go('chat')">再来一局</button>
+        <button class="btn g" onclick="go('mine')">存进情绪日记</button>
+      </div>
+    </div>
+    <nav class="nav" id="nav-report">
+      <a onclick="go('home')"><span class="g">🏠</span>首页</a>
+      <a onclick="go('scenes')"><span class="g">🗺️</span>场景</a>
+      <a class="act" onclick="go('report')"><span class="g">📊</span>松劲</a>
+      <a onclick="go('mine')"><span class="g">🐿️</span>我的</a>
+    </nav>
+  </section>
+
+  <!-- ============ BREATHE · 呼吸引导 ============ -->
+  <section class="screen" id="breathe">
+    <button class="exit" onclick="go('home')">‹</button>
+    <div class="breath-wrap">
+      <div class="bubble"><svg class="mascot"><use href="#i-song"/></svg></div>
+      <div class="phase" id="phase">吸 气</div>
+      <div class="count" id="count">4</div>
+      <div class="tip">紧绷的时候，先陪你待一会儿。跟着松松，慢慢呼吸。</div>
+    </div>
+  </section>
+
+  <!-- ============ PRICING · 会员 ============ -->
+  <section class="screen" id="pricing">
+    <div class="scroll nb">
+      <div class="topbar">
+        <button class="back" onclick="go('mine')">‹</button>
+        <div class="brand"><svg class="dot" style="width:22px;height:22px"><use href="#i-songguo"/></svg>松果会员</div>
+        <div class="sp"></div>
+      </div>
+      <div class="sectit pad">先免费领颗松果，上头了再囤</div>
+
+      <div class="plan">
+        <div class="nm">免费层</div>
+        <div class="pr">¥0</div>
+        <div class="sub">先领颗松果试试</div>
+        <ul>
+          <li><span class="ck">✓</span>1–2 个基础场景</li>
+          <li><span class="ck">✓</span>每日 3 次互动</li>
+          <li><span class="ck">✓</span>基础松劲报告</li>
+        </ul>
+        <button class="btn lite">免费领取</button>
+      </div>
+
+      <div class="plan hot">
+        <div class="tag">最受欢迎</div>
+        <div class="nm">月卡</div>
+        <div class="pr">¥39<small> /月</small></div>
+        <div class="sub">无限敲坚果</div>
+        <ul>
+          <li><span class="ck">✓</span>全场景解锁（15 个）</li>
+          <li><span class="ck">✓</span>无限次互动</li>
+          <li><span class="ck">✓</span>完整五维松劲报告</li>
+          <li><span class="ck">✓</span>记忆 & 成就系统</li>
+        </ul>
+        <button class="btn g">开通月卡</button>
+      </div>
+
+      <div class="plan">
+        <div class="nm">年卡</div>
+        <div class="pr">¥299<small> /年</small></div>
+        <div class="sub">相当于 5 个月卡</div>
+        <ul>
+          <li><span class="ck">✓</span>月卡全部权益</li>
+          <li><span class="ck">✓</span>独家限定剧本</li>
+          <li><span class="ck">✓</span>专属角色皮肤</li>
+          <li><span class="ck">✓</span>优先新功能体验</li>
+        </ul>
+        <button class="btn ghost">开通年卡</button>
+      </div>
+
+      <div class="sectit pad">道具 / 剧本 · ¥6 起</div>
+      <div class="props">
+        <div class="prop"><div class="e">📜</div><b>高级剧本</b><p>¥6–68</p></div>
+        <div class="prop"><div class="e">🎭</div><b>限定角色包</b><p>可送朋友</p></div>
+        <div class="prop"><div class="e">🃏</div><b>特殊场景卡</b><p>单买喜欢的</p></div>
+      </div>
+      <div style="height:18px"></div>
+    </div>
+    <nav class="nav" id="nav-pricing">
+      <a onclick="go('home')"><span class="g">🏠</span>首页</a>
+      <a onclick="go('scenes')"><span class="g">🗺️</span>场景</a>
+      <a onclick="go('report')"><span class="g">📊</span>松劲</a>
+      <a onclick="go('mine')"><span class="g">🐿️</span>我的</a>
+    </nav>
+  </section>
+
+  <!-- ============ MINE · 我的 ============ -->
+  <section class="screen" id="mine">
+    <div class="scroll nb">
+      <div class="m-hero">
+        <div class="row">
+          <div class="m-ava">🐿️</div>
+          <div>
+            <b>松果用户</b><br>
+            <span class="vip">月卡会员 · 松劲达人</span>
+          </div>
+        </div>
+      </div>
+      <div class="m-stats">
+        <div class="s"><b>23</b><span>本周松劲</span></div>
+        <div class="s"><b>松弛</b><span>平均阶段</span></div>
+        <div class="s"><b>12</b><span>连续天数</span></div>
+      </div>
+
+      <div class="menu">
+        <div class="mitem" onclick="go('report')"><div class="e">📊</div><b>松劲历史</b><span class="ar">›</span></div>
+        <div class="mitem"><div class="e">📝</div><b>情绪日记</b><span class="ar">›</span></div>
+        <div class="mitem"><div class="e">🏆</div><b>成就 & 松果壳</b><span class="badge">8 枚</span></div>
+        <div class="mitem" onclick="go('pricing')"><div class="e">💎</div><b>会员中心</b><span class="ar">›</span></div>
+      </div>
+      <div class="menu">
+        <div class="mitem"><div class="e">🛟</div><b>心理援助热线 12356</b><span class="ar">›</span></div>
+        <div class="mitem"><div class="e">🔔</div><b>提醒 & 通知</b><span class="ar">›</span></div>
+        <div class="mitem"><div class="e">🔒</div><b>隐私与数据安全</b><span class="ar">›</span></div>
+        <div class="mitem"><div class="e">❓</div><b>关于松果AI</b><span class="ar">›</span></div>
+      </div>
+      <div style="height:18px"></div>
+    </div>
+    <nav class="nav" id="nav-mine">
+      <a onclick="go('home')"><span class="g">🏠</span>首页</a>
+      <a onclick="go('scenes')"><span class="g">🗺️</span>场景</a>
+      <a onclick="go('report')"><span class="g">📊</span>松劲</a>
+      <a class="act" onclick="go('mine')"><span class="g">🐿️</span>我的</a>
+    </nav>
+  </section>
+
+</div>
+
+<script>
+  // ---- data ----
+  var CIRCLES = {
+    emo:{t:"🌬️ 情绪解压", d:"最高频 · 安全宣泄出口，把紧绷慢慢松成轻盈。", color:"c1",
+      scenes:[
+        ["🎭","AI 剧本杀","千人千结局的悬疑局"],
+        ["📢","AI 吐槽大会","安全环境随便骂"],
+        ["🔥","AI 吵架模拟","吵完它还主动和好"],
+        ["🎲","AI 人生模拟器","体验「如果当初…」"],
+        ["💗","AI 治愈聊天","写完情绪日记再睡"]
+      ]},
+    soc:{t:"💬 社交训练", d:"练完更敢 · 社交焦虑缓解，从破冰到面试。", color:"c2",
+      scenes:[
+        ["💘","AI 约会模拟","给你打「心动指数」"],
+        ["🍻","AI 聚会破冰","练搭讪不冷场"],
+        ["🤝","AI 冲突处理","家庭 / 职场都好用"],
+        ["🎤","AI 演讲陪练","克服社交焦虑"],
+        ["🧑‍💼","AI 面试轻松版","去掉压迫感"]
+      ]},
+    kid:{t:"🧸 亲子互动", d:"全家一起 · 家长练沟通，孩子玩得开心。", color:"c3",
+      scenes:[
+        ["👨‍👩‍👧","AI 亲子对话","家长练沟通技巧"],
+        ["🗺️","AI 冒险故事","和角色共创剧情"],
+        ["🎲","AI 家庭桌游","周末不无聊"],
+        ["📚","AI 作业伙伴","陪学不代写"],
+        ["🌙","AI 睡前故事","定制化哄睡"]
+      ]}
+  };
+  var DIMS = [
+    ["情绪识别",5],["共情接纳",4],["压力释放",5],["放松深度",4],["自我觉察",4]
+  ];
+
+  function buildScenes(key){
+    var c = CIRCLES[key] || CIRCLES.emo;
+    document.getElementById('chero-t').textContent = c.t;
+    document.getElementById('chero-d').textContent = c.d;
+    var box = document.getElementById('slist'); box.innerHTML="";
+    c.scenes.forEach(function(s){
+      var d=document.createElement('div'); d.className='srow';
+      d.innerHTML='<div class="e">'+s[0]+'</div><div><b>'+s[1]+'</b><div class="d">'+s[2]+'</div></div><button class="go" onclick="startScene(\''+s[1]+'\',\''+s[0]+'\')">开始</button>';
+      box.appendChild(d);
+    });
+  }
+  function buildDims(){
+    var box=document.getElementById('dims'); box.innerHTML="";
+    DIMS.forEach(function(d){
+      var el=document.createElement('div'); el.className='dim';
+      el.innerHTML='<div class="top"><b>'+d[0]+'</b><span>'+d[1]+' / 5</span></div><div class="track"><div class="fill" style="width:'+(d[1]*20)+'%"></div></div>';
+      box.appendChild(el);
+    });
+  }
+  function startScene(name,emo){
+    document.getElementById('chat-name').textContent=name.replace('AI ','');
+    document.getElementById('chat-ava').textContent=emo||'🎭';
+    go('chat');
+  }
+
+  // ---- router ----
+  var NAV_OK = {home:1,scenes:1,report:1,mine:1,pricing:1};
+  function go(id){
+    document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('on')});
+    var el=document.getElementById(id); if(!el) el=document.getElementById('home');
+    el.classList.add('on');
+    // nav visibility
+    var showNav = !!NAV_OK[id];
+    document.querySelectorAll('.nav').forEach(function(n){ n.classList.add('hide'); });
+    if(showNav){ var nav=document.getElementById('nav-'+id); if(nav) nav.classList.remove('hide'); }
+    // build dynamic
+    if(id==='scenes') buildScenes(curCircle);
+    if(id==='report') buildDims();
+    window.scrollTo(0,0);
+  }
+
+  // ---- breathe animation ----
+  var brTimer=null;
+  function startBreathe(){
+    var ph=document.getElementById('phase'), ct=document.getElementById('count');
+    var seq=[['吸 气',4],['屏 住',4],['呼 气',6],['休 息',2]];
+    var i=0;
+    function tick(){
+      var s=seq[i%seq.length]; ph.textContent=s[0]; var n=s[1]; ct.textContent=n;
+      var iv=setInterval(function(){ n--; ct.textContent=n>0?n:''; if(n<=0){clearInterval(iv); i++; tick();} },1000);
+    }
+    tick();
+  }
+
+  // ---- init from query (?screen= & ?circle= & ?clean=) ----
+  (function(){
+    var q=new URLSearchParams(location.search);
+    if(q.get('clean')==='1') document.body.classList.add('clean');
+    var c=q.get('circle'); if(c&&CIRCLES[c]) curCircle=c; else curCircle='emo';
+    var scr=q.get('screen');
+    if(scr && document.getElementById(scr)) go(scr); else go('splash');
+    if(scr==='breathe') startBreathe();
+  })();
+  var curCircle='emo';
+</script>
+</body>
+</html>
